@@ -1,0 +1,995 @@
+#!/usr/bin/env node
+// ============================================================
+// Rewa Cricket Division — static site builder (vanilla Node).
+// Reads JSON data -> generates real .html files with SEO +
+// JSON-LD baked in. No framework. Output goes to dist/.
+//
+// To migrate later (Astro/Next/etc.): keep data/ + this URL
+// structure; the generated HTML is throwaway.
+// ============================================================
+
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, readdirSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dirname, '..');
+const SRC = join(ROOT, 'src');
+const DIST = join(ROOT, 'dist');
+const DATA = join(ROOT, 'data');
+
+const SITE = 'https://rewacricketdivision.in';
+
+// ---------- data ----------
+const org = JSON.parse(readFileSync(join(DATA, 'organization.json'), 'utf8'));
+const db = JSON.parse(readFileSync(join(DATA, 'records.json'), 'utf8'));
+
+// ---------- helpers ----------
+const esc = (s) =>
+  String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+
+const absUrl = (p) => SITE + (p.startsWith('/') ? p : '/' + p);
+
+const ld = (obj) =>
+  `<script type="application/ld+json">${JSON.stringify(obj)}</script>`;
+
+const titleFor = (t) => (t === org.name ? org.name : `${t} | ${org.name}`);
+
+function head({ title, description, path, jsonLd = [], ogType = 'website' }) {
+  const blocks = Array.isArray(jsonLd) ? jsonLd : [jsonLd];
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>${esc(titleFor(title))}</title>
+<meta name="description" content="${esc(description)}" />
+<link rel="canonical" href="${absUrl(path)}" />
+<meta property="og:site_name" content="${esc(org.name)}" />
+<meta property="og:title" content="${esc(titleFor(title))}" />
+<meta property="og:description" content="${esc(description)}" />
+<meta property="og:type" content="${ogType}" />
+<meta property="og:url" content="${absUrl(path)}" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="${esc(titleFor(title))}" />
+<meta name="twitter:description" content="${esc(description)}" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="/css/styles.css" />
+${blocks.map(ld).join('\n')}
+</head>`;
+}
+
+const NAV = [
+  ['Home', '/'],
+  ['About', '/about/'],
+  ['News', '/news/'],
+  ['Matches', '/matches/'],
+  ['Tournaments', '/tournaments/'],
+  ['Teams', '/teams/'],
+  ['Players', '/players/'],
+  ['Venues', '/venues/'],
+  ['Stats', '/stats/'],
+  ['Contact', '/contact/'],
+];
+
+function header() {
+  return `<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="${esc(org.name)} — home">
+      <img class="brand-logo" src="/img/logo-rewa-official.jpg" alt="Official emblem of Rewa District, Madhya Pradesh" width="44" height="44" />
+      <span class="brand-text">
+        <strong>${esc(org.name)}</strong>
+        <small>Official Website</small>
+      </span>
+    </a>
+    <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="nav" aria-label="Toggle menu">&#9776;</button>
+    <nav class="main-nav" data-nav id="nav" aria-label="Primary">
+      <ul>
+        ${NAV.map(([name, path]) => `<li><a href="${path}">${name}</a></li>`).join('\n')}
+      </ul>
+    </nav>
+  </div>
+</header>`;
+}
+
+function footer() {
+  return `<footer class="site-footer">
+  <div class="container">
+    <div>
+      <div class="footer-brand">
+        <img src="/img/logo-rewa-official.jpg" alt="Official emblem of Rewa District" width="40" height="40" />
+        <h3>${esc(org.name)}</h3>
+      </div>
+      <p class="footer-note">The official website of the ${esc(org.name)}. सफ़ेद शेरों की धरती — Land of the White Tigers.</p>
+    </div>
+    <div>
+      <h3>Explore</h3>
+      <ul>
+        <li><a href="/matches/">Matches &amp; Results</a></li>
+        <li><a href="/tournaments/">Tournaments</a></li>
+        <li><a href="/records/">Records</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Official</h3>
+      <p class="footer-note">Operated with the permission of the ${esc(org.name)}.</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">© <span data-year>${new Date().getFullYear()}</span> ${esc(org.name)}. All rights reserved.</div>
+  </div>
+</footer>
+<script src="/js/main.js" defer></script>
+</body>
+</html>`;
+}
+
+function layout({ title, description, path, jsonLd = [], ogType, breadcrumbs = [], bodyClass = '' }) {
+  const crumbItems = [{ name: 'Home', path: '/' }, ...breadcrumbs];
+  return `${head({ title, description, path, jsonLd, ogType })}
+<body class="${bodyClass}">
+${header()}
+${breadcrumbs.length ? crumbs(crumbItems) : ''}
+<main id="main">
+<div class="container">`;
+}
+
+// needs layout()'s opening div closed per page via `closeLayout()`
+const closeLayout = (crumbs) => (crumbs ? `</div></main>` : `</div></main>`) + footer();
+
+function crumbs(items) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((it, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: it.name,
+      item: absUrl(it.path),
+    })),
+  };
+  return `<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
+    ${items
+      .map((it, i) => {
+        const last = i === items.length - 1;
+        return last
+          ? `<li><span aria-current="page">${esc(it.name)}</span></li>`
+          : `<li><a href="${it.path}">${esc(it.name)}</a></li>`;
+      })
+      .join('\n')}
+  </ol></nav>${ld(jsonLd)}`;
+}
+
+const empty = (title, body) => `<div class="empty">
+  <div class="empty-icon">&#127951;</div>
+  <h3>${esc(title)}</h3>
+  <p>${esc(body)}</p>
+</div>`;
+
+// ---------- relation maps ----------
+const teamsById = new Map(db.teams.map((t) => [t.id, t]));
+const tourneysById = new Map(db.tournaments.map((t) => [t.id, t]));
+const venuesById = new Map(db.venues.map((v) => [v.id, v]));
+const seasonsById = new Map(db.seasons.map((s) => [s.id, s]));
+
+const statusBadge = (s) => {
+  const map = {
+    scheduled: 'scheduled',
+    live: 'live',
+    completed: 'completed',
+    abandoned: 'abandoned',
+    cancelled: 'cancelled',
+  };
+  const cls = map[s] ?? 'scheduled';
+  return `<span class="badge badge-${cls}">${esc(s)}</span>`;
+};
+
+
+const dateTxt = (m) => m.matchDate ?? 'Date TBA';
+const dateSort = (a, b) => (b.matchDate ?? '9999') < (a.matchDate ?? '9999') ? -1 : (b.matchDate ?? '9999') > (a.matchDate ?? '9999') ? 1 : 0;
+
+const matchCard = (m) => {
+  const teamA = teamsById.get(m.teamAId);
+  const teamB = teamsById.get(m.teamBId);
+  const tourn = tourneysById.get(m.tournamentId);
+  const venue = venuesById.get(m.venueId);
+  return `<article class="card match-card">
+    <div class="match-top">
+      <span class="competition">${esc(tourn?.name ?? 'Match')}</span>
+      ${statusBadge(m.status)}
+    </div>
+    <div class="match-teams">
+      <span class="team-name"><a href="/teams/${esc(teamA?.slug ?? '')}/">${esc(teamA?.name ?? 'Team A')}</a></span>
+      <span class="vs">VS</span>
+      <span class="team-name"><a href="/teams/${esc(teamB?.slug ?? '')}/">${esc(teamB?.name ?? 'Team B')}</a></span>
+    </div>
+    <div class="match-footer">
+      ${m.status === 'completed' && m.resultText ? `<span class="result">${esc(m.resultText)}</span>` : `${esc(dateTxt(m))}${m.startTime ? ' · ' + esc(m.startTime) : ''}`}
+      ${venue?.name ? ` · ${esc(venue.name)}` : ''}
+    </div>
+    <p style="margin-top:.6rem"><a class="btn btn-outline" href="/matches/${esc(m.slug)}/">Scorecard &amp; details</a></p>
+  </article>`;
+};
+
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsOrganization',
+  name: org.name,
+  url: org.website,
+  description: org.description,
+  ...(org.headquarters
+    ? { address: { '@type': 'PostalAddress', addressLocality: org.headquarters } }
+    : {}),
+};
+
+const websiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: org.name,
+  url: org.website,
+  description: org.description,
+};
+
+// ---------- page writers ----------
+const pages = []; // for sitemap
+
+function writePage(relPath, html) {
+  const file = join(DIST, relPath, 'index.html');
+  mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(file, html);
+  pages.push(relPath === '' ? '/' : `/${relPath}/`);
+}
+
+// ============================================================
+// HOME
+// ============================================================
+function renderHome() {
+  const recent = [...db.matches].sort(dateSort).slice(0, 4);
+  const news = [...db.announcements].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)).slice(0, 3);
+
+  let html = layout({
+    title: org.name,
+    description: org.description,
+    path: '/',
+    jsonLd: [orgLd, websiteLd],
+  });
+
+  html += `<section class="hero">
+    <img class="hero-logo" src="/img/logo-rewa-official.jpg" alt="Official emblem of Rewa District" width="88" height="88" />
+    <p class="eyebrow">सफ़ेद शेरों की धरती · Land of the White Tigers</p>
+    <h1>The Official Home of Cricket in Rewa</h1>
+    <p>${esc(org.description)}</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="/matches/">Matches &amp; Results</a>
+      <a class="btn btn-ghost" href="/tournaments/">Tournaments</a>
+      <a class="btn btn-ghost" href="/about/">About the Division</a>
+    </div>
+  </section>
+  <div class="container">
+  <div class="split" style="margin-top:2.5rem">`;
+
+  // recent matches
+  html += `<section class="section">
+    <div class="section-title"><div><p class="eyebrow">Fixtures &amp; Results</p><h2>Recent Matches</h2></div>
+    <a class="link" href="/matches/">View all &rarr;</a></div>
+    ${
+      recent.length
+        ? `<div class="grid grid-2">${recent.map(matchCard).join('\n')}</div>`
+        : empty('No matches published yet', 'Official fixtures and results will appear here as soon as they are confirmed by the Rewa Cricket Division.')
+    }
+  </section>`;
+
+  // sidebar
+  html += `<aside>
+    <section class="section">
+      <div class="section-title"><div><p class="eyebrow">Announcements</p><h2 style="font-size:1.2rem">Latest News</h2></div>
+      <a class="link" href="/news/">All &rarr;</a></div>
+      ${
+        news.length
+          ? `<div class="grid">${news
+              .map(
+                (n) => `<div class="card"><a href="/news/${esc(n.slug)}/"><strong>${esc(n.title)}</strong><div class="card-meta">${esc(n.publishedAt)}</div></a></div>`,
+              )
+              .join('\n')}</div>`
+          : `<p class="card-meta">Official announcements will be published here.</p>`
+      }
+    </section>
+    <section class="section">
+      <p class="eyebrow" style="margin-bottom:.75rem">At a glance</p>
+      <div class="stat-grid">
+        <div class="card stat"><div class="stat-value">${db.teams.length}</div><div class="stat-label">Teams</div></div>
+        <div class="card stat"><div class="stat-value">${db.tournaments.length}</div><div class="stat-label">Tournaments</div></div>
+        <div class="card stat"><div class="stat-value">${db.matches.length}</div><div class="stat-label">Matches</div></div>
+        <div class="card stat"><div class="stat-value">${db.players.length}</div><div class="stat-label">Players</div></div>
+      </div>
+    </section>
+  </aside>
+  </div>
+  </div>`;
+
+  html += closeLayout();
+  writePage('', html);
+}
+
+// ============================================================
+// TEAMS
+// ============================================================
+function renderTeams() {
+  let html = layout({
+    title: 'Teams',
+    description: 'Official teams competing under the Rewa Cricket Division.',
+    path: '/teams/',
+  });
+  html += `<div class="page-head"><p class="eyebrow">Competition</p><h1>Teams</h1>
+    <p>Official team profiles as confirmed by the division.</p></div>`;
+  html += db.teams.length
+    ? `<div class="grid grid-2 grid-3">${db.teams
+        .map(
+          (t) => `<a class="card row-card card-link" href="/teams/${esc(t.slug)}/">
+            <span class="avatar avatar-sm">${esc(t.shortCode || t.name.split(' ').map((w) => w[0]).join('').slice(0, 2))}</span>
+            <span><span class="card-title">${esc(t.name)}</span><div class="card-meta">${t.establishedYear ? 'Est. ' + t.establishedYear : 'Team'}</div></span>
+          </a>`,
+        )
+        .join('\n')}</div>`
+    : empty('No teams published yet', 'Official team profiles will appear here once confirmed by the Rewa Cricket Division.');
+  html += closeLayout();
+  writePage('teams', html);
+}
+
+function renderTeam(t) {
+  const squad = db.players.filter((p) => p.teamId === t.id);
+  const teamMatches = db.matches.filter((m) => m.teamAId === t.id || m.teamBId === t.id);
+  let html = layout({
+    title: t.name,
+    description: t.description ?? `${t.name} — a team competing under the Rewa Cricket Division.`,
+    path: `/teams/${t.slug}/`,
+    breadcrumbs: [{ name: 'Teams', path: '/teams/' }, { name: t.name, path: `/teams/${t.slug}/` }],
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'SportsTeam',
+        name: t.name,
+        url: absUrl(`/teams/${t.slug}/`),
+        sport: 'Cricket',
+        memberOf: { '@type': 'SportsOrganization', name: org.name },
+      },
+    ],
+  });
+  html += `<div class="page-head"><h1>${esc(t.name)}</h1>${t.establishedYear ? `<p>Established ${t.establishedYear}</p>` : ''}</div>`;
+  if (t.description) html += `<p class="prose" style="max-width:62ch;margin-bottom:1.5rem">${esc(t.description)}</p>`;
+
+  html += `<div class="split">
+    <section class="section" style="margin-top:0">
+      <h2>Matches</h2>
+      <div class="grid" style="margin-top:1rem">
+        ${teamMatches.length ? teamMatches.map(matchCard).join('\n') : empty('No matches yet', 'Match fixtures for this team will appear here when confirmed.')}
+      </div>
+    </section>
+    <aside>
+      <h2>Squad</h2>
+      <div class="grid" style="margin-top:1rem">
+        ${
+          squad.length
+            ? squad
+                .map(
+                  (p) => `<a class="card row-card card-link" href="/players/${esc(p.slug)}/">
+                    <span class="avatar avatar-sm">${esc(p.name.split(' ').map((w) => w[0]).slice(0, 2).join(''))}</span>
+                    <span><span class="card-title">${esc(p.name)}</span><div class="card-meta">${esc(p.role)}</div></span>
+                  </a>`,
+                )
+                .join('\n')
+            : `<p class="card-meta">Squad information will be published here when available.</p>`
+        }
+      </div>
+    </aside>
+  </div>`;
+  html += closeLayout();
+  writePage(`teams/${t.slug}`, html);
+}
+
+// ============================================================
+// PLAYERS
+// ============================================================
+function renderPlayers() {
+  let html = layout({
+    title: 'Players',
+    description: 'Official player profiles registered with the Rewa Cricket Division.',
+    path: '/players/',
+  });
+  html += `<div class="page-head"><p class="eyebrow">Competition</p><h1>Players</h1>
+    <p>Official player profiles as confirmed by the division.</p></div>`;
+  html += db.players.length
+    ? `<div class="grid grid-2 grid-3">${db.players
+        .map((p) => {
+          const team = p.teamId ? teamsById.get(p.teamId) : null;
+          return `<a class="card row-card card-link" href="/players/${esc(p.slug)}/">
+            <span class="avatar avatar-sm">${esc(p.name.split(' ').map((w) => w[0]).slice(0, 2).join(''))}</span>
+            <span><span class="card-title">${esc(p.name)}</span><div class="card-meta">${esc(p.role)}${team ? ' · ' + esc(team.name) : ''}</div></span>
+          </a>`;
+        })
+        .join('\n')}</div>`
+    : empty('No players published yet', 'Official player profiles will appear here once confirmed by the Rewa Cricket Division.');
+  html += closeLayout();
+  writePage('players', html);
+}
+
+function renderPlayer(p) {
+  const team = p.teamId ? teamsById.get(p.teamId) : null;
+  const pMatches = db.matches.filter((m) => m.teamAId === p.teamId || m.teamBId === p.teamId);
+  const batInns = db.batting.filter((b) => b.playerId === p.id);
+  const bowlOvers = db.bowling.filter((b) => b.playerId === p.id);
+  const batRuns = batInns.reduce((s, b) => s + (b.runs || 0), 0);
+  const bowlWkts = bowlOvers.reduce((s, b) => s + (b.wickets || 0), 0);
+  let html = layout({
+    title: p.name,
+    description: `${p.name} — ${p.role}${team ? ` for ${team.name}` : ''}, Rewa Cricket Division${p.battingStyle ? `, ${p.battingStyle}` : ''}.`,
+    path: `/players/${p.slug}/`,
+    breadcrumbs: [{ name: 'Players', path: '/players/' }, { name: p.name, path: `/players/${p.slug}/` }],
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: p.name,
+      url: absUrl(`/players/${p.slug}/`),
+      ...(p.dateOfBirth ? { birthDate: p.dateOfBirth } : {}),
+      ...(p.bio ? { description: p.bio } : {}),
+    },
+  });
+  html += `<div class="page-head"><h1>${esc(p.name)}</h1><p>${esc(p.role)}${team ? ` · <a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : ''}</p></div>`;
+  html += `<dl class="card" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:720px;margin-bottom:1.5rem">
+    ${[['Role', p.role], team ? ['Team', `<a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>`] : null, p.battingStyle ? ['Batting style', p.battingStyle] : null, p.bowlingStyle ? ['Bowling style', p.bowlingStyle] : null, p.dateOfBirth ? ['Date of birth', p.dateOfBirth] : null, ['Matches', batInns.length || '—'], ['Runs', batRuns || '—'], ['Wickets', bowlWkts || '—']]
+      .filter(Boolean)
+      .map(([k, v]) => `<div><dt style="font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">${esc(k)}</dt><dd style="font-weight:600;margin-top:.1rem">${v}</dd></div>`)
+      .join('\n')}
+  </dl>`;
+  if (p.bio) html += `<p class="prose" style="max-width:62ch;margin-bottom:1.5rem">${esc(p.bio)}</p>`;
+
+  // career tables — first column = linked match, not dismissal
+  const innOf = (id) => db.innings.find((i) => i.id === id);
+  const matchOf = (inn) => inn && db.matches.find((x) => x.id === inn.matchId);
+  const matchLabel = (m) => {
+    const a = teamsById.get(m?.teamAId);
+    const b = teamsById.get(m?.teamBId);
+    return `${a?.shortCode ?? 'A'} v ${b?.shortCode ?? 'B'} · ${m?.matchDate ?? ''}`;
+  };
+  const batRows = batInns.length
+    ? `<table><thead><tr><th>Match</th><th class="num">R</th><th class="num">B</th><th class="num">4s</th><th class="num">6s</th><th class="num">SR</th><th>Dismissal</th></tr></thead><tbody>${batInns.map((b) => { const m = matchOf(innOf(b.inningsId)); return `<tr><td>${m ? `<a href="/matches/${esc(m.slug)}/">${esc(matchLabel(m))}</a>` : '—'}</td><td class="num">${b.runs}</td><td class="num">${b.balls ? b.balls : '—'}</td><td class="num">${b.fours ?? 0}</td><td class="num">${b.sixes ?? 0}</td><td class="num">${b.strikeRate?.toFixed(2) ?? '—'}</td><td>${esc(b.dismissal || 'not out')}</td></tr>`; }).join('\n')}</tbody></table>`
+    : '';
+
+  const bowlRows = bowlOvers.length
+    ? `<table><thead><tr><th>Match</th><th class="num">O</th><th class="num">M</th><th class="num">R</th><th class="num">W</th><th class="num">Econ</th></tr></thead><tbody>${bowlOvers.map((b) => { const m = matchOf(innOf(b.inningsId)); return `<tr><td>${m ? `<a href="/matches/${esc(m.slug)}/">${esc(matchLabel(m))}</a>` : '—'}</td><td class="num">${b.overs}</td><td class="num">${b.maidens}</td><td class="num">${b.runs}</td><td class="num">${b.wickets}</td><td class="num">${b.economy?.toFixed(2) ?? '—'}</td></tr>`; }).join('\n')}</tbody></table>`
+    : '';
+
+  if (batRows || bowlRows) {
+    html += `<section class="section"><h2>Career statistics</h2><div class="grid" style="margin-top:1rem">`;
+    if (batRows) html += `<div class="table-wrap"><h3 style="margin:.6rem .9rem">Batting</h3>${batRows}</div>`;
+    if (bowlRows) html += `<div class="table-wrap"><h3 style="margin:.6rem .9rem">Bowling</h3>${bowlRows}</div>`;
+    html += `</div></section>`;
+  }
+  writePage(`players/${p.slug}`, html);
+}
+
+// ============================================================
+// TOURNAMENTS
+// ============================================================
+function renderTournaments() {
+  let html = layout({
+    title: 'Tournaments',
+    description: 'Official cricket tournaments organised by the Rewa Cricket Division.',
+    path: '/tournaments/',
+  });
+  html += `<div class="page-head"><p class="eyebrow">Competition</p><h1>Tournaments</h1>
+    <p>Official tournaments as announced by the division.</p></div>`;
+  html += db.tournaments.length
+    ? `<div class="grid grid-2 grid-3">${db.tournaments
+        .map((t) => {
+          const season = seasonsById.get(t.seasonId);
+          const champ = t.championTeamId ? teamsById.get(t.championTeamId) : null;
+          return `<a class="card card-link" href="/tournaments/${esc(t.slug)}/">
+            <p class="eyebrow">${esc(t.format)} · ${season?.year ?? 'Season'}</p>
+            <span class="card-title">${esc(t.name)}</span>
+            <div class="card-meta">${esc(t.status)}${champ ? ` · Champions: ${esc(champ.name)}` : ''}</div>
+          </a>`;
+        })
+        .join('\n')}</div>`
+    : empty('No tournaments published yet', 'Official tournament details will appear here once announced by the Rewa Cricket Division.');
+  html += closeLayout();
+  writePage('tournaments', html);
+}
+
+function renderTournament(t) {
+  const season = seasonsById.get(t.seasonId);
+  const tMatches = db.matches.filter((m) => m.tournamentId === t.id);
+  const champ = t.championTeamId ? teamsById.get(t.championTeamId) : null;
+  let html = layout({
+    title: t.name,
+    description: t.description ?? `${t.name} — a ${t.format} tournament of the Rewa Cricket Division.`,
+    path: `/tournaments/${t.slug}/`,
+    breadcrumbs: [{ name: 'Tournaments', path: '/tournaments/' }, { name: t.name, path: `/tournaments/${t.slug}/` }],
+  });
+  html += `<div class="page-head"><p class="eyebrow">${esc(t.format)}${season ? ` · ${season.year} Season` : ''}</p><h1>${esc(t.name)}</h1><p>Status: ${esc(t.status)}</p></div>`;
+  if (t.description) html += `<p class="prose" style="max-width:62ch;margin-bottom:1rem">${esc(t.description)}</p>`;
+  if (champ) html += `<p class="btn btn-primary" style="margin-bottom:1.5rem">&#127942; Champions: ${esc(champ.name)}</p>`;
+  html += `<section class="section"><div class="section-title"><h2>Matches</h2></div>
+    <div class="grid grid-2">${tMatches.length ? tMatches.map(matchCard).join('\n') : empty('No matches yet', 'Match fixtures for this tournament will be published here when confirmed.')}</div></section>`;
+  html += closeLayout();
+  writePage(`tournaments/${t.slug}`, html);
+}
+
+// ============================================================
+// MATCHES
+// ============================================================
+function renderMatches() {
+  const byDate = [...db.matches].sort(dateSort);
+  let html = layout({
+    title: 'Matches &amp; Results',
+    description: 'Official fixtures, live matches and recent results of the Rewa Cricket Division.',
+    path: '/matches/',
+  });
+  html += `<div class="page-head"><p class="eyebrow">Competition</p><h1>Matches &amp; Results</h1>
+    <p>Official fixtures and completed results as confirmed by the division.</p></div>`;
+  html += byDate.length
+    ? `<div class="grid grid-2 grid-3">${byDate.map(matchCard).join('\n')}</div>`
+    : empty('No matches published yet', 'Official fixtures and results will be listed here once confirmed by the Rewa Cricket Division.');
+  html += closeLayout();
+  writePage('matches', html);
+}
+
+function renderMatch(m) {
+  const teamA = teamsById.get(m.teamAId);
+  const teamB = teamsById.get(m.teamBId);
+  const venue = venuesById.get(m.venueId);
+  const tourn = tourneysById.get(m.tournamentId);
+  const season = seasonsById.get(m.seasonId);
+  const innings = db.innings.filter((i) => i.matchId === m.id).sort((a, b) => a.battingOrder - b.battingOrder);
+  const playersById = new Map(db.players.map((p) => [p.id, p]));
+
+  const title = `${teamA?.name ?? 'Team A'} v ${teamB?.name ?? 'Team B'}`;
+  let html = layout({
+    title,
+    description: m.resultText ?? `Match between ${teamA?.name ?? 'Team A'} and ${teamB?.name ?? 'Team B'} · ${tourn?.name ?? 'Match'} · ${dateTxt(m)}`,
+    path: `/matches/${m.slug}/`,
+    breadcrumbs: [{ name: 'Matches', path: '/matches/' }, { name: title, path: `/matches/${m.slug}/` }],
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'SportsEvent',
+      name: title,
+      url: absUrl(`/matches/${m.slug}/`),
+      startDate: m.matchDate ?? undefined,
+      sport: 'Cricket',
+      ...(venue ? { location: { '@type': 'Place', name: venue.name } } : {}),
+      organizer: { '@type': 'SportsOrganization', name: org.name },
+      ...(teamA && teamB ? { competitor: [{ '@type': 'SportsTeam', name: teamA.name }, { '@type': 'SportsTeam', name: teamB.name }] } : {}),
+      ...(m.resultText ? { description: m.resultText } : {}),
+    },
+  });
+
+  html += `<div class="card" style="margin-bottom:2rem">
+    <p class="eyebrow">${esc(tourn?.name ?? 'Match')}${season ? ` · ${season.year} Season` : ''}</p>
+    <h1 style="margin-top:.25rem">${esc(title)}</h1>
+    <p class="card-meta">${esc(dateTxt(m))}${m.startTime ? ' at ' + esc(m.startTime) : ''}${venue ? ` · ${esc(venue.name)}` : ''}${venue?.city ? `, ${esc(venue.city)}` : ''}</p>
+    ${m.resultText ? `<p class="btn btn-primary" style="margin-top:1rem;pointer-events:none">${esc(m.resultText)}</p>` : ''}
+  </div>
+  <section><h2>Scorecard</h2>
+  ${
+    innings.length
+      ? `<div class="grid" style="margin-top:1rem">${innings
+          .map((inn) => {
+            const team = teamsById.get(inn.teamId);
+            const bat = db.batting.filter((b) => b.inningsId === inn.id);
+            const bowl = db.bowling.filter((b) => b.inningsId === inn.id);
+            let out = `<div class="card table-wrap"><h3 style="margin-bottom:.5rem">${esc(team?.name ?? 'Team')} ${inn.runs != null ? inn.runs + '/' + (inn.wickets ?? '') : ''}${inn.overs != null ? ` (${inn.overs} ov)` : ''}</h3>`;
+            if (bat.length) {
+              out += `<table><thead><tr><th>Batter</th><th class="num">R</th><th class="num">B</th><th class="num">4s</th><th class="num">6s</th><th class="num">SR</th></tr></thead><tbody>${bat
+                .map((b) => {
+                  const p = playersById.get(b.playerId);
+                  return `<tr><td><a href="/players/${esc(p?.slug ?? '')}/">${esc(p?.name ?? '—')}</a><div class="card-meta">${esc(b.dismissal || (b.notOut ? 'not out' : ''))}</div></td><td class="num">${b.runs}</td><td class="num">${b.balls ? b.balls : '—'}</td><td class="num">${b.fours ?? 0}</td><td class="num">${b.sixes ?? 0}</td><td class="num">${b.strikeRate?.toFixed(2) ?? '—'}</td></tr>`;
+                })
+                .join('\n')}</tbody></table>`;
+            }
+            if (bowl.length) {
+              out += `<h3 style="margin:.75rem 0 .5rem;font-size:.95rem">Bowling</h3><table><thead><tr><th>Bowler</th><th class="num">O</th><th class="num">M</th><th class="num">R</th><th class="num">W</th><th class="num">Econ</th></tr></thead><tbody>${bowl
+                .map((b) => {
+                  const p = playersById.get(b.playerId);
+                  return `<tr><td><a href="/players/${esc(p?.slug ?? '')}/">${esc(p?.name ?? '—')}</a></td><td class="num">${b.overs}</td><td class="num">${b.maidens}</td><td class="num">${b.runs}</td><td class="num">${b.wickets}</td><td class="num">${b.economy?.toFixed(2) ?? '—'}</td></tr>`;
+                })
+                .join('\n')}</tbody></table>`;
+            }
+            if (!bat.length && !bowl.length) out += `<p class="card-meta">Full scorecard not yet available.</p>`;
+            return out + `</div>`;
+          })
+          .join('\n')}</div>`
+      : `<p class="card-meta" style="margin-top:1rem">The official scorecard for this match is not yet available.</p>`
+  }
+  </section>`;
+
+  if (m.notes && m.notes.trim()) {
+    html += `<section class="section"><h2>Match notes &amp; commentary</h2>
+      <div class="card prose notes-box"><pre>${esc(m.notes)}</pre></div></section>`;
+  }
+  html += closeLayout();
+  writePage(`matches/${m.slug}`, html);
+}
+
+// ============================================================
+// STATIC MINI-PAGES
+// ============================================================
+function renderStatic({ file, title, description, path, body, jsonLd = [] }) {
+  let html = layout({ title, description, path, jsonLd });
+  html += body;
+  html += closeLayout();
+  writePage(file, html);
+}
+
+// ============================================================
+// VENUES
+// ============================================================
+function renderVenues() {
+  let html = layout({
+    title: 'Venues',
+    description: 'Official cricket venues used by the Rewa Cricket Division.',
+    path: '/venues/',
+  });
+  html += `<div class="page-head"><p class="eyebrow">Grounds</p><h1>Venues</h1>
+    <p>Official venues as confirmed by the division.</p></div>`;
+  html += db.venues.length
+    ? `<div class="grid grid-2 grid-3">${db.venues
+        .map(
+          (v) => `<a class="card card-link" href="/venues/${esc(v.slug)}/">
+            <span class="card-title">${esc(v.name)}</span>
+            <div class="card-meta">${esc([v.city, v.state].filter(Boolean).join(', ') || 'Rewa')}</div>
+            ${v.capacity ? `<div class="card-meta">Capacity: ${v.capacity.toLocaleString()}</div>` : ''}
+          </a>`,
+        )
+        .join('\n')}</div>`
+    : empty('No venues published yet', 'Official venue details will appear here once confirmed by the Rewa Cricket Division.');
+  html += closeLayout();
+  writePage('venues', html);
+}
+
+function renderVenue(v) {
+  const vMatches = db.matches.filter((m) => m.venueId === v.id);
+  let html = layout({
+    title: v.name,
+    description: `${v.name} — a cricket venue of the Rewa Cricket Division${v.city ? ` in ${v.city}` : ''}.`,
+    path: `/venues/${v.slug}/`,
+    breadcrumbs: [{ name: 'Venues', path: '/venues/' }, { name: v.name, path: `/venues/${v.slug}/` }],
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'Place',
+      name: v.name,
+      url: absUrl(`/venues/${v.slug}/`),
+      ...(v.city || v.state
+        ? { address: { '@type': 'PostalAddress', addressLocality: v.city, addressRegion: v.state } }
+        : {}),
+    },
+  });
+  html += `<div class="page-head"><h1>${esc(v.name)}</h1><p>${esc([v.city, v.state].filter(Boolean).join(', ') || 'Rewa, Madhya Pradesh')}</p></div>`;
+  if (v.description) html += `<p class="prose" style="max-width:62ch;margin-bottom:1.5rem">${esc(v.description)}</p>`;
+  html += `<section class="section"><h2>Matches at this venue</h2>
+    <div class="grid grid-2" style="margin-top:1rem">${vMatches.length ? vMatches.map(matchCard).join('\n') : empty('No matches recorded here yet', 'Match details for this venue will appear here when confirmed.')}</div></section>`;
+  html += closeLayout();
+  writePage(`venues/${v.slug}`, html);
+}
+
+// ============================================================
+// NEWS
+// ============================================================
+function renderNews() {
+  const sorted = [...db.announcements].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  let html = layout({
+    title: 'News &amp; Announcements',
+    description: 'Official news and announcements from the Rewa Cricket Division.',
+    path: '/news/',
+  });
+  html += `<div class="page-head"><p class="eyebrow">Official</p><h1>News &amp; Announcements</h1></div>`;
+  html += sorted.length
+    ? `<div class="grid grid-2">${sorted
+        .map(
+          (n) => `<a class="card card-link" href="/news/${esc(n.slug)}/">
+            <p class="eyebrow">${esc(n.category ?? 'Announcement')} · ${esc(n.publishedAt)}</p>
+            <span class="card-title">${esc(n.title)}</span>
+            <p class="card-meta" style="margin-top:.4rem">${esc(n.body.slice(0, 120))}</p>
+          </a>`,
+        )
+        .join('\n')}</div>`
+    : empty('No announcements yet', 'Official announcements from the Rewa Cricket Division will appear here.');
+  html += closeLayout();
+  writePage('news', html);
+}
+
+function renderNewsItem(n) {
+  let html = layout({
+    title: n.title,
+    description: n.body.slice(0, 155),
+    path: `/news/${n.slug}/`,
+    breadcrumbs: [{ name: 'News', path: '/news/' }, { name: n.title, path: `/news/${n.slug}/` }],
+    ogType: 'article',
+  });
+  html += `<article class="prose" style="max-width:720px">
+    <p class="eyebrow">${esc(n.category ?? 'Announcement')} · ${esc(n.publishedAt)}</p>
+    <h1 style="margin-top:.25rem">${esc(n.title)}</h1>
+    <p style="font-size:1.1rem;margin-top:1rem">${esc(n.body)}</p>
+    <p style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem">Published by the ${esc(org.name)}.</p>
+  </article>`;
+  html += closeLayout();
+  writePage(`news/${n.slug}`, html);
+}
+
+// ============================================================
+// AGGREGATE PAGES (live / stats / records / points-tables / seasons)
+// ============================================================
+function renderLive() {
+  const live = db.matches.filter((m) => m.status === 'live');
+  const recent = db.matches.filter((m) => m.status === 'completed' || m.status === 'abandoned').sort(dateSort);
+  let html = layout({
+    title: 'Live &amp; Recent Results',
+    description: 'Live match updates and recent results from the Rewa Cricket Division.',
+    path: '/live/',
+  });
+  html += `<div class="page-head"><p class="eyebrow">Scoreboard</p><h1>Live &amp; Recent Results</h1></div>
+  <section class="section"><div class="section-title"><h2>&#128308; Live Now</h2></div>
+  ${live.length ? `<div class="grid grid-2">${live.map(matchCard).join('\n')}</div>` : `<p class="card-meta">No matches are currently live.</p>`}</section>
+  <section class="section"><h2>Recent Results</h2>
+  <div class="grid grid-2 grid-3" style="margin-top:1rem">${recent.length ? recent.map(matchCard).join('\n') : empty('No results published yet', 'Official results will appear here once confirmed by the Rewa Cricket Division.')}</div></section>`;
+  html += closeLayout();
+  writePage('live', html);
+}
+
+function renderAggregate({ file, title, description, path, body }) {
+  let html = layout({ title, description, path });
+  html += body;
+  html += closeLayout();
+  writePage(file, html);
+}
+
+// ============================================================
+// STATS — computed leaderboards from verified match data
+// ============================================================
+function statsBody() {
+  const playersById = new Map(db.players.map((p) => [p.id, p]));
+  // run aggregation (batting)
+  const runAgg = new Map();
+  for (const b of db.batting) {
+    if (!runAgg.has(b.playerId)) runAgg.set(b.playerId, { runs: 0, inn: 0, fours: 0, sixes: 0, hs: 0 });
+    const a = runAgg.get(b.playerId);
+    a.runs += b.runs || 0;
+    a.inn += 1;
+    a.fours += b.fours || 0;
+    a.sixes += b.sixes || 0;
+    if ((b.runs || 0) > a.hs) a.hs = b.runs || 0;
+  }
+  const topRuns = [...runAgg.entries()]
+    .map(([id, a]) => ({ name: playersById.get(id)?.name ?? '—', slug: playersById.get(id)?.slug ?? '', ...a }))
+    .sort((a, b) => b.runs - a.runs)
+    .slice(0, 10);
+  // wicket aggregation
+  const wktAgg = new Map();
+  for (const w of db.bowling) {
+    if (!wktAgg.has(w.playerId)) wktAgg.set(w.playerId, { wkts: 0, runs: 0, overs: 0, econ: [] });
+    const a = wktAgg.get(w.playerId);
+    a.wkts += w.wickets || 0;
+    a.runs += w.runs || 0;
+    a.overs += w.overs || 0;
+  }
+  const topWkts = [...wktAgg.entries()]
+    .map(([id, a]) => ({ name: playersById.get(id)?.name ?? '—', slug: playersById.get(id)?.slug ?? '', ...a, econ: a.overs ? +(a.runs / a.overs).toFixed(2) : '—' }))
+    .filter((x) => x.wkts > 0)
+    .sort((a, b) => b.wkts - a.wkts)
+    .slice(0, 10);
+
+  const runRows = topRuns.length
+    ? `<div class="table-wrap"><h3 style="margin:.6rem .9rem">Top run-scorers</h3><table><thead><tr><th>Player</th><th class="num">Inn</th><th class="num">Runs</th><th class="num">HS</th><th class="num">4s</th><th class="num">6s</th></tr></thead><tbody>${topRuns
+        .map((r, i) => `<tr><td><span style="color:var(--muted);margin-right:.5rem">${i + 1}</span><a href="/players/${esc(r.slug)}/">${esc(r.name)}</a></td><td class="num">${r.inn}</td><td class="num"><strong>${r.runs}</strong></td><td class="num">${r.hs}</td><td class="num">${r.fours}</td><td class="num">${r.sixes}</td></tr>`)
+        .join('\n')}</tbody></table></div>`
+    : '';
+  const wktRows = topWkts.length
+    ? `<div class="table-wrap"><h3 style="margin:.6rem .9rem">Top wicket-takers</h3><table><thead><tr><th>Player</th><th class="num">Overs</th><th class="num">Runs</th><th class="num">Wickets</th><th class="num">Econ</th></tr></thead><tbody>${topWkts
+        .map((w, i) => `<tr><td><span style="color:var(--muted);margin-right:.5rem">${i + 1}</span><a href="/players/${esc(w.slug)}/">${esc(w.name)}</a></td><td class="num">${w.overs}</td><td class="num">${w.runs}</td><td class="num"><strong>${w.wkts}</strong></td><td class="num">${w.econ}</td></tr>`)
+        .join('\n')}</tbody></table></div>`
+    : '';
+  return `<div class="grid" style="grid-template-columns:1fr">${runRows}${wktRows}</div>`;
+}
+
+const aggregates = [
+  {
+    file: 'stats',
+    title: 'Statistics',
+    description: 'Official statistics of the Rewa Cricket Division — computed from verified match data.',
+    path: '/stats/',
+    body: `<div class="page-head"><p class="eyebrow">Numbers</p><h1>Statistics</h1><p>All statistics are computed automatically from official, verified match records.</p></div>`
+      + (db.batting.length || db.bowling.length
+        ? statsBody()
+        : empty('Statistics pending data', 'Statistics are generated only from verified match records. They will appear here once official data is published.')),
+  },
+  {
+    file: 'records',
+    title: 'Records',
+    description: 'Official records of the Rewa Cricket Division — derived from verified match data.',
+    path: '/records/',
+    body: `<div class="page-head"><p class="eyebrow">Milestones</p><h1>Records</h1><p>Records are derived automatically from official, verified match statistics.</p></div>`
+      + (db.matches.length
+        ? `<div class="stat-grid">
+            ${[['Matches played', db.matches.length], ['Tournaments', db.tournaments.length], ['Teams', db.teams.length], ['Players', db.players.length], ['Seasons', db.seasons.length], ['Venues', db.venues.length]]
+              .map(([k, v]) => `<div class="card stat"><div class="stat-value">${v}</div><div class="stat-label">${k}</div></div>`)
+              .join('\n')}
+          </div>`
+        : empty('Records pending data', 'Records will appear here once official match data is published.')),
+  },
+  {
+    file: 'points-tables',
+    title: 'Points Tables',
+    description: 'Official points tables for Rewa Cricket Division tournaments.',
+    path: '/points-tables/',
+    body: `<div class="page-head"><p class="eyebrow">Standings</p><h1>Points Tables</h1><p>Standings are computed from official match results only.</p></div>`
+      + (db.tournaments.filter((t) => t.status === 'ongoing' || t.status === 'completed').length
+        ? db.tournaments.filter((t) => t.status === 'ongoing' || t.status === 'completed').map((t) =>
+            `<section class="section"><h2>${esc(t.name)}</h2>
+            <div class="table-wrap" style="margin-top:1rem"><table><thead><tr><th>Team</th><th class="num">P</th><th class="num">W</th><th class="num">L</th><th class="num">NR</th><th class="num">Pts</th></tr></thead><tbody>
+            ${db.teams.map((tm, i) => `<tr><td><span style="color:var(--muted);margin-right:.5rem">${i + 1}</span><a href="/teams/${esc(tm.slug)}/">${esc(tm.name)}</a></td><td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr>`).join('\n')}
+            </tbody></table></div></section>`).join('\n')
+        : empty('No points tables yet', 'Points tables will be published here for ongoing and completed tournaments.')),
+  },
+  {
+    file: 'seasons',
+    title: 'Seasons',
+    description: 'Season archives of the Rewa Cricket Division.',
+    path: '/seasons/',
+    body: `<div class="page-head"><p class="eyebrow">Archive</p><h1>Seasons</h1></div>`
+      + (db.seasons.length
+        ? `<div class="grid grid-4">${[...db.seasons].sort((a, b) => b.year - a.year).map((s) => `<a class="card card-link" href="/seasons/${s.year}/"><div class="stat-value">${s.year}</div><div class="stat-label">${esc(s.status)}</div></a>`).join('\n')}</div>`
+        : empty('No seasons published yet', 'Season archives will appear here once confirmed by the Rewa Cricket Division.')),
+  },
+];
+
+// ============================================================
+// SITEMAP + ROBOTS
+// ============================================================
+function writeSitemap() {
+  const locs = [...new Set(pages)].sort();
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${locs.map((p) => `  <url><loc>${absUrl(p)}</loc></url>`).join('\n')}
+</urlset>
+`;
+  writeFileSync(join(DIST, 'sitemap.xml'), xml);
+}
+
+function writeRobots() {
+  const txt = `User-agent: *
+Allow: /
+Disallow: /admin/
+
+Sitemap: ${absUrl('/sitemap.xml')}
+`;
+  writeFileSync(join(DIST, 'robots.txt'), txt);
+}
+
+// ---------- build ----------
+mkdirSync(DIST, { recursive: true });
+
+renderHome();
+db.teams.forEach(renderTeam);
+renderTeams();
+db.players.forEach(renderPlayer);
+renderPlayers();
+db.tournaments.forEach(renderTournament);
+renderTournaments();
+db.matches.forEach(renderMatch);
+renderMatches();
+
+renderStatic({
+  file: 'about',
+  title: 'About the Division',
+  description: `About the ${org.name} — the governing body for organised cricket in the Rewa region.`,
+  path: '/about/',
+  jsonLd: [orgLd],
+  body: `<div class="page-head"><p class="eyebrow">Organization</p><h1>About the Division</h1></div>
+  <div class="split">
+    <div class="prose">
+      <p>${esc(org.description)}</p>
+      <h2>Our Competitions</h2>
+      <p>The division organises and administers cricket tournaments, league matches and fixtures across the Rewa region. Official schedules, results, team and player information are published here as they are confirmed.</p>
+      <h2>Accuracy &amp; Integrity</h2>
+      <p>As an official website, all information published — matches, scorecards, statistics, teams, players and results — is sourced from official records. Content is added only when confirmed, and corrections are made through the division's administrative process.</p>
+      <h2>Contact</h2>
+      <p>For official enquiries, use the <a href="/contact/">contact page</a>.</p>
+    </div>
+    <aside>
+      <div class="card">
+        <p class="eyebrow">Division details</p>
+        <dl style="margin-top:.75rem;line-height:1.9">
+          <dt style="color:var(--muted);font-size:.85rem">Name</dt><dd style="font-weight:600">${esc(org.name)}</dd>
+          ${org.headquarters ? `<dt style="color:var(--muted);font-size:.85rem">Headquarters</dt><dd>${esc(org.headquarters)}</dd>` : ''}
+          <dt style="color:var(--muted);font-size:.85rem">Website</dt><dd><a href="${esc(org.website)}">${esc(org.website)}</a></dd>
+        </dl>
+      </div>
+    </aside>
+  </div>`,
+});
+
+renderStatic({
+  file: 'contact',
+  title: 'Contact',
+  description: `Contact the ${org.name} for official enquiries.`,
+  path: '/contact/',
+  body: `<div class="page-head"><p class="eyebrow">Get in touch</p><h1>Contact</h1></div>
+  <div class="split">
+    <div class="card">
+      <h2 style="margin-bottom:.5rem">Official enquiries</h2>
+      <p style="color:var(--muted);font-size:.95rem">For official correspondence with the ${esc(org.name)}, please use the contact details below. This website is operated with the permission of the division.</p>
+      <dl style="margin-top:1rem;line-height:1.9">
+        <dt style="color:var(--muted);font-size:.85rem">Organization</dt><dd style="font-weight:600">${esc(org.name)}</dd>
+        ${org.headquarters ? `<dt style="color:var(--muted);font-size:.85rem">Headquarters</dt><dd>${esc(org.headquarters)}</dd>` : ''}
+        <dt style="color:var(--muted);font-size:.85rem">Email</dt><dd>${org.contactEmail ? `<a href="mailto:${esc(org.contactEmail)}">${esc(org.contactEmail)}</a>` : 'Official contact email to be confirmed'}</dd>
+      </dl>
+    </div>
+    <div class="card">
+      <h2 style="margin-bottom:1rem">Send an enquiry</h2>
+      <form data-contact-form>
+        <div class="field"><label for="name">Name</label><input id="name" name="name" type="text" required /></div>
+        <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required /></div>
+        <div class="field"><label for="subject">Subject</label><input id="subject" name="subject" type="text" /></div>
+        <div class="field"><label for="message">Message</label><textarea id="message" name="message" rows="4" required></textarea></div>
+        <button class="btn btn-primary" type="submit">Send enquiry</button>
+        <p class="form-status hidden" data-contact-status></p>
+      </form>
+    </div>
+  </div>`,
+});
+
+// season detail pages
+for (const s of db.seasons) {
+  const sTournaments = db.tournaments.filter((t) => t.seasonId === s.id);
+  const sMatches = db.matches.filter((m) => m.seasonId === s.id);
+  renderAggregate({
+    file: `seasons/${s.year}`,
+    title: `${s.year} Season`,
+    description: `The ${s.year} cricket season of the Rewa Cricket Division — tournaments, matches and results.`,
+    path: `/seasons/${s.year}/`,
+    body: `<div class="page-head"><p class="eyebrow">Season</p><h1>${s.year} Season</h1><p>Status: ${esc(s.status)}</p></div>
+    <section class="section"><h2>Matches</h2>
+    <div class="grid grid-2" style="margin-top:1rem">${sMatches.length ? sMatches.map(matchCard).join('\n') : empty('No matches yet', `Match details for the ${s.year} season will appear here when confirmed.`)}</div></section>
+    <section class="section"><h2>Tournaments</h2>
+    <div class="grid" style="margin-top:1rem">${sTournaments.length ? sTournaments.map((t) => `<a class="card card-link" href="/tournaments/${esc(t.slug)}/"><span class="card-title">${esc(t.name)}</span><div class="card-meta">${esc(t.format)} · ${esc(t.status)}</div></a>`).join('\n') : `<p class="card-meta">Tournaments for this season will be listed here when announced.</p>`}</div></section>`,
+  });
+}
+
+renderVenues();
+db.venues.forEach(renderVenue);
+renderNews();
+db.announcements.forEach(renderNewsItem);
+renderLive();
+for (const a of aggregates) renderAggregate(a);
+
+writeSitemap();
+writeRobots();
+
+// copy static assets
+for (const [from, to] of [
+  ['css/styles.css', 'css/styles.css'],
+  ['js/main.js', 'js/main.js'],
+]) {
+  mkdirSync(join(DIST, dirname(to)), { recursive: true });
+  copyFileSync(join(SRC, from), join(DIST, to));
+}
+// favicon
+const fav = join(ROOT, 'public', 'favicon.svg');
+if (existsSync(fav)) copyFileSync(fav, join(DIST, 'favicon.svg'));
+
+// public/img (official logos)
+const imgSrc = join(ROOT, 'public', 'img');
+if (existsSync(imgSrc)) {
+  for (const f of readdirSync(imgSrc)) {
+    mkdirSync(join(DIST, 'img'), { recursive: true });
+    copyFileSync(join(imgSrc, f), join(DIST, 'img', f));
+  }
+}
+
+console.log(`✔ Built ${pages.length} pages → dist/`);
+console.log('  pages:', pages.length, '· teams:', db.teams.length, '· players:', db.players.length, '· matches:', db.matches.length);
