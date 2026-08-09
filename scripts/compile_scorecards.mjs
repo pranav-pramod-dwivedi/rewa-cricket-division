@@ -91,16 +91,10 @@ function parseBatting(body) {
     const sr = parseFloat(f[6]) || null;
     const dismissal = f[1] || (runs === 0 ? '—' : 'not out');
     if (/^\d+$/.test(name)) continue;
-    // disambiguate the two numbers after runs: 4s/6s if plausible, else balls/4s
-    let balls = 0, fours = 0, sixes = 0;
-    const n1 = parseInt(f[4], 10) || 0;
-    const n2 = parseInt(f[5], 10) || 0;
-    if (4 * n1 + 6 * n2 <= runs) {
-      fours = n1; sixes = n2;
-    } else {
-      balls = n1; sixes = n2;
-    }
-    rows.push({ name, runs, balls, fours, sixes, dismissal, strikeRate: sr });
+    // columns: [0]=name [1]=dismissal(or empty) [2]='' [3]=R [4]=4s [5]=6s [6]=SR [7]=Min
+    const fours = parseInt(f[4], 10) || 0;
+    const sixes = parseInt(f[5], 10) || 0;
+    rows.push({ name, runs, balls: 0, fours, sixes, dismissal, strikeRate: sr });
   }
   return rows;
 }
