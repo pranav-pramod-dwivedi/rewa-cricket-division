@@ -46,7 +46,8 @@ function inningsBlocks(text) {
   return blocks;
 }
 
-// Batters table rows: each line = name\tdismissal\t\tR\tB\t4s\t6s\tSR\tMin
+// Batters table rows: [0]=name [1]=dismissal(or empty) [2]='' [3]=R [4]=4s [5]=6s [6]=SR [7]=Min
+// Balls are NOT in the flat text (CricHeroes renders them only in web UI) → balls=0 = unknown
 function battingRows(body) {
   const rows = [];
   for (const line of body.split('\n')) {
@@ -54,9 +55,12 @@ function battingRows(body) {
     if (cols.length < 7) continue;
     const name = cols[0];
     if (!name || /^(Extras|Yet to Bat|Fall Of Wickets|Fall of Wickets|Bowlers?$|Did not Bat|Total|Powerplays|Partnerships)/.test(name)) continue;
-    const R = parseInt(cols[3], 10);
-    if (isNaN(R)) continue;
-    rows.push({ name, dismissal: cols[1] || '', runs: R, balls: parseInt(cols[4], 10) || null, fours: parseInt(cols[5], 10) || 0, sixes: parseInt(cols[6], 10) || 0, strikeRate: parseFloat(cols[7]) || null });
+    const runs = parseInt(cols[3], 10);
+    if (isNaN(runs)) continue;
+    const fours = parseInt(cols[4], 10) || 0;
+    const sixes = parseInt(cols[5], 10) || 0;
+    const sr = parseFloat(cols[6]) || null;
+    rows.push({ name, dismissal: cols[1] || '', runs, balls: 0, fours, sixes, strikeRate: sr });
   }
   return rows;
 }

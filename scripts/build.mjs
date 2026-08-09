@@ -178,6 +178,20 @@ const tourneysById = new Map(db.tournaments.map((t) => [t.id, t]));
 const venuesById = new Map(db.venues.map((v) => [v.id, v]));
 const seasonsById = new Map(db.seasons.map((s) => [s.id, s]));
 
+// ---------- official status ----------
+const officialTournamentIds = new Set(db.tournaments.filter((t) => t.category === 'official').map((t) => t.id));
+const matchTournamentOf = new Map(db.matches.map((m) => [m.id, m.tournamentId]));
+const inningsMatchOf = new Map(db.innings.map((i) => [i.id, i.matchId]));
+const officialPlayerIds = new Set();
+for (const p of db.players) {
+  const inOfficial = (card) => officialTournamentIds.has(matchTournamentOf.get(inningsMatchOf.get(card.inningsId)));
+  if (db.batting.some((b) => b.playerId === p.id && inOfficial(b)) || db.bowling.some((b) => b.playerId === p.id && inOfficial(b))) officialPlayerIds.add(p.id);
+}
+const isOfficialPlayer = (pid) => officialPlayerIds.has(pid);
+const isOfficialTournament = (tid) => officialTournamentIds.has(tid);
+const officialBadge = (label = 'Official') => `<span class="badge badge-official">&#10003; ${label}</span>`;
+const officialCardClass = (official) => (official ? ' card-official' : '');
+
 const statusBadge = (s) => {
   const map = {
     scheduled: 'scheduled',
@@ -408,9 +422,10 @@ function renderPlayers() {
     ? `<div class="grid grid-2 grid-3">${db.players
         .map((p) => {
           const team = p.teamId ? teamsById.get(p.teamId) : null;
-          return `<a class="card row-card card-link" href="/players/${esc(p.slug)}/">
+          const official = isOfficialPlayer(p.id);
+          return `<a class="card row-card card-link${officialCardClass(official)}" href="/players/${esc(p.slug)}/">
             <span class="avatar avatar-sm">${esc(p.name.split(' ').map((w) => w[0]).slice(0, 2).join(''))}</span>
-            <span><span class="card-title">${esc(p.name)}</span><div class="card-meta">${esc(p.role)}${team ? ' · ' + esc(team.name) : ''}</div></span>
+            <span><span class="card-title">${esc(p.name)} ${official ? officialBadge() : ''}</span><div class="card-meta">${esc(p.role)}${team ? ' · ' + esc(team.name) : ''}${official ? ' · Official' : ''}</div></span>
           </a>`;
         })
         .join('\n')}</div>`
@@ -440,7 +455,7 @@ function renderPlayer(p) {
       ...(p.bio ? { description: p.bio } : {}),
     },
   });
-  html += `<div class="page-head"><h1>${esc(p.name)}</h1><p>${esc(p.role)}${team ? ` · <a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : ''}</p></div>`;
+  html += `<div class="page-head"><h1>${esc(p.name)} ${isOfficialPlayer(p.id) ? officialBadge() : ''}</h1><p>${esc(p.role)}${team ? ` · <a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : ''}</p></div>`;
   html += `<dl class="card" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:720px;margin-bottom:1.5rem">
     ${[['Role', p.role], team ? ['Team', `<a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>`] : null, p.battingStyle ? ['Batting style', p.battingStyle] : null, p.bowlingStyle ? ['Bowling style', p.bowlingStyle] : null, p.dateOfBirth ? ['Date of birth', p.dateOfBirth] : null, ['Matches', batInns.length || '—'], ['Runs', batRuns || '—'], ['Wickets', bowlWkts || '—']]
       .filter(Boolean)
@@ -490,10 +505,11 @@ function renderTournaments() {
         .map((t) => {
           const season = seasonsById.get(t.seasonId);
           const champ = t.championTeamId ? teamsById.get(t.championTeamId) : null;
-          return `<a class="card card-link" href="/tournaments/${esc(t.slug)}/">
+          const official = isOfficialTournament(t.id);
+          return `<a class="card card-link${officialCardClass(official)}" href="/tournaments/${esc(t.slug)}/">
             <p class="eyebrow">${esc(t.format)} · ${season?.year ?? 'Season'}</p>
-            <span class="card-title">${esc(t.name)}</span>
-            <div class="card-meta">${esc(t.status)}${champ ? ` · Champions: ${esc(champ.name)}` : ''}</div>
+            <span class="card-title">${esc(t.name)} ${official ? officialBadge() : ''}</span>
+            <div class="card-meta">${esc(t.status)}${champ ? ` · Champions: ${esc(champ.name)}` : ''}${official ? ` · ${esc(t.governingBody ?? 'Official')}` : ' · Local/Community'}</div>
           </a>`;
         })
         .join('\n')}</div>`
@@ -512,7 +528,8 @@ function renderTournament(t) {
     path: `/tournaments/${t.slug}/`,
     breadcrumbs: [{ name: 'Tournaments', path: '/tournaments/' }, { name: t.name, path: `/tournaments/${t.slug}/` }],
   });
-  html += `<div class="page-head"><p class="eyebrow">${esc(t.format)}${season ? ` · ${season.year} Season` : ''}</p><h1>${esc(t.name)}</h1><p>Status: ${esc(t.status)}</p></div>`;
+  html += `<div class="page-head"><p class="eyebrow">${esc(t.format)}${season ? ` · ${season.year} Season` : ''}</p><h1>${esc(t.name)} ${isOfficialTournament(t.id) ? officialBadge() : ''}</h1><p>Status: ${esc(t.status)}</p></div>`;
+  if (isOfficialTournament(t.id) && t.governingBody) html += `<p class="badge badge-official">&#10003; ${esc(t.governingBody)} sanctioned</p>`;
   if (t.description) html += `<p class="prose" style="max-width:62ch;margin-bottom:1rem">${esc(t.description)}</p>`;
   if (champ) html += `<p class="btn btn-primary" style="margin-bottom:1.5rem">&#127942; Champions: ${esc(champ.name)}</p>`;
   html += `<section class="section"><div class="section-title"><h2>Matches</h2></div>

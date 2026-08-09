@@ -448,6 +448,44 @@ h3 {
   border-color: var(--brand);
 }
 
+/* Official cards — distinct gold/amber treatment */
+.card-official {
+  border-color: var(--accent);
+  background: linear-gradient(180deg, rgba(200, 162, 74, 0.10), rgba(200, 162, 74, 0.03) 45%, var(--card-bg));
+  box-shadow: 0 0 0 1px rgba(200, 162, 74, 0.35), var(--shadow);
+}
+
+.card-official:hover {
+  border-color: var(--accent-dark);
+  box-shadow: 0 0 0 1px rgba(200, 162, 74, 0.55), 0 6px 18px rgba(200, 162, 74, 0.15);
+}
+
+/* Official badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.14rem 0.5rem;
+  border-radius: 999px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.badge-official {
+  background: var(--accent);
+  color: #1a1405;
+  border: 1px solid var(--accent-dark);
+}
+
+.card-title .badge {
+  margin-left: 0.35rem;
+  transform: translateY(-1px);
+}
+
 .card a.card-link {
   color: var(--ink);
 }
