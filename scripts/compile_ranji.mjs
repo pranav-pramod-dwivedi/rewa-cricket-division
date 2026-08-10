@@ -32,8 +32,8 @@ function getPlayer(name, teamId, role) {
 // Innings blocks: "MP 1st Innings\nMadhya Pradesh 1st Innings\n425-8 d\n(140 Ov)\nBatter\nR\nB\n4s\n6s\nSR"
 function inningsBlocks(text) {
   const blocks = [];
-  // header: SHORT Xth Innings / FULL NAME Xth Innings / SCORE[-W] [d] / (OV Ov)
-  const re = /([A-Z][A-Za-z .'-]+?) (\d+)(?:st|nd|rd|th) Innings\n([A-Z][A-Za-z .'-]+?) \d+(?:st|nd|rd|th) Innings\n(\d{1,4})-(\d{1,2})\s*(d)?\s*\n\s*\(([\d.]+) Ov\)\nBatter\nR\nB\n4s\n6s\nSR/g;
+  // header: SHORT Xth Innings / FULL NAME Xth Innings / SCORE[-W] [d] / (OV Ov) / [div junk] / Batter
+  const re = /([A-Z][A-Za-z .'-]+?) (\d+)(?:st|nd|rd|th) Innings\n([A-Z][A-Za-z .'-]+?) \d+(?:st|nd|rd|th) Innings\n(\d{1,4})-(\d{1,2})\s*(d)?\s*\n[\s\S]{0,120}?\(([\d.]+) Ov\)[\s\S]{0,120}?\nBatter\nR\nB\n4s\n6s\nSR/g;
   let m;
   while ((m = re.exec(text))) {
     const bodyStart = m.index + m[0].length;
@@ -44,7 +44,7 @@ function inningsBlocks(text) {
   }
   // fallback: single-innings format without duplicate name line
   if (!blocks.length) {
-    const re2 = /([A-Z][A-Za-z .'-]+?) (\d+)(?:st|nd|rd|th) Innings\n(\d{1,4})-(\d{1,2})\s*(d)?\s*\n\s*\(([\d.]+) Ov\)\nBatter\nR\nB\n4s\n6s\nSR/g;
+    const re2 = /([A-Z][A-Za-z .'-]+?) (\d+)(?:st|nd|rd|th) Innings\n(\d{1,4})-(\d{1,2})\s*(d)?\s*\n[\s\S]{0,120}?\(([\d.]+) Ov\)[\s\S]{0,120}?\nBatter\nR\nB\n4s\n6s\nSR/g;
     while ((m = re2.exec(text))) {
       const bodyStart = m.index + m[0].length;
       const rest = text.slice(bodyStart);
@@ -138,12 +138,13 @@ function getVenue(name) {
 
 // load captures
 const captures = [];
-for (const f of ['/tmp/ranji_sc.jsonl', '/tmp/ranji_more_sc.jsonl']) {
+for (const f of ['/tmp/ranji_mob3.jsonl']) {
   try {
     for (const l of readFileSync(f, 'utf8').trim().split('\n').filter(Boolean)) {
       try {
         const o = JSON.parse(l);
-        if (o.result && o.result.length > 500) captures.push({ url: o.url, text: o.result });
+        const text = o.text || o.result || '';
+        if (text.length > 500) captures.push({ url: o.url, title: o.title || '', startDate: o.startDate || '', venue: o.venue || '', text });
       } catch {}
     }
   } catch {}

@@ -14,18 +14,27 @@ async function fetchOne(url) {
   const mob = url.replace('www.cricbuzz.com', 'm.cricbuzz.com');
   const res = await fetch(mob, { headers: { 'User-Agent': UA, 'Accept': 'text/html' } });
   const html = await res.text();
-  // extract innings sections from DOM: pair header (team-*) + body (scard-team-*)
-  const sections = [];
-  const pairRe = /id="team-(\d+)-innings-(\d+)"[^>]*>([\s\S]*?)(?=id="team-\d+-innings-\d+"|class="cb-footer)/g;
-  let pm;
-  while ((pm = pairRe.exec(html))) {
-    const headHtml = pm[3] || '';
-    // find matching scard body (same team+innings)
-    const bodyM = html.match(new RegExp('id="scard-team-' + pm[1] + '-innings-' + pm[2] + '"[\s\S]*?(?=id="(?:scard-)?team-\\d+-innings-\\d+"|class="cb-footer|class="cb-col-100 cb-col cb-mtchs-lst)', 'g'));
-    const bodyHtml = bodyM ? bodyM[0] : '';
-    const strip = (h) => h.replace(/<[^>]+>/g, '\n').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/\n{2,}/g, '\n').trim();
-    sections.push(strip(headHtml) + '\n' + strip(bodyHtml));
+  // extract innings: collect header divs and scard bodies independently, pair by (teamId, innings)
+  const headers = {};
+  const hparts = html.split(/id="team-(\d+)-innings-(\d+)"/);
+  for (let i = 1; i + 2 < hparts.length; i += 3) {
+    const key = hparts[i] + '-' + hparts[i + 1];
+    const content = hparts[i + 2] || '';
+    headers[key] = content.slice(0, content.indexOf('id="scard-team-'));
   }
+  const bodies = {};
+  const bparts = html.split(/id="scard-team-(\d+)-innings-(\d+)"/);
+  for (let i = 1; i + 2 < bparts.length; i += 3) {
+    const key = bparts[i] + '-' + bparts[i + 1];
+    const content = bparts[i + 2] || '';
+    // body ends at next scard or footer or team header
+    const endIdx = content.search(/id="scard-team-\d+-innings-\d+"|class="cb-footer|id="team-\d+-innings-\d+"/);
+    bodies[key] = content.slice(0, endIdx < 0 ? content.length : endIdx);
+  }
+  const strip = (h) => h.replace(/<[^>]+>/g, '\n').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/\n{2,}/g, '\n').trim();
+  const sections = [];
+  const keys = [...new Set([...Object.keys(headers), ...Object.keys(bodies)])];
+  for (const k of keys) sections.push(strip(headers[k] || '') + '\n' + strip(bodies[k] || ''));
   let text = '';
   if (sections.length) {
     text = sections.join('\n\n');
