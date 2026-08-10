@@ -40,7 +40,7 @@ function inningsBlocks(text) {
     const rest = text.slice(bodyStart);
     const end = rest.search(/(?=[A-Z][A-Za-z .'-]+? \d+(?:st|nd|rd|th) Innings\n[A-Z][A-Za-z .'-]+? \d+(?:st|nd|rd|th) Innings\n\d{1,4}-\d{1,2})|(?=INFOMatch)/);
     const body = rest.slice(0, end < 0 ? 40000 : end);
-    blocks.push({ team: m[2].trim(), fullTeam: m[3].trim(), runs: parseInt(m[4], 10), wickets: parseInt(m[5], 10), declared: !!m[6], overs: parseFloat(m[7]), body });
+    blocks.push({ team: m[1].trim(), fullTeam: m[3].trim(), runs: parseInt(m[4], 10), wickets: parseInt(m[5], 10), declared: !!m[6], overs: parseFloat(m[7]), body });
   }
   // fallback: single-innings format without duplicate name line
   if (!blocks.length) {

@@ -442,6 +442,18 @@ function renderPlayer(p) {
   const bowlOvers = db.bowling.filter((b) => b.playerId === p.id);
   const batRuns = batInns.reduce((s, b) => s + (b.runs || 0), 0);
   const bowlWkts = bowlOvers.reduce((s, b) => s + (b.wickets || 0), 0);
+  // teams he played for, derived from match history (batting card -> innings team; bowling card -> opposing team)
+  const innById = new Map(db.innings.map((i) => [i.id, i]));
+  const matchByInn = new Map(db.innings.map((i) => [i.id, db.matches.find((m) => m.id === i.matchId)]));
+  const playedTeamIds = new Set();
+  for (const b of batInns) { const inn = innById.get(b.inningsId); if (inn) playedTeamIds.add(inn.teamId); }
+  for (const w of bowlOvers) {
+    const inn = innById.get(w.inningsId);
+    const m = inn && matchByInn.get(inn.id);
+    if (m) playedTeamIds.add(m.teamAId === inn.teamId ? m.teamBId : m.teamAId);
+  }
+  const playedTeams = [...playedTeamIds].map((id) => teamsById.get(id)).filter(Boolean)
+    .sort((a, b) => a.name.localeCompare(b.name));
   let html = layout({
     title: p.name,
     description: `${p.name} — ${p.role}${team ? ` for ${team.name}` : ''}, Rewa Cricket Division${p.battingStyle ? `, ${p.battingStyle}` : ''}.`,
@@ -463,7 +475,10 @@ function renderPlayer(p) {
       .map(([k, v]) => `<div><dt style="font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">${esc(k)}</dt><dd style="font-weight:600;margin-top:.1rem">${v}</dd></div>`)
       .join('\n')}
   </dl>`;
-  if (p.bio) html += `<p class="prose" style="max-width:62ch;margin-bottom:1.5rem">${esc(p.bio)}</p>`;
+  if (p.bio) html += `<section class="section"><h2>About</h2><p class="prose" style="max-width:62ch;margin-top:.6rem">${esc(p.bio)}</p></section>`;
+  if (playedTeams.length) {
+    html += `<section class="section"><h2>Teams</h2><div class="chip-row" style="margin-top:.6rem">${playedTeams.map((t) => `<a class="chip" href="/teams/${esc(t.slug)}/">${esc(t.name)}</a>`).join('')}</div></section>`;
+  }
 
   // career tables — first column = linked match, not dismissal
   const innOf = (id) => db.innings.find((i) => i.id === id);
@@ -646,7 +661,17 @@ function renderTournaments() {
   const officialTs = db.tournaments.filter((t) => isOfficialTournament(t.id));
   const communityTs = db.tournaments.filter((t) => !isOfficialTournament(t.id));
   if (officialTs.length) {
-    html += `<section class="section"><div class="section-title"><h2>Official</h2></div><div class="grid grid-2 grid-3">${officialTs.map(tournCard).join('\n')}</div></section>`;
+    html += `<section class="section"><div class="section-title"><h2>Official</h2></div>`;
+    const groups = new Map();
+    for (const t of officialTs) {
+      const key = t.name.replace(/\s+\d{4}(-\d{2})?$/, '').trim();
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(t);
+    }
+    for (const [gname, ts] of [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
+      html += `<div class="group-block"><div class="group-title"><h3>${esc(gname)}</h3><span class="count-pill">${ts.length} season${ts.length === 1 ? '' : 's'}</span></div><div class="grid grid-2 grid-3">${ts.sort((a, b) => b.name.localeCompare(a.name)).map(tournCard).join('\n')}</div></div>`;
+    }
+    html += `</section>`;
   }
   if (communityTs.length) {
     html += `<section class="section"><hr class="archive-divider"><div class="section-title"><h2>More Tournaments</h2></div><div class="grid grid-2 grid-3">${communityTs.map(tournCard).join('\n')}</div></section>`;

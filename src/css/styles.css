@@ -897,3 +897,12 @@ textarea:focus {
 .skip-link:focus {
   left: 0;
 }
+
+/* player teams chips + tournament grouping */
+.chip-row { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip { display: inline-block; padding: .35rem .8rem; border-radius: 999px; background: var(--bg-soft, rgba(0,0,0,.05)); border: 1px solid rgba(0,0,0,.08); font-size: .85rem; font-weight: 600; text-decoration: none; color: inherit; transition: transform .15s ease, box-shadow .15s ease; }
+.chip:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+.group-block { margin-bottom: 1.75rem; }
+.group-title { display: flex; align-items: center; gap: .6rem; margin-bottom: .8rem; }
+.group-title h3 { margin: 0; }
+.count-pill { background: var(--accent, #0a7d5f); color: #fff; border-radius: 999px; padding: .15rem .65rem; font-size: .72rem; font-weight: 700; letter-spacing: .03em; }
