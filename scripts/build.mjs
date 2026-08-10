@@ -469,6 +469,7 @@ function renderPlayer(p) {
     title: p.name,
     description: `${p.name} — ${p.role}${team ? ` for ${team.name}` : ''}, Rewa Cricket Division${p.battingStyle ? `, ${p.battingStyle}` : ''}.`,
     path: `/players/${p.slug}/`,
+    bodyClass: 'profile',
     breadcrumbs: [{ name: 'Players', path: '/players/' }, { name: p.name, path: `/players/${p.slug}/` }],
     jsonLd: {
       '@context': 'https://schema.org',
@@ -480,7 +481,7 @@ function renderPlayer(p) {
     },
   });
   html += `<div class="page-head"><h1>${esc(p.name)} ${isOfficialPlayer(p.id) ? verifiedTick() : ''}</h1><p>${esc(p.role)}${team ? ` · <a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : ''}</p></div>`;
-  html += `<dl class="card" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:720px;margin-bottom:1.5rem">
+  html += `<dl class="card dl-card" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:720px;margin-bottom:1.5rem">
     ${[['Role', p.role], team ? ['Team', `<a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>`] : null, p.battingStyle ? ['Batting style', p.battingStyle] : null, p.bowlingStyle ? ['Bowling style', p.bowlingStyle] : null, p.dateOfBirth ? ['Born', `${p.dateOfBirth}${age !== null ? ` (${age} years)` : ''}`] : null, p.birthPlace ? ['Birth place', p.birthPlace] : null, ['Matches', batInns.length || '—'], ['Runs', batRuns || '—'], ['Wickets', bowlWkts || '—']]
       .filter(Boolean)
       .map(([k, v]) => `<div><dt style="font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">${esc(k)}</dt><dd style="font-weight:600;margin-top:.1rem">${v}</dd></div>`)
@@ -580,6 +581,7 @@ function renderPlayer(p) {
     if (bowlRows) html += `<div class="table-wrap"><h3 style="margin:.6rem .9rem">Bowling</h3>${bowlRows}</div>`;
     html += `</div></section>`;
   }
+  html += closeLayout();
   writePage(`players/${p.slug}`, html);
 }
 
