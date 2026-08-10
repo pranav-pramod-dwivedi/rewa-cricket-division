@@ -537,6 +537,7 @@ const ARCHIVE = [
     id: 'bcci-competitions',
     name: 'BCCI Competitions',
     desc: 'National BCCI competitions. Rewa players feature for Madhya Pradesh.',
+    dynamic: 'bcci',
     groups: [
       { name: 'Ranji Trophy', tids: [] },
       { name: 'Vijay Hazare Trophy', tids: [] },
@@ -615,7 +616,12 @@ function renderArchiveCategory(cat) {
   html += `<div class="page-head"><p class="eyebrow">Archive</p><h1>${esc(cat.name)}</h1><p>${esc(cat.desc)}</p></div>`;
   if (cat.groups.length) {
     for (const g of cat.groups) {
-      const ts = g.tids.map((id) => tourneysById.get(id)).filter(Boolean);
+      let ts = g.tids.map((id) => tourneysById.get(id)).filter(Boolean);
+      // dynamic BCCI groups: auto-fill from tournaments whose name starts with the group name
+      if (cat.dynamic === 'bcci') {
+        const pat = new RegExp('^' + g.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+        ts = db.tournaments.filter((t) => pat.test(t.name));
+      }
       html += `<section class="section"><div class="section-title"><h2>${esc(g.name)}</h2></div>
         <div class="grid grid-2">${ts.length ? ts.map(tournCard).join('\n') : `<p class="card-meta">Nothing recorded yet — will appear when confirmed.</p>`}</div></section>`;
     }
