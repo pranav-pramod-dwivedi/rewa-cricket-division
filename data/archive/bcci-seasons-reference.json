@@ -1,0 +1,10 @@
+{
+  "note": "Verified edition lists from Wikipedia (fetched 2026-08-10). Use for future all-seasons build.",
+  "ranji": {"first": "1934-35", "last": "2025-26", "annual": true, "cancelled": ["2020-21"], "format": "First-class"},
+  "vijayHazare": {"first": "1993-94", "last": "2025-26", "annual": true, "cancelled": [], "note": "zonal until 2001-02, national from 2002-03", "format": "List A"},
+  "smat": {"first": "2006-07", "last": "2025-26", "annual": true, "cancelled": [], "format": "T20"},
+  "irani": {"first": "1959-60", "last": "2025-26", "annual": false, "notPlayed": ["1960-61","1961-62","1964-65","2020-21","2021-22"], "extra": ["2013"], "format": "First-class"},
+  "duleep": {"first": "1961-62", "last": "2025-26", "annual": false, "notPlayed": ["2015-16","2020-21","2021-22"], "note": "2023 & 2025-26 calendar-year editions", "format": "First-class"},
+  "deodhar": {"first": "1973-74", "last": "2023-24", "annual": false, "notPlayed": ["2020-21","2021-22","2022-23"], "format": "List A"},
+  "ipl": {"first": "2008", "last": "2025", "annual": true, "format": "T20", "rewaPlayer": "Kuldeep Sen (RR 2022-24, PBKS 2025)"}
+}
