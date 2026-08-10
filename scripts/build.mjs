@@ -8,7 +8,7 @@
 // structure; the generated HTML is throwaway.
 // ============================================================
 
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, readdirSync, rmSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -23,6 +23,7 @@ const SITE = (process.env.SITE_URL || 'https://rewacricketdivision.in').replace(
 // ---------- data ----------
 const org = JSON.parse(readFileSync(join(DATA, 'organization.json'), 'utf8'));
 const db = JSON.parse(readFileSync(join(DATA, 'records.json'), 'utf8'));
+const dsyw = JSON.parse(readFileSync(join(DATA, 'dsyw.json'), 'utf8'));
 
 // Production domain (confirmed) — used when SITE_URL is not set.
 // Override per deploy: SITE_URL=https://... npm run build
@@ -100,6 +101,13 @@ function header() {
         ${NAV.map(([name, path]) => `<li><a href="${path}">${name}</a></li>`).join('\n')}
       </ul>
     </nav>
+    <form class="header-search" role="search" action="/search/" method="get">
+      <label class="sr-only" for="q">Search the archive</label>
+      <span class="header-search-icon" aria-hidden="true">&#128269;</span>
+      <input id="q" name="q" type="search" placeholder="Search players, teams, matches…" autocomplete="off" />
+      <button class="header-search-clear" type="button" data-search-clear aria-label="Clear search" hidden>&#10005;</button>
+      <button class="btn btn-primary header-search-go" type="submit">Search</button>
+    </form>
   </div>
 </header>`;
 }
@@ -120,6 +128,8 @@ function footer() {
         <li><a href="/matches/">Matches &amp; Results</a></li>
         <li><a href="/tournaments/">Tournaments</a></li>
         <li><a href="/records/">Records</a></li>
+        <li><a href="/academy/">Women's Cricket Academy</a></li>
+        <li><a href="${esc(dsyw.source)}" rel="noopener">MP Sports &amp; Youth Welfare</a></li>
         <li><a href="/contact/">Contact</a></li>
       </ul>
     </div>
@@ -266,12 +276,21 @@ const websiteLd = {
 
 // ---------- page writers ----------
 const pages = []; // for sitemap
+const pageMeta = []; // for client-side search index
 
 function writePage(relPath, html) {
   const file = join(DIST, relPath, 'index.html');
   mkdirSync(dirname(file), { recursive: true });
   writeFileSync(file, html);
   pages.push(relPath === '' ? '/' : `/${relPath}/`);
+  const t = html.match(/<title>(.*?)<\/title>/s)?.[1] ?? '';
+  const d = html.match(/<meta name="description" content="(.*?)"/s)?.[1] ?? '';
+  pageMeta.push({ path: relPath === '' ? '/' : `/${relPath}/`, title: t.replace(/\s+\| Rewa Cricket Division$/, '').replace(/&amp;/g, '&'), description: d });
+}
+
+function writeSearchIndex() {
+  writeFileSync(join(DIST, 'search-index.json'), JSON.stringify(pageMeta));
+  console.log(`search index: ${pageMeta.length} entries`);
 }
 
 // ---------- sitemap validation ----------
@@ -315,6 +334,58 @@ ${locs.map((p) => `  <url><loc>${absUrl(p)}</loc></url>`).join('\n')}
 // ============================================================
 // HOME
 // ============================================================
+// "What's New" — content from the MP Directorate of Sports & Youth
+// Welfare (dsywmp.gov.in), the parent sports body. Attributed, factual.
+function dsywSection() {
+  const src = dsyw.source;
+  return `<section class="section whats-new">
+    <div class="section-title"><div><p class="eyebrow">Madhya Pradesh Sports</p><h2>What's New — MP Sports &amp; Youth Welfare</h2></div>
+    <a class="link" href="${esc(src)}" rel="noopener" target="_blank">Source: ${esc(dsyw.sourceName)} &nearr;</a></div>
+    <div class="grid grid-2">
+      ${dsyw.whatsNew.map((n) => `<div class="card"><h3 style="font-size:1rem">${esc(n.title)}</h3><p class="card-meta" style="margin-top:.5rem">${esc(n.body)}</p></div>`).join('\n')}
+    </div>
+    <div class="prose" style="max-width:72ch;margin-top:1.5rem"><p>${esc(dsyw.deptIntro)}</p></div>
+    <div class="split" style="margin-top:1.5rem;align-items:start">
+      <div class="stat-grid" style="grid-template-columns:repeat(4,1fr)">
+        ${dsyw.keyStats.map((s) => `<div class="card stat"><div class="stat-value">${esc(s.value)}</div><div class="stat-label">${esc(s.label)}</div></div>`).join('\n')}
+      </div>
+      <ul style="margin-top:.25rem;line-height:2">
+        ${dsyw.leadership.map((l) => `<li><strong>${esc(l.name)}</strong><div class="card-meta">${esc(l.role)}</div></li>`).join('\n')}
+      </ul>
+    </div>
+    <h3 style="margin:2rem 0 .75rem">Press Releases &amp; Updates</h3>
+    <div class="card notes-box" style="max-height:26rem;overflow-y:auto">
+      <ol class="press-list">${dsyw.pressReleases.map((p) => `<li><span class="press-date">${esc(p.date)}</span> ${esc(p.title)}</li>`).join('\n')}</ol>
+    </div>
+    <h3 style="margin:2rem 0 .75rem">Important Events &amp; Schemes</h3>
+    <div class="grid grid-2 grid-3">
+      ${dsyw.importantEvents.map((e) => `<div class="card"><h3 style="font-size:1rem">${esc(e.title)}</h3><p class="card-meta" style="margin-top:.5rem">${esc(e.body)}</p></div>`).join('\n')}
+    </div>
+    <div class="split" style="margin-top:1.5rem">
+      <div class="card"><h3 style="font-size:1rem">Khelo India</h3><p class="card-meta" style="margin-top:.5rem">${esc(dsyw.kheloIndia)}</p></div>
+      <div class="card"><h3 style="font-size:1rem">Sports Science Centre</h3><p class="card-meta" style="margin-top:.5rem">${esc(dsyw.sportsScience)}</p></div>
+    </div>
+    <p class="card-meta" style="margin-top:1rem">Content reproduced from the official MP Directorate of Sports &amp; Youth Welfare website (<a href="${esc(src)}" rel="noopener" target="_blank">${esc(src.replace('https://', ''))}</a>) for reference. Check the source for the latest official updates.</p>
+  </section>`;
+}
+
+function academyCard() {
+  const a = dsyw.academy;
+  return `<section class="section">
+    <div class="split" style="align-items:center">
+      <div class="prose">
+        <p class="eyebrow">State Academy</p>
+        <h2>${esc(a.title)}</h2>
+        <p>${esc(a.body.slice(0, 220))}…</p>
+        <p style="margin-top:1rem"><a class="btn btn-primary" href="/academy/">Visit the academy page</a> <a class="btn btn-ghost" href="${esc(a.pageUrl)}" rel="noopener" target="_blank">Original source &nearr;</a></p>
+      </div>
+      <a class="card" style="min-width:240px" href="/academy/">
+        <img src="/img/academy/Cricket_Logo.jpg" alt="${esc(a.title)} — emblem" width="240" height="193" loading="lazy" />
+      </a>
+    </div>
+  </section>`;
+}
+
 function renderHome() {
   const recent = [...db.matches].sort(dateSort).slice(0, 4);
   const news = [...db.announcements].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)).slice(0, 3);
@@ -424,6 +495,8 @@ function renderHome() {
       <div class="card"><h3 style="font-size:1rem">Board of Control for Cricket in India</h3><p class="card-meta">National governing body — state and national competitions archive.</p><p style="margin-top:.6rem"><a href="https://www.bcci.tv" rel="noopener" target="_blank">bcci.tv &nearr;</a></p></div>
     </div>
   </section>
+  ${dsywSection()}
+  ${academyCard()}
   </div>`;
 
   html += closeLayout();
@@ -1260,6 +1333,65 @@ db.matches.forEach(renderMatch);
 renderMatches();
 
 renderStatic({
+  file: 'search',
+  title: 'Search',
+  description: `Search the ${org.name} archive — players, teams, matches, tournaments, venues and more.`,
+  path: '/search/',
+  body: `<div class="page-head"><p class="eyebrow">Find it</p><h1>Search the Archive</h1>
+    <p>Search every player, team, match, tournament, venue and page in the Rewa Cricket Division archive.</p></div>
+  <form class="search-page-form" role="search" action="/search/" method="get">
+    <label class="sr-only" for="sq">Search</label>
+    <input id="sq" name="q" type="search" placeholder="e.g. Kuldeep Sen, Ranji Trophy, Rewa Jaguars…" autocomplete="off" />
+    <button class="btn btn-primary" type="submit">Search</button>
+    <button class="btn btn-ghost" type="button" data-search-clear aria-label="Clear search">Clear</button>
+  </form>
+  <p class="search-count hidden" data-search-count></p>
+  <div class="search-results" data-search-results>
+    <p class="card-meta">Type a query above and press Search, or use the search box in the header.</p>
+  </div>`,
+});
+
+renderStatic({
+  file: 'academy',
+  title: dsyw.academy.title,
+  description: `${dsyw.academy.title} — established ${dsyw.academy.established}, with a dedicated cricket stadium, fitness center, hostel and more. Rewa Cricket Division archive.`,
+  path: '/academy/',
+  jsonLd: [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'EducationalOrganization',
+      name: dsyw.academy.title,
+      url: absUrl('/academy/'),
+      description: dsyw.academy.body,
+      address: { '@type': 'PostalAddress', addressLocality: 'Shivpuri', addressRegion: 'Madhya Pradesh', addressCountry: 'IN' },
+      parentOrganization: { '@type': 'SportsOrganization', name: dsyw.sourceName },
+    },
+  ],
+  body: `<div class="page-head"><p class="eyebrow">State Academy · Established ${esc(dsyw.academy.established)}</p><h1>${esc(dsyw.academy.title)}</h1></div>
+  <div class="split">
+    <div class="prose">
+      <p>${esc(dsyw.academy.body)}</p>
+      <h2>Facilities</h2>
+      <ul>${dsyw.academy.facilities.map((f) => `<li>${esc(f)}</li>`).join('\n')}</ul>
+      <p class="card-meta" style="margin-top:1.5rem">Content reproduced from the official MP Directorate of Sports &amp; Youth Welfare page (<a href="${esc(dsyw.academy.pageUrl)}" rel="noopener" target="_blank">${esc(dsyw.academy.pageUrl.replace('https://', ''))}</a>).</p>
+    </div>
+    <aside>
+      <div class="card">
+        <img src="/img/academy/Cricket_Logo.jpg" alt="${esc(dsyw.academy.title)} — emblem" width="240" height="193" loading="lazy" />
+        <p class="card-meta" style="margin-top:.75rem">MP State Women's Cricket Academy of Excellence, Shivpuri.</p>
+      </div>
+    </aside>
+  </div>
+  <section class="section">
+    <div class="section-title"><div><p class="eyebrow">Cricket Academy Gallery</p><h2>Gallery</h2></div></div>
+    <div class="gallery-grid">${dsyw.academy.gallery
+      .map((g) => `<a class="card gallery-item" href="${esc(g.src)}"><img src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" width="640" height="480" /></a>`)
+      .join('\n')}</div>
+    <p class="card-meta" style="margin-top:1rem">Photographs © MP Directorate of Sports &amp; Youth Welfare.</p>
+  </section>`,
+});
+
+renderStatic({
   file: '404',
   title: 'Page not found',
   description: 'The page you requested could not be found in the Rewa Cricket Division archive.',
@@ -1334,22 +1466,22 @@ renderStatic({
       <dl style="margin-top:1rem;line-height:1.9">
         <dt style="color:var(--muted);font-size:.85rem">Organization</dt><dd style="font-weight:600">${esc(org.name)}</dd>
         ${org.headquarters ? `<dt style="color:var(--muted);font-size:.85rem">Headquarters</dt><dd>${esc(org.headquarters)}</dd>` : ''}
-        ${org.address ? `<dt style="color:var(--muted);font-size:.85rem">Address</dt><dd>${esc(org.address)}</dd>` : ''}
-        <dt style="color:var(--muted);font-size:.85rem">Email</dt><dd>${org.contactEmail ? `<a href="mailto:${esc(org.contactEmail)}">${esc(org.contactEmail)}</a>` : 'Official contact email to be confirmed by the division'}</dd>
-        <dt style="color:var(--muted);font-size:.85rem">Phone</dt><dd>${org.contactPhone ? esc(org.contactPhone) : 'Official contact number to be confirmed by the division'}</dd>
+        <dt style="color:var(--muted);font-size:.85rem">Address</dt><dd>${esc(dsyw.contact.address)}</dd>
+        <dt style="color:var(--muted);font-size:.85rem">Email</dt><dd><a href="mailto:${esc(dsyw.contact.email)}">${esc(dsyw.contact.email)}</a></dd>
+        <dt style="color:var(--muted);font-size:.85rem">Phone</dt><dd><a href="${esc(dsyw.contact.mapsUrl)}" rel="noopener" target="_blank">${esc(dsyw.contact.phone)} &nearr;</a></dd>
         <dt style="color:var(--muted);font-size:.85rem">Website</dt><dd><a href="${esc(org.website)}">${esc(org.website)}</a></dd>
       </dl>
     </div>
     <div class="card">
-      <h2 style="margin-bottom:1rem">Send an enquiry</h2>
-      <form data-contact-form ${org.contactEmail ? `data-contact-email="${esc(org.contactEmail)}"` : ''}>
-        <div class="field"><label for="name">Name</label><input id="name" name="name" type="text" required /></div>
-        <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required /></div>
-        <div class="field"><label for="subject">Subject</label><input id="subject" name="subject" type="text" /></div>
-        <div class="field"><label for="message">Message</label><textarea id="message" name="message" rows="4" required></textarea></div>
-        <button class="btn btn-primary" type="submit">Send enquiry</button>
-        <p class="form-status hidden" data-contact-status></p>
-      </form>
+      <h2 style="margin-bottom:.5rem">Sports &amp; Youth Welfare Directorate</h2>
+      <p style="color:var(--muted);font-size:.95rem">Correspondence is handled through the MP Directorate of Sports &amp; Youth Welfare, the state sports body under which the division operates.</p>
+      <dl style="margin-top:1rem;line-height:1.9">
+        <dt style="color:var(--muted);font-size:.85rem">Directorate</dt><dd style="font-weight:600">${esc(dsyw.sourceName)}</dd>
+        <dt style="color:var(--muted);font-size:.85rem">Address</dt><dd>${esc(dsyw.contact.address)}</dd>
+        <dt style="color:var(--muted);font-size:.85rem">Email</dt><dd><a href="mailto:${esc(dsyw.contact.email)}">${esc(dsyw.contact.email)}</a></dd>
+        <dt style="color:var(--muted);font-size:.85rem">Phone</dt><dd><a href="${esc(dsyw.contact.mapsUrl)}" rel="noopener" target="_blank">${esc(dsyw.contact.phone)} &nearr;</a></dd>
+        <dt style="color:var(--muted);font-size:.85rem">Website</dt><dd><a href="${esc(dsyw.source)}" rel="noopener" target="_blank">${esc(dsyw.source.replace('https://', ''))} &nearr;</a></dd>
+      </dl>
     </div>
   </div>
   <section class="section">
@@ -1357,6 +1489,7 @@ renderStatic({
     <div class="grid grid-2 grid-3">
       <div class="card"><h3 style="font-size:1rem">Rewa District</h3><p class="card-meta">Government of Madhya Pradesh — official district portal of Rewa (सफ़ेद शेरों की धरती).</p><p style="margin-top:.6rem"><a href="https://rewa.nic.in" rel="noopener" target="_blank">rewa.nic.in &nearr;</a></p></div>
       <div class="card"><h3 style="font-size:1rem">Madhya Pradesh Government</h3><p class="card-meta">State government portal — parent administration of Rewa district.</p><p style="margin-top:.6rem"><a href="https://www.mp.gov.in" rel="noopener" target="_blank">mp.gov.in &nearr;</a></p></div>
+      <div class="card"><h3 style="font-size:1rem">Sports &amp; Youth Welfare Department</h3><p class="card-meta">State sports directorate — academies, schemes and notifications.</p><p style="margin-top:.6rem"><a href="${esc(dsyw.source)}" rel="noopener" target="_blank">dsywmp.gov.in &nearr;</a></p></div>
       <div class="card"><h3 style="font-size:1rem">Board of Control for Cricket in India</h3><p class="card-meta">National cricket governing body — domestic competitions and records.</p><p style="margin-top:.6rem"><a href="https://www.bcci.tv" rel="noopener" target="_blank">bcci.tv &nearr;</a></p></div>
       <div class="card"><h3 style="font-size:1rem">Madhya Pradesh Cricket Association</h3><p class="card-meta">State cricket body — the MPCA website link will be added once its official address is confirmed.</p></div>
       <div class="card"><h3 style="font-size:1rem">Cricbuzz</h3><p class="card-meta">International cricket scores and player career statistics — used as a reference source.</p><p style="margin-top:.6rem"><a href="https://www.cricbuzz.com" rel="noopener" target="_blank">cricbuzz.com &nearr;</a></p></div>
@@ -1389,6 +1522,7 @@ db.announcements.forEach(renderNewsItem);
 renderLive();
 for (const a of aggregates) renderAggregate(a);
 
+writeSearchIndex();
 writeSitemap();
 writeRobots();
 
@@ -1404,14 +1538,18 @@ for (const [from, to] of [
 const fav = join(ROOT, 'public', 'favicon.svg');
 if (existsSync(fav)) copyFileSync(fav, join(DIST, 'favicon.svg'));
 
-// public/img (official logos)
+// public/img (official logos) — recursive copy
 const imgSrc = join(ROOT, 'public', 'img');
-if (existsSync(imgSrc)) {
-  for (const f of readdirSync(imgSrc)) {
-    mkdirSync(join(DIST, 'img'), { recursive: true });
-    copyFileSync(join(imgSrc, f), join(DIST, 'img', f));
+function copyDir(src, dst) {
+  mkdirSync(dst, { recursive: true });
+  for (const f of readdirSync(src)) {
+    const s = join(src, f);
+    const d = join(dst, f);
+    if (existsSync(s) && statSync(s).isDirectory()) copyDir(s, d);
+    else copyFileSync(s, d);
   }
 }
+if (existsSync(imgSrc)) copyDir(imgSrc, join(DIST, 'img'));
 
 console.log(`✔ Built ${pages.length} pages → dist/`);
 console.log('  pages:', pages.length, '· teams:', db.teams.length, '· players:', db.players.length, '· matches:', db.matches.length);

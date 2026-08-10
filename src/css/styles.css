@@ -932,3 +932,153 @@ textarea:focus {
 .badge-state { background: #dbeafe; color: #1e40af; }
 .badge-national { background: #ede9fe; color: #5b21b6; }
 .badge-division { background: var(--brand-light); color: var(--brand-dark); }
+
+/* ---------- Header search ---------- */
+.header-search {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #f3f5f3;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.25rem 0.35rem 0.25rem 0.75rem;
+  min-width: 220px;
+}
+.header-search-icon {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  line-height: 1;
+}
+.header-search input {
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: 0.85rem;
+  width: 130px;
+  padding: 0.25rem 0;
+  outline: none;
+}
+.header-search input:focus {
+  box-shadow: none;
+}
+.header-search-clear {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--muted);
+  padding: 0.2rem 0.3rem;
+  line-height: 1;
+}
+.header-search-clear:hover {
+  color: var(--brand-dark);
+}
+.header-search-go {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.8rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+@media (max-width: 900px) {
+  .header-search {
+    order: 5;
+    width: 100%;
+    min-width: 0;
+  }
+  .header-search input {
+    flex: 1;
+    width: auto;
+  }
+}
+
+/* ---------- Search page ---------- */
+.search-page-form {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.search-page-form input {
+  flex: 1;
+  min-width: 220px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  font: inherit;
+}
+.search-page-form input:focus {
+  outline: 2px solid var(--brand);
+  outline-offset: 1px;
+}
+.search-count {
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+.search-results:not(.search-has-results) {
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+/* ---------- What's New (MP Sports) ---------- */
+.whats-new .stat-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+.press-list {
+  list-style: none;
+  counter-reset: press;
+  margin: 0;
+  padding: 0.25rem 0.9rem;
+}
+.press-list li {
+  counter-increment: press;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.press-list li:last-child {
+  border-bottom: none;
+}
+.press-list li::before {
+  content: counter(press) " ";
+  color: var(--brand);
+  font-weight: 700;
+  margin-right: 0.4rem;
+}
+.press-date {
+  display: inline-block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  background: #f0f2f0;
+  border-radius: 4px;
+  padding: 0.1rem 0.4rem;
+  margin-right: 0.4rem;
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .whats-new .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---------- Gallery ---------- */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+.gallery-item {
+  padding: 0.5rem;
+  overflow: hidden;
+}
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  display: block;
+}
+.gallery-item:hover img {
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
+}
