@@ -53,6 +53,17 @@ function inningsBlocks(text) {
       blocks.push({ team: m[1].trim(), fullTeam: m[1].trim(), runs: parseInt(m[3], 10), wickets: parseInt(m[4], 10), declared: !!m[5], overs: parseFloat(m[6]), body });
     }
   }
+  // fallback 2: white-ball format "SHORT\nFULL\nSCORE-W\n(50 Ov)\nBatter..." (no Innings label)
+  if (!blocks.length) {
+    const re3 = /([A-Z]{2,6})\n([A-Z][A-Za-z .'-]+?)\n(\d{1,4})-(\d{1,2})\s*(d)?\s*\n[\s\S]{0,80}?\(([\d.]+) Ov\)[\s\S]{0,120}?\nBatter\nR\nB\n4s\n6s\nSR/g;
+    while ((m = re3.exec(text))) {
+      const bodyStart = m.index + m[0].length;
+      const rest = text.slice(bodyStart);
+      const end = rest.search(/(?=[A-Z]{2,6}\n[A-Z][A-Za-z .'-]+?\n\d{1,4}-\d{1,2})|(?=INFOMatch)/);
+      const body = rest.slice(0, end < 0 ? 40000 : end);
+      blocks.push({ team: m[1].trim(), fullTeam: m[2].trim(), runs: parseInt(m[3], 10), wickets: parseInt(m[4], 10), declared: !!m[5], overs: parseFloat(m[6]), body });
+    }
+  }
   return blocks;
 }
 
@@ -105,25 +116,39 @@ function bowlingRows(body) {
 function matchInfo(cap) {
   const text = cap.text;
   const title = cap.title || '';
-  const tm = title.match(/([A-Z][A-Za-z .']+?) vs ([A-Z][A-Za-z .']+?), ([^,]+), (.+)/);
-  const series = tm ? tm[4].trim() : (text.match(/Series:\s*([^\n]+)/)?.[1]?.trim() || '');
+  // "BEN vs MP, Round 7, Group E, Vijay Hazare Trophy 2024-25" or "MP vs KAR, Elite Group C, Ranji Trophy Elite 2024-25"
+  const tm = title.match(/([A-Z][A-Za-z .']+?) vs ([A-Z][A-Za-z .']+?), (.+)/);
+  const segs = tm ? tm[3].split(',').map((s) => s.trim()).filter(Boolean) : [];
+  const series = segs.length ? segs[segs.length - 1] : (text.match(/Series:\s*([^\n]+)/)?.[1]?.trim() || '');
   const date = cap.startDate ? cap.startDate.slice(0, 10) : (text.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || null);
   const venue = cap.venue || (text.match(/Venue:\s*([^\n•]+)/)?.[1]?.trim() || null);
-  return { teamA: tm?.[1]?.trim(), teamB: tm?.[2]?.trim(), group: tm?.[3]?.trim(), series, date, venue, result: null };
+  return { teamA: tm?.[1]?.trim(), teamB: tm?.[2]?.trim(), series, date, venue, result: null };
 }
 
-// season/tournament from series name
+// season/tournament from series name (supports Ranji + Vijay Hazare + SMAT + others)
 function getTournament(seriesName, dateStr) {
   const year = dateStr ? parseInt(dateStr.slice(0, 4), 10) : 2024;
   const sYear = `${year - 1}-${String(year).slice(2)}`;
-  const isRanji = /ranji/i.test(seriesName || '');
-  const slugBase = isRanji ? 'ranji-trophy' : slugify(seriesName || 'bcci-competition');
+  const sn = seriesName || '';
+  const isRanji = /ranji/i.test(sn);
+  const isVH = /vijay hazare/i.test(sn);
+  const isSMAT = /mushtaq ali/i.test(sn);
+  const isCK = /ck nayudu/i.test(sn);
+  const isCooch = /cooch behar/i.test(sn);
+  const isVM = /vijay merchant/i.test(sn);
+  const isVinoo = /vinoo mankad/i.test(sn);
+  const comp = isRanji ? 'Ranji Trophy' : isVH ? 'Vijay Hazare Trophy' : isSMAT ? 'Syed Mushtaq Ali Trophy' : isCK ? 'CK Nayudu Trophy' : isCooch ? 'Cooch Behar Trophy' : isVM ? 'Vijay Merchant Trophy' : isVinoo ? 'Vinoo Mankad Trophy' : 'BCCI Competition';
+  const slugBase = slugify(comp);
+  // season label: first-class comps span Oct-Mar (label prev-next); white-ball span Dec-Jan
+  const startY = year - 1;
+  const label = `${startY}-${String(year).slice(2)}`;
   let season = db.seasons.find((s) => s.year === year);
   if (!season) { season = { id: `s-${year}`, year, slug: String(year), startDate: `${year}-01-01`, endDate: `${year}-12-31`, status: year >= 2025 ? 'ongoing' : 'completed' }; db.seasons.push(season); }
-  const tname = isRanji ? `Ranji Trophy ${sYear}` : (seriesName || 'BCCI Competition');
+  const tname = `${comp} ${label}`;
   let t = db.tournaments.find((x) => norm(x.name + x.seasonId) === norm(tname + season.id));
   if (!t) {
-    t = { id: `t-${slugBase}-${sYear}`, name: tname, slug: `${slugBase}-${sYear}`, seasonId: season.id, format: 'First-class', status: 'completed', category: 'official', governingBody: 'BCCI', description: `${tname} — national ${isRanji ? 'first-class' : ''} competition. Rewa players feature for Madhya Pradesh.` };
+    const fmt = isRanji || isCK || isCooch ? 'First-class' : 'List A';
+    t = { id: `t-${slugBase}-${label}`, name: tname, slug: `${slugBase}-${label}`, seasonId: season.id, format: fmt, status: 'completed', category: 'official', governingBody: 'BCCI', description: `${tname} — national competition. Rewa players feature for Madhya Pradesh.` };
     db.tournaments.push(t);
   }
   return t;
