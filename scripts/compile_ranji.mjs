@@ -127,8 +127,6 @@ function matchInfo(cap) {
 
 // season/tournament from series name (supports Ranji + Vijay Hazare + SMAT + others)
 function getTournament(seriesName, dateStr) {
-  const year = dateStr ? parseInt(dateStr.slice(0, 4), 10) : 2024;
-  const sYear = `${year - 1}-${String(year).slice(2)}`;
   const sn = seriesName || '';
   const isRanji = /ranji/i.test(sn);
   const isVH = /vijay hazare/i.test(sn);
@@ -139,11 +137,18 @@ function getTournament(seriesName, dateStr) {
   const isVinoo = /vinoo mankad/i.test(sn);
   const comp = isRanji ? 'Ranji Trophy' : isVH ? 'Vijay Hazare Trophy' : isSMAT ? 'Syed Mushtaq Ali Trophy' : isCK ? 'CK Nayudu Trophy' : isCooch ? 'Cooch Behar Trophy' : isVM ? 'Vijay Merchant Trophy' : isVinoo ? 'Vinoo Mankad Trophy' : 'BCCI Competition';
   const slugBase = slugify(comp);
-  // season label: first-class comps span Oct-Mar (label prev-next); white-ball span Dec-Jan
-  const startY = year - 1;
-  const label = `${startY}-${String(year).slice(2)}`;
-  let season = db.seasons.find((s) => s.year === year);
-  if (!season) { season = { id: `s-${year}`, year, slug: String(year), startDate: `${year}-01-01`, endDate: `${year}-12-31`, status: year >= 2025 ? 'ongoing' : 'completed' }; db.seasons.push(season); }
+  // prefer the label in the series name (e.g. "2024-25", "2023", "2020-21"); fall back to date-derived
+  let label = '';
+  const lm = sn.match(/(\d{4})[-–]?(\d{2})?/);
+  const year = dateStr ? parseInt(dateStr.slice(0, 4), 10) : (lm ? parseInt(lm[1], 10) : 2024);
+  if (lm && lm[2]) label = `${lm[1]}-${lm[2]}`;
+  else if (lm) label = `${parseInt(lm[1], 10) - 1}-${lm[1].slice(2)}`;
+  else label = `${year - 1}-${String(year).slice(2)}`;
+  // ensure the label year matches a season that exists
+  const labelStart = parseInt(label.slice(0, 4), 10);
+  const seasonYear = labelStart + 1;
+  let season = db.seasons.find((s) => s.year === seasonYear);
+  if (!season) { season = { id: `s-${seasonYear}`, year: seasonYear, slug: String(seasonYear), startDate: `${seasonYear}-01-01`, endDate: `${seasonYear}-12-31`, status: seasonYear >= 2025 ? 'ongoing' : 'completed' }; db.seasons.push(season); }
   const tname = `${comp} ${label}`;
   let t = db.tournaments.find((x) => norm(x.name + x.seasonId) === norm(tname + season.id));
   if (!t) {
@@ -163,7 +168,7 @@ function getVenue(name) {
 
 // load captures
 const captures = [];
-for (const f of ['/tmp/od_mob.jsonl']) {
+for (const f of ['/tmp/od_all.jsonl']) {
   try {
     for (const l of readFileSync(f, 'utf8').trim().split('\n').filter(Boolean)) {
       try {
