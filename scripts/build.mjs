@@ -61,9 +61,14 @@ function head({ title, description, path, jsonLd = [], ogType = 'website' }) {
 <meta property="og:description" content="${esc(description)}" />
 <meta property="og:type" content="${ogType}" />
 <meta property="og:url" content="${absUrl(path)}" />
-<meta name="twitter:card" content="summary" />
+<meta property="og:image" content="${absUrl('/img/og-cover.png')}" />
+<meta property="og:image:width" content="1672" />
+<meta property="og:image:height" content="941" />
+<meta property="og:image:alt" content="${esc(org.name)} — सफ़ेद शेरों की धरती, Land of the White Tigers" />
+<meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="${esc(titleFor(title))}" />
 <meta name="twitter:description" content="${esc(description)}" />
+<meta name="twitter:image" content="${absUrl('/img/og-cover.png')}" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="stylesheet" href="/css/styles.css" />
 ${blocks.map(ld).join('\n')}
@@ -84,7 +89,16 @@ const NAV = [
   ['Contact', '/contact/'],
 ];
 
-function header() {
+function header(pinned = false) {
+  const search = pinned
+    ? `<form class="header-search" role="search" action="/search/" method="get">
+      <label class="sr-only" for="q">Search the archive</label>
+      <span class="header-search-icon" aria-hidden="true">&#128269;</span>
+      <input id="q" name="q" type="search" placeholder="Search players, teams, matches…" autocomplete="off" />
+      <button class="header-search-clear" type="button" data-search-clear aria-label="Clear search" hidden>&#10005;</button>
+      <button class="btn btn-primary header-search-go" type="submit">Search</button>
+    </form>`
+    : `<a class="btn btn-primary header-search-btn" href="/search/" role="search">&#128269;&nbsp; Search</a>`;
   return `<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="container header-inner">
@@ -101,13 +115,7 @@ function header() {
         ${NAV.map(([name, path]) => `<li><a href="${path}">${name}</a></li>`).join('\n')}
       </ul>
     </nav>
-    <form class="header-search" role="search" action="/search/" method="get">
-      <label class="sr-only" for="q">Search the archive</label>
-      <span class="header-search-icon" aria-hidden="true">&#128269;</span>
-      <input id="q" name="q" type="search" placeholder="Search players, teams, matches…" autocomplete="off" />
-      <button class="header-search-clear" type="button" data-search-clear aria-label="Clear search" hidden>&#10005;</button>
-      <button class="btn btn-primary header-search-go" type="submit">Search</button>
-    </form>
+    ${search}
   </div>
 </header>`;
 }
@@ -140,6 +148,7 @@ function footer() {
   </div>
   <div class="footer-bottom">
     <div class="container">© <span data-year>${new Date().getFullYear()}</span> ${esc(org.name)}. All rights reserved.</div>
+    <div class="container footer-about"><p>The ${esc(org.name)} archive is a permanent, searchable record of organised cricket in the Rewa region — division competitions, local leagues, and the state and national matches of Rewa's players — built with the permission of the division and sourced only from official records. सफ़ेद शेरों की धरती · Land of the White Tigers.</p></div>
   </div>
 </footer>
 <script src="/js/main.js" defer></script>
@@ -151,7 +160,7 @@ function layout({ title, description, path, jsonLd = [], ogType, breadcrumbs = [
   const crumbItems = [{ name: 'Home', path: '/' }, ...breadcrumbs];
   return `${head({ title, description, path, jsonLd, ogType })}
 <body class="${bodyClass}">
-${header()}
+${header(bodyClass.includes('search-pinned'))}
 ${breadcrumbs.length ? crumbs(crumbItems) : ''}
 <main id="main">
 <div class="container">`;
@@ -206,7 +215,8 @@ for (const p of db.players) {
 }
 const isOfficialPlayer = (pid) => officialPlayerIds.has(pid);
 const isOfficialTournament = (tid) => officialTournamentIds.has(tid);
-const verifiedTick = () => `<span class="badge badge-official" title="Verified official player">&#10003;</span>`;
+const verifiedTick = () =>
+  `<span class="badge badge-official tick-svg" title="Verified official player"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 1.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21zm-1.3 14.2L6.4 11.4l1.4-1.4 2.9 2.9 5.9-5.9 1.4 1.4-7.3 7.3z"/></svg><span class="sr-only">Verified official player</span></span>`;
 const officialCardClass = (official) => (official ? ' card-official' : '');
 
 const statusBadge = (s) => {
@@ -393,7 +403,7 @@ function academyCard() {
 
 function renderHome() {
   const recent = [...db.matches].sort(dateSort).slice(0, 4);
-  const news = [...db.announcements].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)).slice(0, 3);
+  const news = allNews().slice(0, 3);
 
   let html = layout({
     title: org.name,
@@ -443,17 +453,6 @@ function renderHome() {
   </section>`;
 
   html += `<div class="split" style="margin-top:2.5rem">`;
-
-  // recent matches
-  html += `<section class="section">
-    <div class="section-title"><div><p class="eyebrow">Fixtures &amp; Results</p><h2>Recent Matches</h2></div>
-    <a class="link" href="/matches/">View all &rarr;</a></div>
-    ${
-      recent.length
-        ? `<div class="grid grid-2">${recent.map(matchCard).join('\n')}</div>`
-        : empty('No matches published yet', 'Official fixtures and results will appear here as soon as they are confirmed by the Rewa Cricket Division.')
-    }
-  </section>`;
 
   // sidebar
   html += `<aside>
@@ -513,6 +512,7 @@ function renderHome() {
 // ============================================================
 function renderTeams() {
   let html = layout({
+    bodyClass: 'search-pinned',
     title: 'Teams',
     description: 'Official teams competing under the Rewa Cricket Division.',
     path: '/teams/',
@@ -540,6 +540,7 @@ function renderTeam(t) {
     ? t.description
     : `${t.name} — team profile, squad, matches and results from the Rewa Cricket Division archive.`;
   let html = layout({
+    bodyClass: 'search-pinned',
     title: t.name,
     description: teamDesc,
     path: `/teams/${t.slug}/`,
@@ -592,6 +593,7 @@ function renderTeam(t) {
 // ============================================================
 function renderPlayers() {
   let html = layout({
+    bodyClass: 'search-pinned',
     title: 'Players',
     description: 'Official player profiles registered with the Rewa Cricket Division.',
     path: '/players/',
@@ -647,7 +649,7 @@ function renderPlayer(p) {
     title: team ? `${p.name} — ${team.name}` : p.name,
     description: `${p.name} — ${p.role}${team ? ` for ${team.name}` : ''}, Rewa Cricket Division${p.battingStyle ? `, ${p.battingStyle}` : ''}.`,
     path: `/players/${p.slug}/`,
-    bodyClass: 'profile',
+    bodyClass: 'profile search-pinned',
     breadcrumbs: [{ name: 'Players', path: '/players/' }, { name: p.name, path: `/players/${p.slug}/` }],
     jsonLd: {
       '@context': 'https://schema.org',
@@ -873,6 +875,7 @@ function tournCard(t) {
 
 function renderArchiveIndex() {
   let html = layout({
+    bodyClass: 'search-pinned',
     title: 'Rewa Division Archive',
     description: 'Complete archive of Rewa Division cricket — inter-district, inter-school, MPCA, BCCI and historical competitions.',
     path: '/archive/',
@@ -923,6 +926,7 @@ function renderArchiveCategory(cat) {
 // ============================================================
 function renderTournaments() {
   let html = layout({
+    bodyClass: 'search-pinned',
     title: 'Tournaments',
     description: 'Official cricket tournaments organised by the Rewa Cricket Division.',
     path: '/tournaments/',
@@ -956,6 +960,7 @@ function renderTournament(t) {
   const tMatches = db.matches.filter((m) => m.tournamentId === t.id);
   const champ = t.championTeamId ? teamsById.get(t.championTeamId) : null;
   let html = layout({
+    bodyClass: 'search-pinned',
     title: t.name,
     description: t.description ?? `${t.name} — a ${t.format} tournament of the Rewa Cricket Division.`,
     path: `/tournaments/${t.slug}/`,
@@ -1139,8 +1144,53 @@ function renderVenue(v) {
 // ============================================================
 // NEWS
 // ============================================================
+const slugify = (s) => (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const dmyToIso = (d) => { const m = d.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/); return m ? `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}` : d; };
+// Combined news feed: official announcements + MP Sports (DSYW) items.
+function allNews() {
+  const dsywItems = [
+    ...dsyw.whatsNew.map((w, i) => ({
+      id: `dsyw-wn-${i}`,
+      slug: `dsyw-${slugify(w.title)}`,
+      title: w.title,
+      body: w.body,
+      publishedAt: '2026-07-20',
+      category: 'MP Sports · What\'s New',
+      source: dsyw.source,
+      sourceName: dsyw.sourceName,
+    })),
+    ...dsyw.pressReleases.map((p, i) => ({
+      id: `dsyw-pr-${i}`,
+      slug: `dsyw-${slugify(p.title)}`,
+      title: p.title,
+      body: p.title,
+      publishedAt: dmyToIso(p.date),
+      category: 'MP Sports · Press Release',
+      source: dsyw.source,
+      sourceName: dsyw.sourceName,
+    })),
+    ...dsyw.importantEvents.map((e, i) => ({
+      id: `dsyw-ev-${i}`,
+      slug: `dsyw-${slugify(e.title)}`,
+      title: e.title,
+      body: e.body,
+      publishedAt: '2026-08-01',
+      category: 'MP Sports · Events & Schemes',
+      source: dsyw.source,
+      sourceName: dsyw.sourceName,
+    })),
+  ];
+  const all = [...db.announcements, ...dsywItems];
+  const seen = new Set();
+  return all.filter((n) => {
+    if (seen.has(n.slug)) return false;
+    seen.add(n.slug);
+    return true;
+  }).sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+}
+
 function renderNews() {
-  const sorted = [...db.announcements].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  const sorted = allNews();
   let html = layout({
     title: 'News &amp; Announcements',
     description: 'Official news and announcements from the Rewa Cricket Division.',
@@ -1154,6 +1204,7 @@ function renderNews() {
             <p class="eyebrow">${esc(n.category ?? 'Announcement')} · ${esc(n.publishedAt)}</p>
             <span class="card-title">${esc(n.title)}</span>
             <p class="card-meta" style="margin-top:.4rem">${esc(n.body.slice(0, 120))}</p>
+            ${n.source ? `<p class="card-meta" style="margin-top:.4rem">Source: ${esc(n.sourceName)}</p>` : ''}
           </a>`,
         )
         .join('\n')}</div>`
@@ -1174,7 +1225,8 @@ function renderNewsItem(n) {
     <p class="eyebrow">${esc(n.category ?? 'Announcement')} · ${esc(n.publishedAt)}</p>
     <h1 style="margin-top:.25rem">${esc(n.title)}</h1>
     <p style="font-size:1.1rem;margin-top:1rem">${esc(n.body)}</p>
-    <p style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem">Published by the ${esc(org.name)}.</p>
+    ${n.source ? `<p class="card-meta" style="margin-top:1rem">Source: <a href="${esc(n.source)}" rel="noopener" target="_blank">${esc(n.sourceName)} &nearr;</a></p>` : ''}
+    <p style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem">${n.source ? 'Reproduced from the official MP Directorate of Sports &amp; Youth Welfare website for reference.' : `Published by the ${esc(org.name)}.`}</p>
   </article>`;
   html += closeLayout();
   writePage(`news/${n.slug}`, html);
@@ -1523,7 +1575,7 @@ for (const s of db.seasons) {
 renderVenues();
 db.venues.forEach(renderVenue);
 renderNews();
-db.announcements.forEach(renderNewsItem);
+allNews().forEach(renderNewsItem);
 renderLive();
 for (const a of aggregates) renderAggregate(a);
 
