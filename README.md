@@ -54,6 +54,23 @@ The production domain is **configurable** — nothing is hardcoded.
 The generated HTML is throwaway. To migrate to Astro/Next/etc. later, keep `data/` and this
 URL structure — swap the data source in the new framework without rebuilding the site.
 
+## SEO
+- Every page has a unique `<title>`, meta description, canonical URL, JSON-LD
+  (SportsOrganization, SportsTeam, Person, Place, SportsEvent, EducationalOrganization,
+  BreadcrumbList) and a validated sitemap.
+- **Keyword strategy — no stuffing.** A keyword→page map is maintained in
+  `data/seo/keyword-map.json`: 160+ ultra-long-tail, low-competition queries collected
+  from Google Autocomplete, each classified into an intent family and mapped to the
+  exact archive page that should rank for it (players, teams, tournaments, matches,
+  venues, academy, archive).
+- Refresh the research anytime:
+  ```bash
+  node scripts/keywords.mjs
+  ```
+- The home page declares a schema.org `SearchAction`, wiring Google to `/search/?q=`.
+- After launch, use Google Search Console's query report as the live keyword source:
+  improve the page each real query already points at.
+
 ## Integrity rule
 No match, scorecard, statistic, player, team, tournament, date or result is ever invented.
 Pages render clean empty states until official data is confirmed.

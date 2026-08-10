@@ -1,0 +1,1630 @@
+{
+  "meta": {
+    "generated": "2026-08-10",
+    "method": "Google Autocomplete (real user queries) + Google Trends (rate-limited, no volume data obtained) — all keywords are ultra-long-tail/low-competition by construction",
+    "note": "suggestRank = position in Google autocomplete (1 = most popular suggestion for its seed). interest = Google Trends relative score (null = no data). lowCompetition = no volume data or interest < 10.",
+    "families": [
+      "rewa-cricket",
+      "player",
+      "team",
+      "tournament",
+      "match",
+      "venue",
+      "archive",
+      "academy"
+    ],
+    "refresh": "node scripts/keywords.mjs"
+  },
+  "keywords": [
+    {
+      "keyword": "rewa cricketer",
+      "source": "rewa cricket",
+      "suggestRank": 0,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa cricket player",
+      "source": "rewa cricket",
+      "suggestRank": 1,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa cricket academy",
+      "source": "rewa cricket",
+      "suggestRank": 2,
+      "family": "academy",
+      "page": "/academy/",
+      "pageTitle": "Academy",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa cricket stadium",
+      "source": "rewa cricket",
+      "suggestRank": 3,
+      "family": "venue",
+      "page": "/venues/",
+      "pageTitle": "Venues",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa cricket live",
+      "source": "rewa cricket",
+      "suggestRank": 4,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa cricketer name",
+      "source": "rewa cricket",
+      "suggestRank": 5,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa cricket turf",
+      "source": "rewa cricket",
+      "suggestRank": 6,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa cricket team",
+      "source": "rewa cricket",
+      "suggestRank": 7,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa cricket academy fees",
+      "source": "rewa cricket",
+      "suggestRank": 8,
+      "family": "academy",
+      "page": "/academy/",
+      "pageTitle": "Academy",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa cricket player in ipl",
+      "source": "rewa cricket",
+      "suggestRank": 9,
+      "family": "tournament",
+      "page": "/tournaments/",
+      "pageTitle": "Tournaments",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa division cricket association",
+      "source": "rewa cricket division",
+      "suggestRank": 0,
+      "family": "team",
+      "page": "/teams/rewa-division/",
+      "pageTitle": "Rewa Division",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa division cricket",
+      "source": "rewa cricket division",
+      "suggestRank": 1,
+      "family": "team",
+      "page": "/teams/rewa-division/",
+      "pageTitle": "Rewa Division",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "divisions in cricket",
+      "source": "rewa cricket division",
+      "suggestRank": 2,
+      "family": "archive",
+      "page": "/about/",
+      "pageTitle": "About",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa district cricket association",
+      "source": "rewa district cricket",
+      "suggestRank": 0,
+      "family": "team",
+      "page": "/teams/rewa-district/",
+      "pageTitle": "Rewa District",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa mp cricket academy",
+      "source": "rewa district cricket",
+      "suggestRank": 1,
+      "family": "academy",
+      "page": "/academy/",
+      "pageTitle": "Academy",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa mp cricket player",
+      "source": "rewa district cricket",
+      "suggestRank": 2,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "district in rewa division",
+      "source": "rewa district cricket",
+      "suggestRank": 3,
+      "family": "team",
+      "page": "/teams/rewa-division/",
+      "pageTitle": "Rewa Division",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "how many district in rewa division",
+      "source": "rewa district cricket",
+      "suggestRank": 4,
+      "family": "team",
+      "page": "/teams/rewa-division/",
+      "pageTitle": "Rewa Division",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa division district list",
+      "source": "rewa district cricket",
+      "suggestRank": 5,
+      "family": "team",
+      "page": "/teams/rewa-division/",
+      "pageTitle": "Rewa Division",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa in which district",
+      "source": "rewa district cricket",
+      "suggestRank": 6,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa cricket academy contact number",
+      "source": "rewa cricket academy",
+      "suggestRank": 2,
+      "family": "academy",
+      "page": "/academy/",
+      "pageTitle": "Academy",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa cricket academy near me",
+      "source": "rewa cricket academy",
+      "suggestRank": 3,
+      "family": "academy",
+      "page": "/academy/",
+      "pageTitle": "Academy",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa cricket club",
+      "source": "rewa cricket academy",
+      "suggestRank": 4,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa me cricket academy kahan hai",
+      "source": "rewa cricket academy",
+      "suggestRank": 5,
+      "family": "academy",
+      "page": "/academy/",
+      "pageTitle": "Academy",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa best cricket academy",
+      "source": "rewa cricket academy",
+      "suggestRank": 6,
+      "family": "academy",
+      "page": "/academy/",
+      "pageTitle": "Academy",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa ki cricket academy",
+      "source": "rewa cricket academy",
+      "suggestRank": 8,
+      "family": "academy",
+      "page": "/academy/",
+      "pageTitle": "Academy",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa all cricket academy",
+      "source": "rewa cricket academy",
+      "suggestRank": 9,
+      "family": "academy",
+      "page": "/academy/",
+      "pageTitle": "Academy",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa international stadium",
+      "source": "rewa cricket stadium",
+      "suggestRank": 1,
+      "family": "venue",
+      "page": "/venues/",
+      "pageTitle": "Venues",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa new cricket stadium",
+      "source": "rewa cricket stadium",
+      "suggestRank": 2,
+      "family": "venue",
+      "page": "/venues/",
+      "pageTitle": "Venues",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "cricket stadium entry fee",
+      "source": "rewa cricket stadium",
+      "suggestRank": 3,
+      "family": "venue",
+      "page": "/venues/",
+      "pageTitle": "Venues",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "which country has most cricket stadium",
+      "source": "rewa cricket stadium",
+      "suggestRank": 4,
+      "family": "venue",
+      "page": "/venues/",
+      "pageTitle": "Venues",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "which is the beautiful cricket stadium in the world",
+      "source": "rewa cricket stadium",
+      "suggestRank": 5,
+      "family": "venue",
+      "page": "/venues/",
+      "pageTitle": "Venues",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa ka cricketer kaun hai",
+      "source": "rewa cricketer",
+      "suggestRank": 2,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa ka cricketer",
+      "source": "rewa cricketer",
+      "suggestRank": 3,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa mp cricketer",
+      "source": "rewa cricketer",
+      "suggestRank": 4,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa famous cricketer",
+      "source": "rewa cricketer",
+      "suggestRank": 5,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "kuldeep sen rewa cricketer",
+      "source": "rewa cricketer",
+      "suggestRank": 6,
+      "family": "player",
+      "page": "/players/kuldeep-sen/",
+      "pageTitle": "Kuldeep Sen",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "is suresh raina all rounder",
+      "source": "rewa cricketer",
+      "suggestRank": 7,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa jaguars cricket team",
+      "source": "rewa cricket team",
+      "suggestRank": 1,
+      "family": "team",
+      "page": "/teams/rewa-jaguars/",
+      "pageTitle": "Rewa Jaguars",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "how many matches does a team play in ranji trophy",
+      "source": "rewa cricket team",
+      "suggestRank": 2,
+      "family": "tournament",
+      "page": "/tournaments/",
+      "pageTitle": "Tournaments",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "indian cricket group a team salary",
+      "source": "rewa cricket team",
+      "suggestRank": 3,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa jaguars",
+      "source": "rewa jaguars",
+      "suggestRank": 0,
+      "family": "team",
+      "page": "/teams/rewa-jaguars/",
+      "pageTitle": "Rewa Jaguars",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa jaguars vs gwalior cheetahs",
+      "source": "rewa jaguars",
+      "suggestRank": 1,
+      "family": "team",
+      "page": "/teams/rewa-jaguars/",
+      "pageTitle": "Rewa Jaguars",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa jaguars vs royal nimar eagles",
+      "source": "rewa jaguars",
+      "suggestRank": 2,
+      "family": "team",
+      "page": "/teams/rewa-jaguars/",
+      "pageTitle": "Rewa Jaguars",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa jaguars today match",
+      "source": "rewa jaguars",
+      "suggestRank": 3,
+      "family": "team",
+      "page": "/teams/rewa-jaguars/",
+      "pageTitle": "Rewa Jaguars",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa jaguars team",
+      "source": "rewa jaguars",
+      "suggestRank": 4,
+      "family": "team",
+      "page": "/teams/rewa-jaguars/",
+      "pageTitle": "Rewa Jaguars",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa jaguars matches",
+      "source": "rewa jaguars",
+      "suggestRank": 5,
+      "family": "team",
+      "page": "/teams/rewa-jaguars/",
+      "pageTitle": "Rewa Jaguars",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa jaguars players",
+      "source": "rewa jaguars",
+      "suggestRank": 6,
+      "family": "team",
+      "page": "/teams/rewa-jaguars/",
+      "pageTitle": "Rewa Jaguars",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa jaguars vs jabalpur royal lions",
+      "source": "rewa jaguars",
+      "suggestRank": 7,
+      "family": "team",
+      "page": "/teams/rewa-jaguars/",
+      "pageTitle": "Rewa Jaguars",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa jaguars owner",
+      "source": "rewa jaguars",
+      "suggestRank": 8,
+      "family": "team",
+      "page": "/teams/rewa-jaguars/",
+      "pageTitle": "Rewa Jaguars",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa jaguars last match scorecard",
+      "source": "rewa jaguars",
+      "suggestRank": 9,
+      "family": "team",
+      "page": "/teams/rewa-jaguars/",
+      "pageTitle": "Rewa Jaguars",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "ranji trophy rewards",
+      "source": "ranji trophy rewa",
+      "suggestRank": 0,
+      "family": "tournament",
+      "page": "/tournaments/",
+      "pageTitle": "Tournaments",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "jammu kashmir ranji trophy reward",
+      "source": "ranji trophy rewa",
+      "suggestRank": 1,
+      "family": "tournament",
+      "page": "/tournaments/",
+      "pageTitle": "Tournaments",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "how players are selected for ranji trophy",
+      "source": "ranji trophy rewa",
+      "suggestRank": 2,
+      "family": "tournament",
+      "page": "/tournaments/",
+      "pageTitle": "Tournaments",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa cricket match",
+      "source": "rewa cricket match",
+      "suggestRank": 0,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "rewa live cricket match today",
+      "source": "rewa cricket match",
+      "suggestRank": 1,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "how is fair play points calculated in ipl",
+      "source": "rewa cricket match",
+      "suggestRank": 2,
+      "family": "tournament",
+      "page": "/tournaments/",
+      "pageTitle": "Tournaments",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "what is fair play award in cricket",
+      "source": "rewa cricket match",
+      "suggestRank": 3,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "how many matches played by suresh raina in ipl",
+      "source": "rewa cricket match",
+      "suggestRank": 5,
+      "family": "tournament",
+      "page": "/tournaments/",
+      "pageTitle": "Tournaments",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "how many matches each team in ipl",
+      "source": "rewa cricket match",
+      "suggestRank": 6,
+      "family": "tournament",
+      "page": "/tournaments/",
+      "pageTitle": "Tournaments",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh",
+      "source": "Madhya Pradesh",
+      "suggestRank": 0,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh capital",
+      "source": "Madhya Pradesh",
+      "suggestRank": 1,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh cm",
+      "source": "Madhya Pradesh",
+      "suggestRank": 2,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh premier league",
+      "source": "Madhya Pradesh",
+      "suggestRank": 3,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh premier league 2026",
+      "source": "Madhya Pradesh",
+      "suggestRank": 4,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh cricket team",
+      "source": "Madhya Pradesh",
+      "suggestRank": 5,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh league",
+      "source": "Madhya Pradesh",
+      "suggestRank": 6,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh t20 league",
+      "source": "Madhya Pradesh",
+      "suggestRank": 7,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh league 2026",
+      "source": "Madhya Pradesh",
+      "suggestRank": 8,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh map",
+      "source": "Madhya Pradesh",
+      "suggestRank": 9,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "sbi remit seven eleven",
+      "source": "SBI ELEVEN",
+      "suggestRank": 0,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "sbi sector 11 branch code",
+      "source": "SBI ELEVEN",
+      "suggestRank": 1,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "sbi madhavanagar branch contact number",
+      "source": "SBI ELEVEN",
+      "suggestRank": 2,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "sbi amu branch contact number",
+      "source": "SBI ELEVEN",
+      "suggestRank": 3,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "sbi ulikkal branch contact number",
+      "source": "SBI ELEVEN",
+      "suggestRank": 4,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "fearless tiger",
+      "source": "FEARLESS TIGERS",
+      "suggestRank": 0,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "fearless tiger movie",
+      "source": "FEARLESS TIGERS",
+      "suggestRank": 1,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "fearless tiger 1991",
+      "source": "FEARLESS TIGERS",
+      "suggestRank": 2,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "fearless tigers martial arts academy",
+      "source": "FEARLESS TIGERS",
+      "suggestRank": 3,
+      "family": "team",
+      "page": "/teams/fearless-tigers/",
+      "pageTitle": "FEARLESS TIGERS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "fearless tiger construction llc",
+      "source": "FEARLESS TIGERS",
+      "suggestRank": 4,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "fearless tiger t shirt",
+      "source": "FEARLESS TIGERS",
+      "suggestRank": 5,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "fearless tiger hoodie",
+      "source": "FEARLESS TIGERS",
+      "suggestRank": 6,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "fearless tiger meaning in hindi",
+      "source": "FEARLESS TIGERS",
+      "suggestRank": 7,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "fearless tiger motivation",
+      "source": "FEARLESS TIGERS",
+      "suggestRank": 8,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "fearless tiger videos",
+      "source": "FEARLESS TIGERS",
+      "suggestRank": 9,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "power hitters logo",
+      "source": "POWER HITTERS",
+      "suggestRank": 0,
+      "family": "team",
+      "page": "/teams/power-hitters/",
+      "pageTitle": "POWER HITTERS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "power hitters cricket logo",
+      "source": "POWER HITTERS",
+      "suggestRank": 1,
+      "family": "team",
+      "page": "/teams/power-hitters/",
+      "pageTitle": "POWER HITTERS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "power hitters",
+      "source": "POWER HITTERS",
+      "suggestRank": 2,
+      "family": "team",
+      "page": "/teams/power-hitters/",
+      "pageTitle": "POWER HITTERS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "power hitters in cricket",
+      "source": "POWER HITTERS",
+      "suggestRank": 3,
+      "family": "team",
+      "page": "/teams/power-hitters/",
+      "pageTitle": "POWER HITTERS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "power hitters in ipl 2026",
+      "source": "POWER HITTERS",
+      "suggestRank": 4,
+      "family": "team",
+      "page": "/teams/power-hitters/",
+      "pageTitle": "POWER HITTERS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "power hitters of india",
+      "source": "POWER HITTERS",
+      "suggestRank": 5,
+      "family": "team",
+      "page": "/teams/power-hitters/",
+      "pageTitle": "POWER HITTERS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "power hitters name style",
+      "source": "POWER HITTERS",
+      "suggestRank": 6,
+      "family": "team",
+      "page": "/teams/power-hitters/",
+      "pageTitle": "POWER HITTERS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "power hitters in ipl",
+      "source": "POWER HITTERS",
+      "suggestRank": 7,
+      "family": "team",
+      "page": "/teams/power-hitters/",
+      "pageTitle": "POWER HITTERS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "power hitters logo design",
+      "source": "POWER HITTERS",
+      "suggestRank": 8,
+      "family": "team",
+      "page": "/teams/power-hitters/",
+      "pageTitle": "POWER HITTERS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "power hitters cricket team logo",
+      "source": "POWER HITTERS",
+      "suggestRank": 9,
+      "family": "team",
+      "page": "/teams/power-hitters/",
+      "pageTitle": "POWER HITTERS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "punjab kings standings",
+      "source": "Punjab",
+      "suggestRank": 0,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "punjab kings",
+      "source": "Punjab",
+      "suggestRank": 1,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "punjab kings schedule",
+      "source": "Punjab",
+      "suggestRank": 2,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "punjab kings players",
+      "source": "Punjab",
+      "suggestRank": 3,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "punjab national bank",
+      "source": "Punjab",
+      "suggestRank": 4,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "punjab",
+      "source": "Punjab",
+      "suggestRank": 5,
+      "family": "team",
+      "page": "/teams/punjab/",
+      "pageTitle": "Punjab",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "punjab grill",
+      "source": "Punjab",
+      "suggestRank": 6,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "punjabi song",
+      "source": "Punjab",
+      "suggestRank": 7,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "punjabi",
+      "source": "Punjab",
+      "suggestRank": 8,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "punjab kings table",
+      "source": "Punjab",
+      "suggestRank": 9,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "junior champs play school",
+      "source": "JUNIOR CHAMPS",
+      "suggestRank": 0,
+      "family": "team",
+      "page": "/teams/junior-champs/",
+      "pageTitle": "JUNIOR CHAMPS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "junior champs",
+      "source": "JUNIOR CHAMPS",
+      "suggestRank": 1,
+      "family": "team",
+      "page": "/teams/junior-champs/",
+      "pageTitle": "JUNIOR CHAMPS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "junior champs photos",
+      "source": "JUNIOR CHAMPS",
+      "suggestRank": 2,
+      "family": "team",
+      "page": "/teams/junior-champs/",
+      "pageTitle": "JUNIOR CHAMPS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "junior champs preschool",
+      "source": "JUNIOR CHAMPS",
+      "suggestRank": 3,
+      "family": "team",
+      "page": "/teams/junior-champs/",
+      "pageTitle": "JUNIOR CHAMPS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "junior champs kovan",
+      "source": "JUNIOR CHAMPS",
+      "suggestRank": 4,
+      "family": "team",
+      "page": "/teams/junior-champs/",
+      "pageTitle": "JUNIOR CHAMPS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "junior champs hougang green",
+      "source": "JUNIOR CHAMPS",
+      "suggestRank": 5,
+      "family": "team",
+      "page": "/teams/junior-champs/",
+      "pageTitle": "JUNIOR CHAMPS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "junior champs preschool fees",
+      "source": "JUNIOR CHAMPS",
+      "suggestRank": 6,
+      "family": "team",
+      "page": "/teams/junior-champs/",
+      "pageTitle": "JUNIOR CHAMPS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "junior champs bugbrooke",
+      "source": "JUNIOR CHAMPS",
+      "suggestRank": 7,
+      "family": "team",
+      "page": "/teams/junior-champs/",
+      "pageTitle": "JUNIOR CHAMPS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "junior champs educampus pte. ltd",
+      "source": "JUNIOR CHAMPS",
+      "suggestRank": 8,
+      "family": "team",
+      "page": "/teams/junior-champs/",
+      "pageTitle": "JUNIOR CHAMPS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "junior champs 2026",
+      "source": "JUNIOR CHAMPS",
+      "suggestRank": 9,
+      "family": "team",
+      "page": "/teams/junior-champs/",
+      "pageTitle": "JUNIOR CHAMPS",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "senior citizen card",
+      "source": "SENIOR CITIZEN",
+      "suggestRank": 0,
+      "family": "team",
+      "page": "/teams/senior-citizen/",
+      "pageTitle": "SENIOR CITIZEN",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "senior citizens savings scheme",
+      "source": "SENIOR CITIZEN",
+      "suggestRank": 1,
+      "family": "team",
+      "page": "/teams/senior-citizen/",
+      "pageTitle": "SENIOR CITIZEN",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "senior citizen",
+      "source": "SENIOR CITIZEN",
+      "suggestRank": 2,
+      "family": "team",
+      "page": "/teams/senior-citizen/",
+      "pageTitle": "SENIOR CITIZEN",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "senior citizen age",
+      "source": "SENIOR CITIZEN",
+      "suggestRank": 3,
+      "family": "team",
+      "page": "/teams/senior-citizen/",
+      "pageTitle": "SENIOR CITIZEN",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "senior citizen card karnataka",
+      "source": "SENIOR CITIZEN",
+      "suggestRank": 4,
+      "family": "team",
+      "page": "/teams/senior-citizen/",
+      "pageTitle": "SENIOR CITIZEN",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "senior citizen fd rates",
+      "source": "SENIOR CITIZEN",
+      "suggestRank": 5,
+      "family": "team",
+      "page": "/teams/senior-citizen/",
+      "pageTitle": "SENIOR CITIZEN",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "senior citizen savings scheme (scss)",
+      "source": "SENIOR CITIZEN",
+      "suggestRank": 6,
+      "family": "team",
+      "page": "/teams/senior-citizen/",
+      "pageTitle": "SENIOR CITIZEN",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "senior citizen card online apply",
+      "source": "SENIOR CITIZEN",
+      "suggestRank": 7,
+      "family": "team",
+      "page": "/teams/senior-citizen/",
+      "pageTitle": "SENIOR CITIZEN",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "senior citizen pension scheme",
+      "source": "SENIOR CITIZEN",
+      "suggestRank": 8,
+      "family": "team",
+      "page": "/teams/senior-citizen/",
+      "pageTitle": "SENIOR CITIZEN",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "senior citizen health insurance",
+      "source": "SENIOR CITIZEN",
+      "suggestRank": 9,
+      "family": "team",
+      "page": "/teams/senior-citizen/",
+      "pageTitle": "SENIOR CITIZEN",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "bengaluru",
+      "source": "Bengal",
+      "suggestRank": 0,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "bengaluru weather",
+      "source": "Bengal",
+      "suggestRank": 1,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "bengaluru temperature",
+      "source": "Bengal",
+      "suggestRank": 2,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "bengaluru metro",
+      "source": "Bengal",
+      "suggestRank": 3,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "bengaluru news",
+      "source": "Bengal",
+      "suggestRank": 4,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "bengaluru weather today",
+      "source": "Bengal",
+      "suggestRank": 5,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "bengaluru pincode",
+      "source": "Bengal",
+      "suggestRank": 6,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "bengaluru palace photos",
+      "source": "Bengal",
+      "suggestRank": 7,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "bengaluru cant",
+      "source": "Bengal",
+      "suggestRank": 8,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "bangalore palace",
+      "source": "Bengal",
+      "suggestRank": 9,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "inter district senior tournament 2026",
+      "source": "Inter District Senior",
+      "suggestRank": 0,
+      "family": "tournament",
+      "page": "/tournaments/inter-district-senior-2018-19/",
+      "pageTitle": "Inter District Senior",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "inter district senior tournament 2025",
+      "source": "Inter District Senior",
+      "suggestRank": 1,
+      "family": "tournament",
+      "page": "/tournaments/inter-district-senior-2018-19/",
+      "pageTitle": "Inter District Senior",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "inter district senior tournament 2024",
+      "source": "Inter District Senior",
+      "suggestRank": 2,
+      "family": "tournament",
+      "page": "/tournaments/inter-district-senior-2018-19/",
+      "pageTitle": "Inter District Senior",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "inter senior district tournament 2018",
+      "source": "Inter District Senior",
+      "suggestRank": 3,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "inter district transfer seniority list 2026",
+      "source": "Inter District Senior",
+      "suggestRank": 4,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "regional inter district senior 2025 26",
+      "source": "Inter District Senior",
+      "suggestRank": 5,
+      "family": "tournament",
+      "page": "/tournaments/inter-district-senior-2018-19/",
+      "pageTitle": "Inter District Senior",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "regional inter district senior tournament 2025",
+      "source": "Inter District Senior",
+      "suggestRank": 6,
+      "family": "tournament",
+      "page": "/tournaments/inter-district-senior-2018-19/",
+      "pageTitle": "Inter District Senior",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "inter district transfer seniority list",
+      "source": "Inter District Senior",
+      "suggestRank": 7,
+      "family": "rewa-cricket",
+      "page": "/",
+      "pageTitle": "Home",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "regional inter district senior tournament 2024 25",
+      "source": "Inter District Senior",
+      "suggestRank": 8,
+      "family": "tournament",
+      "page": "/tournaments/inter-district-senior-2018-19/",
+      "pageTitle": "Inter District Senior",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "regional inter district senior tournament 2023 24",
+      "source": "Inter District Senior",
+      "suggestRank": 9,
+      "family": "tournament",
+      "page": "/tournaments/inter-district-senior-2018-19/",
+      "pageTitle": "Inter District Senior",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh premier league live",
+      "source": "Madhya Pradesh Premier League",
+      "suggestRank": 2,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh premier league points table",
+      "source": "Madhya Pradesh Premier League",
+      "suggestRank": 3,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh premier league 2026 points table",
+      "source": "Madhya Pradesh Premier League",
+      "suggestRank": 4,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh premier league 2026 schedule",
+      "source": "Madhya Pradesh Premier League",
+      "suggestRank": 5,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh premier league 2026 live score",
+      "source": "Madhya Pradesh Premier League",
+      "suggestRank": 6,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh premier league 2026 teams",
+      "source": "Madhya Pradesh Premier League",
+      "suggestRank": 7,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh premier league live streaming",
+      "source": "Madhya Pradesh Premier League",
+      "suggestRank": 8,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh premier league rajat patidar team",
+      "source": "Madhya Pradesh Premier League",
+      "suggestRank": 9,
+      "family": "player",
+      "page": "/players/rajat-patidar/",
+      "pageTitle": "Rajat Patidar",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh league 2026 scorecard",
+      "source": "Madhya Pradesh League",
+      "suggestRank": 2,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh league 2026 schedule",
+      "source": "Madhya Pradesh League",
+      "suggestRank": 3,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh league 2026 points table",
+      "source": "Madhya Pradesh League",
+      "suggestRank": 4,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh league live score",
+      "source": "Madhya Pradesh League",
+      "suggestRank": 5,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh league 2026 live",
+      "source": "Madhya Pradesh League",
+      "suggestRank": 6,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh league rajat patidar team",
+      "source": "Madhya Pradesh League",
+      "suggestRank": 7,
+      "family": "player",
+      "page": "/players/rajat-patidar/",
+      "pageTitle": "Rajat Patidar",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh league points table",
+      "source": "Madhya Pradesh League",
+      "suggestRank": 8,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    },
+    {
+      "keyword": "madhya pradesh league live",
+      "source": "Madhya Pradesh League",
+      "suggestRank": 9,
+      "family": "team",
+      "page": "/teams/madhya-pradesh/",
+      "pageTitle": "Madhya Pradesh",
+      "interest": null,
+      "lowCompetition": true
+    }
+  ]
+}

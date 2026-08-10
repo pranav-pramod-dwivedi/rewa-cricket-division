@@ -272,6 +272,11 @@ const websiteLd = {
   name: org.name,
   url: org.website,
   description: org.description,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: { '@type': 'EntryPoint', urlTemplate: absUrl('/search/?q={search_term_string}') },
+    'query-input': 'required name=search_term_string',
+  },
 };
 
 // ---------- page writers ----------
