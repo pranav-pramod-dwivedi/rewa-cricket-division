@@ -454,6 +454,17 @@ function renderPlayer(p) {
   }
   const playedTeams = [...playedTeamIds].map((id) => teamsById.get(id)).filter(Boolean)
     .sort((a, b) => a.name.localeCompare(b.name));
+  const ageOf = (dob) => {
+    if (!dob) return null;
+    const d = new Date(dob);
+    if (isNaN(d)) return null;
+    const now = new Date();
+    let age = now.getFullYear() - d.getFullYear();
+    const m = now.getMonth() - d.getMonth();
+    if (m < 0 || (m === 0 && now.getDate() < d.getDate())) age--;
+    return age;
+  };
+  const age = ageOf(p.dateOfBirth);
   let html = layout({
     title: p.name,
     description: `${p.name} — ${p.role}${team ? ` for ${team.name}` : ''}, Rewa Cricket Division${p.battingStyle ? `, ${p.battingStyle}` : ''}.`,
@@ -470,7 +481,7 @@ function renderPlayer(p) {
   });
   html += `<div class="page-head"><h1>${esc(p.name)} ${isOfficialPlayer(p.id) ? verifiedTick() : ''}</h1><p>${esc(p.role)}${team ? ` · <a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : ''}</p></div>`;
   html += `<dl class="card" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:720px;margin-bottom:1.5rem">
-    ${[['Role', p.role], team ? ['Team', `<a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>`] : null, p.battingStyle ? ['Batting style', p.battingStyle] : null, p.bowlingStyle ? ['Bowling style', p.bowlingStyle] : null, p.dateOfBirth ? ['Date of birth', p.dateOfBirth] : null, ['Matches', batInns.length || '—'], ['Runs', batRuns || '—'], ['Wickets', bowlWkts || '—']]
+    ${[['Role', p.role], team ? ['Team', `<a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>`] : null, p.battingStyle ? ['Batting style', p.battingStyle] : null, p.bowlingStyle ? ['Bowling style', p.bowlingStyle] : null, p.dateOfBirth ? ['Born', `${p.dateOfBirth}${age !== null ? ` (${age} years)` : ''}`] : null, p.birthPlace ? ['Birth place', p.birthPlace] : null, ['Matches', batInns.length || '—'], ['Runs', batRuns || '—'], ['Wickets', bowlWkts || '—']]
       .filter(Boolean)
       .map(([k, v]) => `<div><dt style="font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">${esc(k)}</dt><dd style="font-weight:600;margin-top:.1rem">${v}</dd></div>`)
       .join('\n')}
@@ -479,6 +490,73 @@ function renderPlayer(p) {
   if (playedTeams.length) {
     html += `<section class="section"><h2>Teams</h2><div class="chip-row" style="margin-top:.6rem">${playedTeams.map((t) => `<a class="chip" href="/teams/${esc(t.slug)}/">${esc(t.name)}</a>`).join('')}</div></section>`;
   }
+
+  // ---- career stats: official (cricbuzz) if available, else computed from match data ----
+  const statsSection = (() => {
+    const fmtLabel = (f) => ({ 'Test': 'Test', 'ODI': 'ODI', 'T20': 'T20', 'IPL': 'IPL', 'FC': 'First-class', 'List A': 'List A' }[f] || f);
+    const rows = [];
+    let sourceNote = '';
+    if (p.stats && (p.stats.batting || p.stats.bowling) && Object.keys(p.stats.batting || {}).length) {
+      sourceNote = 'Official career statistics (source: Cricbuzz).';
+      const b = p.stats.batting, bw = p.stats.bowling;
+      const fmts = (b.formats || []);
+      const fmtRow = (label, pick, def) => `<td>${esc(label)}</td>${fmts.map((f) => `<td class="num">${esc(pick(f) ?? def)}</td>`).join('')}`;
+      const th = `<tr><th>Batting</th>${fmts.map((f) => `<th>${esc(fmtLabel(f))}</th>`).join('')}</tr>`;
+      const body = [
+        ['Matches', 'Matches'], ['Innings', 'Innings'], ['Runs', 'Runs'], ['Highest', 'Highest'], ['Average', 'Average'], ['Strike rate', 'SR'], ['Fours', 'Fours'], ['Sixes', 'Sixes'], ['50s', '50s'], ['100s', '100s'],
+      ].map(([lab, key]) => `<tr>${fmtRow(lab, (f) => b.rows[key]?.[fmts.indexOf(f)] ?? '—', '—')}</tr>`).join('\n');
+      let bow = '';
+      if (bw && bw.formats) {
+        const bfmts = bw.formats;
+        bow = `<tr><th>Bowling</th>${bfmts.map((f) => `<th>${esc(fmtLabel(f))}</th>`).join('')}</tr>`
+          + [['Matches', 'Matches'], ['Wickets', 'Wickets'], ['Average', 'Avg'], ['Economy', 'Eco'], ['Best', 'BBI']]
+            .map(([lab, key]) => `<tr>${fmtRow(lab, (f) => bw.rows[key]?.[bfmts.indexOf(f)] ?? '—', '—')}</tr>`).join('\n');
+      }
+      rows.push(`<div class="table-wrap"><h3 style="margin:.6rem .9rem">Career statistics</h3><table><thead>${th}</thead><tbody>${body}${bow}</tbody></table></div>`);
+    } else {
+      // computed fallback from compiled match data, grouped by format
+      sourceNote = 'Computed from Rewa Cricket Division match archive (compiled scorecards).';
+      const fmtOf = (tid) => {
+        const t = tourneysById.get(tid);
+        if (!t) return 'Other';
+        if (/first-class|multi-day/i.test(t.format)) return 'First-class';
+        if (/list a|odi/i.test(t.format)) return 'List A';
+        if (/t20|twenty/i.test(t.format)) return 'T20';
+        return t.format || 'Other';
+      };
+      const perFmt = new Map();
+      const get = (f) => { if (!perFmt.has(f)) perFmt.set(f, { inns: 0, runs: 0, balls: 0, fours: 0, sixes: 0, notOut: 0, dismissals: 0, hs: 0, wkts: 0, bowlRuns: 0, bowlBalls: 0, overs: 0, bowlMaidens: 0, bbiW: 0, bbiR: 0, matches: new Set() }); return perFmt.get(f); };
+      for (const b of batInns) {
+        const inn = innById.get(b.inningsId); const m = inn && matchByInn.get(inn.id);
+        const f = m ? fmtOf(m.tournamentId) : 'Other';
+        const s = get(f); s.inns++; s.runs += b.runs || 0; s.balls += b.balls || 0; s.fours += b.fours || 0; s.sixes += b.sixes || 0;
+        if (b.notOut) s.notOut++; else s.dismissals++;
+        if ((b.runs || 0) > s.hs) s.hs = b.runs;
+        if (m) s.matches.add(m.id);
+      }
+      for (const w of bowlOvers) {
+        const inn = innById.get(w.inningsId); const m = inn && matchByInn.get(inn.id);
+        const f = m ? fmtOf(m.tournamentId) : 'Other';
+        const s = get(f); s.wkts += w.wickets || 0; s.bowlRuns += w.runs || 0; s.bowlBalls += Math.round((w.overs || 0) * 6); s.overs += w.overs || 0; s.bowlMaidens += w.maidens || 0;
+        if (m) s.matches.add(m.id);
+        if ((w.wickets || 0) > s.bbiW || ((w.wickets || 0) === s.bbiW && (w.runs || 0) < s.bbiR)) { s.bbiW = w.wickets || 0; s.bbiR = w.runs || 0; }
+      }
+      const fmts = [...perFmt.keys()].sort((a, b) => (a === 'First-class' ? -1 : b === 'First-class' ? 1 : a.localeCompare(b)));
+      if (fmts.length) {
+        const th = `<tr><th></th>${fmts.map((f) => `<th>${esc(f)}</th>`).join('')}</tr>`;
+        const cell = (f, fn) => `<td class="num">${fn(perFmt.get(f))}</td>`;
+        const rowsHtml = [
+          ['Matches', (s) => s.matches.size || '—'], ['Innings', (s) => s.inns || '—'], ['Runs', (s) => s.runs || '—'], ['Highest', (s) => s.hs || '—'],
+          ['Average', (s) => (s.dismissals ? (s.runs / s.dismissals).toFixed(2) : s.runs ? '—' : '—')], ['Strike rate', (s) => (s.balls ? ((s.runs / s.balls) * 100).toFixed(2) : '—')],
+          ['Wickets', (s) => s.wkts || '—'], ['Bowling avg', (s) => (s.wkts ? (s.bowlRuns / s.wkts).toFixed(2) : '—')], ['Economy', (s) => (s.overs ? (s.bowlRuns / s.overs).toFixed(2) : '—')], ['Best bowling', (s) => (s.bbiW ? `${s.bbiW}/${s.bbiR}` : '—')],
+        ].map(([lab, fn]) => `<tr><td>${esc(lab)}</td>${fmts.map((f) => cell(f, fn)).join('')}</tr>`).join('\n');
+        rows.push(`<div class="table-wrap"><h3 style="margin:.6rem .9rem">Career statistics</h3><table><thead>${th}</thead><tbody>${rowsHtml}</tbody></table></div>`);
+      }
+    }
+    if (!rows.length) return '';
+    return `<section class="section"><h2>Statistics</h2><p class="card-meta" style="margin:.4rem 0 .9rem">${esc(sourceNote)}</p><div class="grid" style="margin-top:.4rem">${rows.join('\n')}</div></section>`;
+  })();
+  html += statsSection;
 
   // career tables — first column = linked match, not dismissal
   const innOf = (id) => db.innings.find((i) => i.id === id);
