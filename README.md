@@ -27,6 +27,7 @@ The production domain is **configurable** — nothing is hardcoded.
 
 - `npm run build` uses `SITE_URL` for canonical URLs, Open Graph URLs and the static
   `sitemap.xml`/`robots.txt`. Without it, the build falls back to the default URL in
+  `scripts/build.mjs` (currently `https://rewa-cricket-division.vercel.app`):
   `scripts/build.mjs` (change that constant once the domain is confirmed):
 
   ```bash

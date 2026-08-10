@@ -1138,3 +1138,56 @@ h1 .tick-svg {
   font-size: clamp(1.4rem, 3vw, 2rem);
   overflow-wrap: anywhere;
 }
+
+/* ---------- Minimal search icon button (no emoji, no text) ---------- */
+.header-search-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  background: #fff;
+  text-decoration: none;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.header-search-btn:hover {
+  color: var(--brand);
+  border-color: var(--brand);
+  text-decoration: none;
+}
+.header-search-btn svg {
+  display: block;
+}
+@media (max-width: 900px) {
+  .header-search-btn {
+    order: 5;
+  }
+}
+
+/* pinned search: icon sits cleanly left of the input */
+.header-search-icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--muted);
+  line-height: 0;
+}
+
+/* ---------- Footer legal block alignment ---------- */
+.footer-legal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  text-align: center;
+}
+.footer-copyright {
+  margin: 0;
+}
+.footer-about {
+  max-width: 72ch;
+  line-height: 1.6;
+  margin: 0 auto;
+}

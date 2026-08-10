@@ -18,7 +18,7 @@ const SRC = join(ROOT, 'src');
 const DIST = join(ROOT, 'dist');
 const DATA = join(ROOT, 'data');
 
-const SITE = (process.env.SITE_URL || 'https://rewacricketdivision.in').replace(/\/$/, '');
+const SITE = (process.env.SITE_URL || 'https://rewa-cricket-division.vercel.app').replace(/\/$/, '');
 
 // ---------- data ----------
 const org = JSON.parse(readFileSync(join(DATA, 'organization.json'), 'utf8'));
@@ -90,15 +90,16 @@ const NAV = [
 ];
 
 function header(pinned = false) {
+  const searchIcon = `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
   const search = pinned
     ? `<form class="header-search" role="search" action="/search/" method="get">
       <label class="sr-only" for="q">Search the archive</label>
-      <span class="header-search-icon" aria-hidden="true">&#128269;</span>
+      <span class="header-search-icon">${searchIcon}</span>
       <input id="q" name="q" type="search" placeholder="Search players, teams, matches…" autocomplete="off" />
       <button class="header-search-clear" type="button" data-search-clear aria-label="Clear search" hidden>&#10005;</button>
       <button class="btn btn-primary header-search-go" type="submit">Search</button>
     </form>`
-    : `<a class="btn btn-primary header-search-btn" href="/search/" role="search">&#128269;&nbsp; Search</a>`;
+    : `<a class="header-search-btn" href="/search/" aria-label="Search the archive" title="Search the archive">${searchIcon}</a>`;
   return `<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="container header-inner">
@@ -147,8 +148,10 @@ function footer() {
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="container">© <span data-year>${new Date().getFullYear()}</span> ${esc(org.name)}. All rights reserved.</div>
-    <div class="container footer-about"><p>The ${esc(org.name)} archive is a permanent, searchable record of organised cricket in the Rewa region — division competitions, local leagues, and the state and national matches of Rewa's players — built with the permission of the division and sourced only from official records. सफ़ेद शेरों की धरती · Land of the White Tigers.</p></div>
+    <div class="container footer-legal">
+      <p class="footer-copyright">&copy; <span data-year>${new Date().getFullYear()}</span> ${esc(org.name)}. All rights reserved.</p>
+      <p class="footer-about">The ${esc(org.name)} archive is a permanent, searchable record of organised cricket in the Rewa region — division competitions, local leagues, and the state and national matches of Rewa's players — built with the permission of the division and sourced only from official records. सफ़ेद शेरों की धरती · Land of the White Tigers.</p>
+    </div>
   </div>
 </footer>
 <script src="/js/main.js" defer></script>
