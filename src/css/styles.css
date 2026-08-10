@@ -448,7 +448,7 @@ h3 {
   border-color: var(--brand);
 }
 
-/* Official cards — distinct gold/amber treatment */
+/* Official cards — distinct gold/amber treatment (tournaments only) */
 .card-official {
   border-color: var(--accent);
   background: linear-gradient(180deg, rgba(200, 162, 74, 0.10), rgba(200, 162, 74, 0.03) 45%, var(--card-bg));
@@ -460,30 +460,36 @@ h3 {
   box-shadow: 0 0 0 1px rgba(200, 162, 74, 0.55), 0 6px 18px rgba(200, 162, 74, 0.15);
 }
 
-/* Official badge */
+/* Official badge — small grey verified tick (players) */
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 0.14rem 0.5rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.08rem 0.35rem;
   border-radius: 999px;
   vertical-align: middle;
   white-space: nowrap;
 }
 
 .badge-official {
-  background: var(--accent);
-  color: #1a1405;
-  border: 1px solid var(--accent-dark);
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--line);
 }
 
 .card-title .badge {
-  margin-left: 0.35rem;
+  margin-left: 0.3rem;
   transform: translateY(-1px);
+}
+
+/* Archive / tournaments section divider */
+.archive-divider {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 1.5rem 0;
 }
 
 .card a.card-link {

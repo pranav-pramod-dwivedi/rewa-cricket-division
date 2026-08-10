@@ -69,6 +69,7 @@ const NAV = [
   ['News', '/news/'],
   ['Matches', '/matches/'],
   ['Tournaments', '/tournaments/'],
+  ['Archive', '/archive/'],
   ['Teams', '/teams/'],
   ['Players', '/players/'],
   ['Venues', '/venues/'],
@@ -189,7 +190,7 @@ for (const p of db.players) {
 }
 const isOfficialPlayer = (pid) => officialPlayerIds.has(pid);
 const isOfficialTournament = (tid) => officialTournamentIds.has(tid);
-const officialBadge = (label = 'Official') => `<span class="badge badge-official">&#10003; ${label}</span>`;
+const verifiedTick = () => `<span class="badge badge-official" title="Verified official player">&#10003;</span>`;
 const officialCardClass = (official) => (official ? ' card-official' : '');
 
 const statusBadge = (s) => {
@@ -423,9 +424,9 @@ function renderPlayers() {
         .map((p) => {
           const team = p.teamId ? teamsById.get(p.teamId) : null;
           const official = isOfficialPlayer(p.id);
-          return `<a class="card row-card card-link${officialCardClass(official)}" href="/players/${esc(p.slug)}/">
+          return `<a class="card row-card card-link" href="/players/${esc(p.slug)}/">
             <span class="avatar avatar-sm">${esc(p.name.split(' ').map((w) => w[0]).slice(0, 2).join(''))}</span>
-            <span><span class="card-title">${esc(p.name)} ${official ? officialBadge() : ''}</span><div class="card-meta">${esc(p.role)}${team ? ' · ' + esc(team.name) : ''}${official ? ' · Official' : ''}</div></span>
+            <span><span class="card-title">${esc(p.name)} ${official ? verifiedTick() : ''}</span><div class="card-meta">${esc(p.role)}${team ? ' · ' + esc(team.name) : ''}</div></span>
           </a>`;
         })
         .join('\n')}</div>`
@@ -455,7 +456,7 @@ function renderPlayer(p) {
       ...(p.bio ? { description: p.bio } : {}),
     },
   });
-  html += `<div class="page-head"><h1>${esc(p.name)} ${isOfficialPlayer(p.id) ? officialBadge() : ''}</h1><p>${esc(p.role)}${team ? ` · <a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : ''}</p></div>`;
+  html += `<div class="page-head"><h1>${esc(p.name)} ${isOfficialPlayer(p.id) ? verifiedTick() : ''}</h1><p>${esc(p.role)}${team ? ` · <a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : ''}</p></div>`;
   html += `<dl class="card" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:720px;margin-bottom:1.5rem">
     ${[['Role', p.role], team ? ['Team', `<a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>`] : null, p.battingStyle ? ['Batting style', p.battingStyle] : null, p.bowlingStyle ? ['Bowling style', p.bowlingStyle] : null, p.dateOfBirth ? ['Date of birth', p.dateOfBirth] : null, ['Matches', batInns.length || '—'], ['Runs', batRuns || '—'], ['Wickets', bowlWkts || '—']]
       .filter(Boolean)
@@ -490,6 +491,142 @@ function renderPlayer(p) {
 }
 
 // ============================================================
+// ARCHIVE — Rewa Division Archive hierarchy
+// ============================================================
+// Rule: if a match has at least one Rewa player, the match is in, the tournament is in.
+const ARCHIVE = [
+  {
+    id: 'inter-district',
+    name: 'Inter-District',
+    desc: 'Official inter-district tournaments of the Rewa zone, conducted under MPCA / RDCA.',
+    groups: [
+      { name: 'Senior Men', tids: ['t-senior-2018'] },
+      { name: 'U-22', tids: ['t-u22-2018', 't-u22-2020'] },
+      { name: 'U-18', tids: ['t-u18-2018', 't-gaykawad-2021'] },
+      { name: 'U-15', tids: ['t-u15-2018', 't-u15-2022'] },
+      { name: 'U-14', tids: [] },
+      { name: 'Senior Women', tids: [] },
+      { name: 'Girls U-19', tids: [] },
+      { name: 'Girls U-16', tids: [] },
+    ],
+  },
+  {
+    id: 'inter-school',
+    name: 'Inter-School',
+    desc: 'Inter-school cricket competitions in the Rewa district.',
+    groups: [],
+  },
+  {
+    id: 'mpca-inter-club',
+    name: 'MPCA Inter-Club',
+    desc: 'MPCA-sanctioned inter-club competitions (A Grade).',
+    groups: [{ name: 'A Grade', tids: [] }],
+  },
+  {
+    id: 'historical-inter-divisional',
+    name: 'Historical Inter-Divisional',
+    desc: 'Historical inter-divisional trophies of Madhya Pradesh cricket.',
+    groups: [
+      { name: 'M.Y. Memorial Trophy', tids: [] },
+      { name: 'Hiralal Gaekwad Trophy', tids: ['t-gaykawad-2021'] },
+      { name: 'Parmanand Bhai Patel Trophy', tids: ['t-u22-2018', 't-u22-2020'] },
+      { name: 'Other Historical Competitions', tids: [] },
+    ],
+  },
+  {
+    id: 'bcci-competitions',
+    name: 'BCCI Competitions',
+    desc: 'National BCCI competitions. Rewa players feature for Madhya Pradesh.',
+    groups: [
+      { name: 'Ranji Trophy', tids: [] },
+      { name: 'Vijay Hazare Trophy', tids: [] },
+      { name: 'Syed Mushtaq Ali Trophy', tids: [] },
+      { name: 'CK Nayudu Trophy', tids: [] },
+      { name: 'U-23 State A', tids: [] },
+      { name: 'Cooch Behar Trophy', tids: [] },
+      { name: 'Vinoo Mankad Trophy', tids: [] },
+      { name: 'Vijay Merchant Trophy', tids: [] },
+    ],
+  },
+  {
+    id: 'mpca-inter-divisional',
+    name: 'MPCA Inter-Divisional',
+    desc: 'MPCA inter-divisional championships.',
+    groups: [
+      { name: 'Senior', tids: ['t-senior-2018'] },
+      { name: 'U-23', tids: ['t-u23-2018'] },
+      { name: 'U-19', tids: [] },
+      { name: 'U-16', tids: [] },
+      { name: 'Women\'s Competitions', tids: [] },
+    ],
+  },
+  {
+    id: 'rewa-cricket-division',
+    name: 'Rewa Cricket Division',
+    desc: 'Rewa Cricket Division competitions, local tournaments and the Rewa Jaguars franchise.',
+    groups: [
+      { name: 'District Competitions', tids: ['t-u23-2018', 't-u15-2018', 't-u18-2018', 't-senior-2018'] },
+      { name: 'Local Tournaments', tids: ['t-rainy-celebration-cup-2026-2026', 't-gk-electrical-battery-series-2026-2026', 't-rainy-cup-season-4-2026', 't-mitra-mandali-league-2026', 't-vindhyachal-premier-league-2026'] },
+      { name: 'MPL Franchise (Rewa Jaguars)', tids: ['t-mpl-2025', 't-mppl-2026'] },
+      { name: 'RCD Matches', tids: [] },
+      { name: 'Historical Archive', tids: [] },
+    ],
+  },
+];
+
+function tournCard(t) {
+  const season = seasonsById.get(t.seasonId);
+  const official = isOfficialTournament(t.id);
+  return `<a class="card card-link${officialCardClass(official)}" href="/tournaments/${esc(t.slug)}/">
+    <p class="eyebrow">${esc(t.format)} · ${season?.year ?? 'Season'}</p>
+    <span class="card-title">${esc(t.name)}</span>
+    <div class="card-meta">${esc(t.status)}${official ? ` · ${esc(t.governingBody ?? 'Official')}` : ' · Local/Community'}</div>
+  </a>`;
+}
+
+function renderArchiveIndex() {
+  let html = layout({
+    title: 'Rewa Division Archive',
+    description: 'Complete archive of Rewa Division cricket — inter-district, inter-school, MPCA, BCCI and historical competitions.',
+    path: '/archive/',
+    breadcrumbs: [{ name: 'Archive', path: '/archive/' }],
+  });
+  html += `<div class="page-head"><p class="eyebrow">Archive</p><h1>Rewa Division Archive</h1>
+    <p>The complete archive. A match is included if it features at least one Rewa player.</p></div>`;
+  html += `<div class="grid grid-2">${ARCHIVE.map((cat) => {
+    const count = cat.groups.reduce((s, g) => s + g.tids.length, 0);
+    return `<a class="card card-link" href="/archive/${esc(cat.id)}/">
+      <span class="card-title">${esc(cat.name)}</span>
+      <div class="card-meta">${count} ${count === 1 ? 'tournament' : 'tournaments'} recorded</div>
+    </a>`;
+  }).join('\n')}</div>`;
+  html += closeLayout();
+  writePage('archive', html);
+}
+
+function renderArchiveCategory(cat) {
+  const slug = cat.id;
+  let html = layout({
+    title: cat.name,
+    description: cat.desc,
+    path: `/archive/${slug}/`,
+    breadcrumbs: [{ name: 'Archive', path: '/archive/' }, { name: cat.name, path: `/archive/${slug}/` }],
+  });
+  html += `<div class="page-head"><p class="eyebrow">Archive</p><h1>${esc(cat.name)}</h1><p>${esc(cat.desc)}</p></div>`;
+  if (cat.groups.length) {
+    for (const g of cat.groups) {
+      const ts = g.tids.map((id) => tourneysById.get(id)).filter(Boolean);
+      html += `<section class="section"><div class="section-title"><h2>${esc(g.name)}</h2></div>
+        <div class="grid grid-2">${ts.length ? ts.map(tournCard).join('\n') : `<p class="card-meta">Nothing recorded yet — will appear when confirmed.</p>`}</div></section>`;
+    }
+  } else {
+    html += `<p class="card-meta">Nothing recorded yet — will appear when confirmed.</p>`;
+  }
+  html += closeLayout();
+  writePage(`archive/${slug}`, html);
+}
+
+// ============================================================
 // TOURNAMENTS
 // ============================================================
 function renderTournaments() {
@@ -500,20 +637,14 @@ function renderTournaments() {
   });
   html += `<div class="page-head"><p class="eyebrow">Competition</p><h1>Tournaments</h1>
     <p>Official tournaments as announced by the division.</p></div>`;
-  html += db.tournaments.length
-    ? `<div class="grid grid-2 grid-3">${db.tournaments
-        .map((t) => {
-          const season = seasonsById.get(t.seasonId);
-          const champ = t.championTeamId ? teamsById.get(t.championTeamId) : null;
-          const official = isOfficialTournament(t.id);
-          return `<a class="card card-link${officialCardClass(official)}" href="/tournaments/${esc(t.slug)}/">
-            <p class="eyebrow">${esc(t.format)} · ${season?.year ?? 'Season'}</p>
-            <span class="card-title">${esc(t.name)} ${official ? officialBadge() : ''}</span>
-            <div class="card-meta">${esc(t.status)}${champ ? ` · Champions: ${esc(champ.name)}` : ''}${official ? ` · ${esc(t.governingBody ?? 'Official')}` : ' · Local/Community'}</div>
-          </a>`;
-        })
-        .join('\n')}</div>`
-    : empty('No tournaments published yet', 'Official tournament details will appear here once announced by the Rewa Cricket Division.');
+  const officialTs = db.tournaments.filter((t) => isOfficialTournament(t.id));
+  const communityTs = db.tournaments.filter((t) => !isOfficialTournament(t.id));
+  if (officialTs.length) {
+    html += `<section class="section"><div class="section-title"><h2>Official</h2></div><div class="grid grid-2 grid-3">${officialTs.map(tournCard).join('\n')}</div></section>`;
+  }
+  if (communityTs.length) {
+    html += `<section class="section"><hr class="archive-divider"><div class="section-title"><h2>More Tournaments</h2></div><div class="grid grid-2 grid-3">${communityTs.map(tournCard).join('\n')}</div></section>`;
+  }
   html += closeLayout();
   writePage('tournaments', html);
 }
@@ -528,7 +659,7 @@ function renderTournament(t) {
     path: `/tournaments/${t.slug}/`,
     breadcrumbs: [{ name: 'Tournaments', path: '/tournaments/' }, { name: t.name, path: `/tournaments/${t.slug}/` }],
   });
-  html += `<div class="page-head"><p class="eyebrow">${esc(t.format)}${season ? ` · ${season.year} Season` : ''}</p><h1>${esc(t.name)} ${isOfficialTournament(t.id) ? officialBadge() : ''}</h1><p>Status: ${esc(t.status)}</p></div>`;
+  html += `<div class="page-head"><p class="eyebrow">${esc(t.format)}${season ? ` · ${season.year} Season` : ''}</p><h1>${esc(t.name)}</h1><p>Status: ${esc(t.status)}</p></div>`;
   if (isOfficialTournament(t.id) && t.governingBody) html += `<p class="badge badge-official">&#10003; ${esc(t.governingBody)} sanctioned</p>`;
   if (t.description) html += `<p class="prose" style="max-width:62ch;margin-bottom:1rem">${esc(t.description)}</p>`;
   if (champ) html += `<p class="btn btn-primary" style="margin-bottom:1.5rem">&#127942; Champions: ${esc(champ.name)}</p>`;
@@ -897,6 +1028,8 @@ db.players.forEach(renderPlayer);
 renderPlayers();
 db.tournaments.forEach(renderTournament);
 renderTournaments();
+renderArchiveIndex();
+for (const cat of ARCHIVE) renderArchiveCategory(cat);
 db.matches.forEach(renderMatch);
 renderMatches();
 
