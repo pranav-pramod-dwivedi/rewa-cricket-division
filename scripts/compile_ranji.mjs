@@ -168,7 +168,7 @@ function getVenue(name) {
 
 // load captures
 const captures = [];
-for (const f of ['/tmp/od_all.jsonl']) {
+for (const f of ['/tmp/od_all2.jsonl']) {
   try {
     for (const l of readFileSync(f, 'utf8').trim().split('\n').filter(Boolean)) {
       try {
