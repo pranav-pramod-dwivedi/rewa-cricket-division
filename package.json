@@ -1,12 +1,16 @@
 {
   "name": "rewa-cricket-division",
   "version": "0.1.0",
-  "description": "Official website of the Rewa Cricket Division — plain HTML/CSS/JS, data in JSON, static build.",
+  "description": "Official archive of the Rewa Cricket Division — plain HTML/CSS/JS, data in JSON, static build.",
   "type": "module",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
+    "start": "node scripts/serve.mjs",
     "serve": "node scripts/serve.mjs",
-    "dev": "node scripts/dev.mjs"
+    "dev": "node scripts/serve.mjs"
   }
 }

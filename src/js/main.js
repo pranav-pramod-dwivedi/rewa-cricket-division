@@ -16,15 +16,28 @@
     });
   }
 
-  // Contact form (demo handler — replace with real endpoint/backend when live)
+  // Contact form: opens the visitor's mail client when an official address is
+  // configured; otherwise states plainly that the address is being confirmed.
   var form = document.querySelector('[data-contact-form]');
   var status = document.querySelector('[data-contact-status]');
   if (form && status) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      status.classList.remove('hidden');
-      status.textContent =
-        'Thank you. The Rewa Cricket Division will review your enquiry.';
+      var to = form.getAttribute('data-contact-email');
+      var subject = encodeURIComponent(form.subject ? form.subject.value : 'Enquiry via rewa-cricket-division website');
+      var body = encodeURIComponent(
+        'Name: ' + (form.name ? form.name.value : '') +
+        '\nEmail: ' + (form.email ? form.email.value : '') +
+        '\n\n' + (form.message ? form.message.value : '')
+      );
+      if (to) {
+        window.location.href = 'mailto:' + to + '?subject=' + subject + '&body=' + body;
+        status.classList.remove('hidden');
+        status.textContent = 'Opening your email client… (your message is not stored on this site)';
+      } else {
+        status.classList.remove('hidden');
+        status.textContent = 'The official contact address is being confirmed by the division. Meanwhile, please use the official government and sports links above.';
+      }
       form.reset();
     });
   }

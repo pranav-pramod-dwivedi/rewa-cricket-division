@@ -999,6 +999,11 @@ function renderStatic({ file, title, description, path, body, jsonLd = [] }) {
   let html = layout({ title, description, path, jsonLd });
   html += body;
   html += closeLayout();
+  if (file === '404') {
+    // static hosts (Netlify/GH Pages) serve 404.html from the site root
+    writeFileSync(join(DIST, '404.html'), html);
+    return;
+  }
   writePage(file, html);
 }
 
@@ -1255,6 +1260,16 @@ db.matches.forEach(renderMatch);
 renderMatches();
 
 renderStatic({
+  file: '404',
+  title: 'Page not found',
+  description: 'The page you requested could not be found in the Rewa Cricket Division archive.',
+  path: '/404/',
+  body: `<div class="page-head"><p class="eyebrow">Error 404</p><h1>Page not found</h1>
+    <p>That page does not exist in the Rewa Cricket Division archive. It may have been moved or renamed.</p>
+    <p style="margin-top:1rem"><a class="btn btn-primary" href="/">Back to the archive home</a> <a class="btn btn-ghost" href="/archive/">Browse the archive</a></p></div>`,
+});
+
+renderStatic({
   file: 'about',
   title: 'About the Division',
   description: `About the ${org.name} — the governing body for organised cricket in the Rewa region.`,
@@ -1315,16 +1330,19 @@ renderStatic({
   <div class="split">
     <div class="card">
       <h2 style="margin-bottom:.5rem">Official enquiries</h2>
-      <p style="color:var(--muted);font-size:.95rem">For official correspondence with the ${esc(org.name)}, please use the contact details below. This website is operated with the permission of the division.</p>
+      <p style="color:var(--muted);font-size:.95rem">For official correspondence with the ${esc(org.name)}, please use the contact details below. This archive is operated with the permission of the division.</p>
       <dl style="margin-top:1rem;line-height:1.9">
         <dt style="color:var(--muted);font-size:.85rem">Organization</dt><dd style="font-weight:600">${esc(org.name)}</dd>
         ${org.headquarters ? `<dt style="color:var(--muted);font-size:.85rem">Headquarters</dt><dd>${esc(org.headquarters)}</dd>` : ''}
-        <dt style="color:var(--muted);font-size:.85rem">Email</dt><dd>${org.contactEmail ? `<a href="mailto:${esc(org.contactEmail)}">${esc(org.contactEmail)}</a>` : 'Official contact email to be confirmed'}</dd>
+        ${org.address ? `<dt style="color:var(--muted);font-size:.85rem">Address</dt><dd>${esc(org.address)}</dd>` : ''}
+        <dt style="color:var(--muted);font-size:.85rem">Email</dt><dd>${org.contactEmail ? `<a href="mailto:${esc(org.contactEmail)}">${esc(org.contactEmail)}</a>` : 'Official contact email to be confirmed by the division'}</dd>
+        <dt style="color:var(--muted);font-size:.85rem">Phone</dt><dd>${org.contactPhone ? esc(org.contactPhone) : 'Official contact number to be confirmed by the division'}</dd>
+        <dt style="color:var(--muted);font-size:.85rem">Website</dt><dd><a href="${esc(org.website)}">${esc(org.website)}</a></dd>
       </dl>
     </div>
     <div class="card">
       <h2 style="margin-bottom:1rem">Send an enquiry</h2>
-      <form data-contact-form>
+      <form data-contact-form ${org.contactEmail ? `data-contact-email="${esc(org.contactEmail)}"` : ''}>
         <div class="field"><label for="name">Name</label><input id="name" name="name" type="text" required /></div>
         <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required /></div>
         <div class="field"><label for="subject">Subject</label><input id="subject" name="subject" type="text" /></div>
@@ -1333,7 +1351,18 @@ renderStatic({
         <p class="form-status hidden" data-contact-status></p>
       </form>
     </div>
-  </div>`,
+  </div>
+  <section class="section">
+    <div class="section-title"><div><p class="eyebrow">Authoritative sources</p><h2>Official Government &amp; Sports Links</h2></div></div>
+    <div class="grid grid-2 grid-3">
+      <div class="card"><h3 style="font-size:1rem">Rewa District</h3><p class="card-meta">Government of Madhya Pradesh — official district portal of Rewa (सफ़ेद शेरों की धरती).</p><p style="margin-top:.6rem"><a href="https://rewa.nic.in" rel="noopener" target="_blank">rewa.nic.in &nearr;</a></p></div>
+      <div class="card"><h3 style="font-size:1rem">Madhya Pradesh Government</h3><p class="card-meta">State government portal — parent administration of Rewa district.</p><p style="margin-top:.6rem"><a href="https://www.mp.gov.in" rel="noopener" target="_blank">mp.gov.in &nearr;</a></p></div>
+      <div class="card"><h3 style="font-size:1rem">Board of Control for Cricket in India</h3><p class="card-meta">National cricket governing body — domestic competitions and records.</p><p style="margin-top:.6rem"><a href="https://www.bcci.tv" rel="noopener" target="_blank">bcci.tv &nearr;</a></p></div>
+      <div class="card"><h3 style="font-size:1rem">Madhya Pradesh Cricket Association</h3><p class="card-meta">State cricket body — the MPCA website link will be added once its official address is confirmed.</p></div>
+      <div class="card"><h3 style="font-size:1rem">Cricbuzz</h3><p class="card-meta">International cricket scores and player career statistics — used as a reference source.</p><p style="margin-top:.6rem"><a href="https://www.cricbuzz.com" rel="noopener" target="_blank">cricbuzz.com &nearr;</a></p></div>
+      <div class="card"><h3 style="font-size:1rem">ESPNcricinfo</h3><p class="card-meta">Cricket records and archives — used as a reference source.</p><p style="margin-top:.6rem"><a href="https://www.espncricinfo.com" rel="noopener" target="_blank">espncricinfo.com &nearr;</a></p></div>
+    </div>
+  </section>`,
 });
 
 // season detail pages
