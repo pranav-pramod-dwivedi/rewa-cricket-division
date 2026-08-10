@@ -1598,6 +1598,13 @@ for (const [from, to] of [
 const fav = join(ROOT, 'public', 'favicon.svg');
 if (existsSync(fav)) copyFileSync(fav, join(DIST, 'favicon.svg'));
 
+// root-level public files (e.g. Google site-verification html)
+for (const f of readdirSync(join(ROOT, 'public'))) {
+  const s = join(ROOT, 'public', f);
+  if (f === 'favicon.svg' || f === 'img' || f === '.DS_Store') continue;
+  if (statSync(s).isFile()) copyFileSync(s, join(DIST, f));
+}
+
 // public/img (official logos) — recursive copy
 const imgSrc = join(ROOT, 'public', 'img');
 function copyDir(src, dst) {
