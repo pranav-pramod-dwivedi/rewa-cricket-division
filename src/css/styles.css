@@ -927,3 +927,8 @@ textarea:focus {
 .group-title { display: flex; align-items: center; gap: .6rem; margin-bottom: .8rem; }
 .group-title h3 { margin: 0; }
 .count-pill { background: var(--accent, #0a7d5f); color: #fff; border-radius: 999px; padding: .15rem .65rem; font-size: .72rem; font-weight: 700; letter-spacing: .03em; }
+
+/* scope badges (Rewa archive classification) */
+.badge-state { background: #dbeafe; color: #1e40af; }
+.badge-national { background: #ede9fe; color: #5b21b6; }
+.badge-division { background: var(--brand-light); color: var(--brand-dark); }

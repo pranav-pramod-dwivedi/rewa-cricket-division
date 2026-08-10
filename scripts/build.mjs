@@ -8,7 +8,7 @@
 // structure; the generated HTML is throwaway.
 // ============================================================
 
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, readdirSync, rmSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -38,6 +38,9 @@ const ld = (obj) =>
   `<script type="application/ld+json">${JSON.stringify(obj)}</script>`;
 
 const titleFor = (t) => (t === org.name ? org.name : `${t} | ${org.name}`);
+
+// team-name disambiguation for player page titles (common names collide)
+const teamOf = (p) => (p.teamId ? teamsById.get(p.teamId) : null);
 
 function head({ title, description, path, jsonLd = [], ogType = 'website' }) {
   const blocks = Array.isArray(jsonLd) ? jsonLd : [jsonLd];
@@ -85,7 +88,7 @@ function header() {
       <img class="brand-logo" src="/img/logo-rewa-official.jpg" alt="Official emblem of Rewa District, Madhya Pradesh" width="44" height="44" />
       <span class="brand-text">
         <strong>${esc(org.name)}</strong>
-        <small>Official Website</small>
+        <small>Official Archive</small>
       </span>
     </a>
     <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="nav" aria-label="Toggle menu">&#9776;</button>
@@ -106,7 +109,7 @@ function footer() {
         <img src="/img/logo-rewa-official.jpg" alt="Official emblem of Rewa District" width="40" height="40" />
         <h3>${esc(org.name)}</h3>
       </div>
-      <p class="footer-note">The official website of the ${esc(org.name)}. सफ़ेद शेरों की धरती — Land of the White Tigers.</p>
+      <p class="footer-note">The official archive of the ${esc(org.name)}, built with the permission of the division. सफ़ेद शेरों की धरती — Land of the White Tigers.</p>
     </div>
     <div>
       <h3>Explore</h3>
@@ -119,7 +122,7 @@ function footer() {
     </div>
     <div>
       <h3>Official</h3>
-      <p class="footer-note">Operated with the permission of the ${esc(org.name)}.</p>
+      <p class="footer-note">Archive operated with the permission of the ${esc(org.name)}.</p>
     </div>
   </div>
   <div class="footer-bottom">
@@ -207,6 +210,13 @@ const statusBadge = (s) => {
 
 
 const dateTxt = (m) => m.matchDate ?? 'Date TBA';
+const scopeOf = (tourn) => (tourn ? tourn.scope || 'division' : 'division');
+const scopeLabel = { division: 'Rewa Division match', state: 'State-level match', national: 'National match' };
+const scopeBadge = (tourn) => {
+  const s = scopeOf(tourn);
+  if (s === 'division') return '';
+  return `<span class="badge badge-${s}" title="External match featuring a Rewa player — part of the Rewa archive">${scopeLabel[s]}</span>`;
+};
 const dateSort = (a, b) => (b.matchDate ?? '9999') < (a.matchDate ?? '9999') ? -1 : (b.matchDate ?? '9999') > (a.matchDate ?? '9999') ? 1 : 0;
 
 const matchCard = (m) => {
@@ -217,7 +227,7 @@ const matchCard = (m) => {
   return `<article class="card match-card">
     <div class="match-top">
       <span class="competition">${esc(tourn?.name ?? 'Match')}</span>
-      ${statusBadge(m.status)}
+      ${scopeBadge(tourn)}${statusBadge(m.status)}
     </div>
     <div class="match-teams">
       <span class="team-name"><a href="/teams/${esc(teamA?.slug ?? '')}/">${esc(teamA?.name ?? 'Team A')}</a></span>
@@ -261,6 +271,44 @@ function writePage(relPath, html) {
   pages.push(relPath === '' ? '/' : `/${relPath}/`);
 }
 
+// ---------- sitemap validation ----------
+// Every canonical indexable HTML page written must appear exactly once in the
+// sitemap; no stale/empty/duplicate URLs. Fails the build on mismatch.
+function writeSitemap() {
+  const locs = [...new Set(pages)].sort();
+  const bad = pages.filter((p) => p.includes('//'));
+  const dupes = locs.length !== pages.length;
+  // walk dist to find any index.html not registered in pages
+  const walk = (dir, out = []) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = join(dir, e.name);
+      if (e.isDirectory()) walk(p, out);
+      else if (e.name === 'index.html') out.push(p);
+    }
+    return out;
+  };
+  const onDisk = walk(DIST);
+  const expect = locs.map((p) => join(DIST, p === '/' ? '' : p, 'index.html'));
+  const missing = onDisk.filter((f) => !expect.includes(f));
+  const notWritten = expect.filter((f) => !onDisk.includes(f));
+  const problems = [];
+  if (bad.length) problems.push(`invalid sitemap URLs: ${bad.join(', ')}`);
+  if (dupes) problems.push(`duplicate page entries: ${pages.length} entries vs ${locs.length} unique`);
+  if (missing.length) problems.push(`${missing.length} files on disk missing from sitemap (stale): ${missing.slice(0, 5).join(', ')}`);
+  if (notWritten.length) problems.push(`${notWritten.length} sitemap URLs missing on disk: ${notWritten.slice(0, 5).join(', ')}`);
+  if (problems.length) {
+    console.error('SITEMAP VALIDATION FAILED:\n - ' + problems.join('\n - '));
+    process.exit(1);
+  }
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${locs.map((p) => `  <url><loc>${absUrl(p)}</loc></url>`).join('\n')}
+</urlset>
+`;
+  writeFileSync(join(DIST, 'sitemap.xml'), xml);
+  console.log(`sitemap ok: ${locs.length} URLs, matches ${onDisk.length} pages on disk`);
+}
+
 // ============================================================
 // HOME
 // ============================================================
@@ -281,13 +329,41 @@ function renderHome() {
     <h1>The Official Home of Cricket in Rewa</h1>
     <p>${esc(org.description)}</p>
     <div class="hero-actions">
-      <a class="btn btn-primary" href="/matches/">Matches &amp; Results</a>
-      <a class="btn btn-ghost" href="/tournaments/">Tournaments</a>
+      <a class="btn btn-primary" href="/archive/">Explore the Archive</a>
+      <a class="btn btn-ghost" href="/matches/">Matches &amp; Results</a>
       <a class="btn btn-ghost" href="/about/">About the Division</a>
     </div>
   </section>
-  <div class="container">
-  <div class="split" style="margin-top:2.5rem">`;
+  <div class="container">`;
+
+  // archive positioning strip
+  html += `<section class="section">
+    <div class="split" style="align-items:center">
+      <div class="prose">
+        <p class="eyebrow">What this is</p>
+        <h2>The ${esc(org.name)} Historical Archive</h2>
+        <p>This site is the <strong>official historical archive</strong> of the ${esc(org.name)} — a permanent, searchable record of the division's competitions, teams, players, matches and statistics. It is built with the permission of the division and contains only verified, sourced information.</p>
+        <p>The archive is organised in four layers:</p>
+        <ul>
+          <li><strong>Rewa Division competitions</strong> — inter-district, age-group and divisional tournaments organised by the RDCA.</li>
+          <li><strong>Rewa teams &amp; players</strong> — every team and player appearing in recorded Rewa cricket.</li>
+          <li><strong>Rewa tournaments</strong> — local leagues and cups with full results.</li>
+          <li><strong>Rewa-related external matches</strong> — state and national matches (e.g. Madhya Pradesh in the Ranji Trophy, Rewa Jaguars in the MP League) archived because a Rewa player featured in them.</li>
+        </ul>
+      </div>
+      <aside class="card" style="min-width:260px">
+        <p class="eyebrow">The archive in numbers</p>
+        <div class="stat-grid">
+          <div class="card stat"><div class="stat-value">${db.matches.length}</div><div class="stat-label">Matches</div></div>
+          <div class="card stat"><div class="stat-value">${db.players.length}</div><div class="stat-label">Players</div></div>
+          <div class="card stat"><div class="stat-value">${db.teams.length}</div><div class="stat-label">Teams</div></div>
+          <div class="card stat"><div class="stat-value">${db.tournaments.length}</div><div class="stat-label">Tournaments</div></div>
+        </div>
+      </aside>
+    </div>
+  </section>`;
+
+  html += `<div class="split" style="margin-top:2.5rem">`;
 
   // recent matches
   html += `<section class="section">
@@ -326,6 +402,25 @@ function renderHome() {
     </section>
   </aside>
   </div>
+
+  <!-- match officials -->
+  <section class="section">
+    <div class="section-title"><div><p class="eyebrow">Who runs it</p><h2>Match Officials</h2></div>
+    <a class="link" href="/about/">More &rarr;</a></div>
+    <div class="grid grid-2">
+      ${db.officials.length ? db.officials.map((o) => `<div class="card"><strong>${esc(o.name)}</strong><div class="card-meta">${esc(o.role)}</div>${o.bio ? `<p class="card-meta" style="margin-top:.5rem">${esc(o.bio)}</p>` : ''}</div>`).join('\n') : `<p class="card-meta">Official listings will be published once confirmed by the division.</p>`}
+    </div>
+  </section>
+
+  <!-- official resources: govt + sports bodies -->
+  <section class="section">
+    <div class="section-title"><div><p class="eyebrow">Authoritative sources</p><h2>Official Resources</h2></div></div>
+    <div class="grid grid-2 grid-3">
+      <div class="card"><h3 style="font-size:1rem">Rewa District</h3><p class="card-meta">Government district portal for Rewa, Madhya Pradesh.</p><p style="margin-top:.6rem"><a href="https://rewa.nic.in" rel="noopener" target="_blank">rewa.nic.in &nearr;</a></p></div>
+      <div class="card"><h3 style="font-size:1rem">Madhya Pradesh Government</h3><p class="card-meta">State government portal — the parent administration for the district.</p><p style="margin-top:.6rem"><a href="https://www.mp.gov.in" rel="noopener" target="_blank">mp.gov.in &nearr;</a></p></div>
+      <div class="card"><h3 style="font-size:1rem">Board of Control for Cricket in India</h3><p class="card-meta">National governing body — state and national competitions archive.</p><p style="margin-top:.6rem"><a href="https://www.bcci.tv" rel="noopener" target="_blank">bcci.tv &nearr;</a></p></div>
+    </div>
+  </section>
   </div>`;
 
   html += closeLayout();
@@ -360,9 +455,12 @@ function renderTeams() {
 function renderTeam(t) {
   const squad = db.players.filter((p) => p.teamId === t.id);
   const teamMatches = db.matches.filter((m) => m.teamAId === t.id || m.teamBId === t.id);
+  const teamDesc = t.description && t.description.trim()
+    ? t.description
+    : `${t.name} — team profile, squad, matches and results from the Rewa Cricket Division archive.`;
   let html = layout({
     title: t.name,
-    description: t.description ?? `${t.name} — a team competing under the Rewa Cricket Division.`,
+    description: teamDesc,
     path: `/teams/${t.slug}/`,
     breadcrumbs: [{ name: 'Teams', path: '/teams/' }, { name: t.name, path: `/teams/${t.slug}/` }],
     jsonLd: [
@@ -437,8 +535,7 @@ function renderPlayers() {
 
 function renderPlayer(p) {
   const team = p.teamId ? teamsById.get(p.teamId) : null;
-  const pMatches = db.matches.filter((m) => m.teamAId === p.teamId || m.teamBId === p.teamId);
-  const batInns = db.batting.filter((b) => b.playerId === p.id);
+  const pMatches = db.matches.filter((m) => m.teamAId === p.teamId || m.teamBId === p.teamId);  const batInns = db.batting.filter((b) => b.playerId === p.id);
   const bowlOvers = db.bowling.filter((b) => b.playerId === p.id);
   const batRuns = batInns.reduce((s, b) => s + (b.runs || 0), 0);
   const bowlWkts = bowlOvers.reduce((s, b) => s + (b.wickets || 0), 0);
@@ -466,7 +563,7 @@ function renderPlayer(p) {
   };
   const age = ageOf(p.dateOfBirth);
   let html = layout({
-    title: p.name,
+    title: team ? `${p.name} — ${team.name}` : p.name,
     description: `${p.name} — ${p.role}${team ? ` for ${team.name}` : ''}, Rewa Cricket Division${p.battingStyle ? `, ${p.battingStyle}` : ''}.`,
     path: `/players/${p.slug}/`,
     bodyClass: 'profile',
@@ -490,6 +587,19 @@ function renderPlayer(p) {
   if (p.bio) html += `<section class="section"><h2>About</h2><p class="prose" style="max-width:62ch;margin-top:.6rem">${esc(p.bio)}</p></section>`;
   if (playedTeams.length) {
     html += `<section class="section"><h2>Teams</h2><div class="chip-row" style="margin-top:.6rem">${playedTeams.map((t) => `<a class="chip" href="/teams/${esc(t.slug)}/">${esc(t.name)}</a>`).join('')}</div></section>`;
+  }
+
+  // Rewa archive classification: external matches (state/national) on a Rewa player's record
+  const extInn = db.innings.filter((i) => {
+    const m = matchByInn.get(i.id);
+    if (!m) return false;
+    const t = tourneysById.get(m.tournamentId);
+    return t && t.scope && t.scope !== 'division';
+  });
+  const extMatchIds = new Set(extInn.map((i) => matchByInn.get(i.id).id));
+  const hasExt = batInns.some((b) => extMatchIds.has(matchByInn.get(innById.get(b.inningsId)?.id)?.id)) || bowlOvers.some((w) => extMatchIds.has(matchByInn.get(innById.get(w.inningsId)?.id)?.id));
+  if (hasExt) {
+    html += `<p class="card-meta" style="max-width:62ch;margin:.25rem 0 0">His career record includes external matches (Madhya Pradesh state / national competitions). These are part of the Rewa archive because they feature a Rewa player — see <a href="/archive/">the archive</a> for how the collection is organised.</p>`;
   }
 
   // ---- career stats: official (cricbuzz) if available, else computed from match data ----
@@ -809,9 +919,12 @@ function renderMatch(m) {
   const playersById = new Map(db.players.map((p) => [p.id, p]));
 
   const title = `${teamA?.name ?? 'Team A'} v ${teamB?.name ?? 'Team B'}`;
+  const docTitle = tourn ? `${title} — ${tourn.name}` : title;
   let html = layout({
-    title,
-    description: m.resultText ?? `Match between ${teamA?.name ?? 'Team A'} and ${teamB?.name ?? 'Team B'} · ${tourn?.name ?? 'Match'} · ${dateTxt(m)}`,
+    title: docTitle,
+    description: m.resultText
+      ? `${m.resultText} — ${title}${tourn ? `, ${tourn.name}` : ''}${m.matchDate ? `, ${m.matchDate}` : ''} · Rewa Cricket Division archive.`
+      : `${title} match details, scorecard, tournament and result${tourn ? ` — ${tourn.name}` : ''}${m.matchDate ? `, ${m.matchDate}` : ''}, from the Rewa Cricket Division archive.`,
     path: `/matches/${m.slug}/`,
     breadcrumbs: [{ name: 'Matches', path: '/matches/' }, { name: title, path: `/matches/${m.slug}/` }],
     jsonLd: {
@@ -832,6 +945,7 @@ function renderMatch(m) {
     <p class="eyebrow">${esc(tourn?.name ?? 'Match')}${season ? ` · ${season.year} Season` : ''}</p>
     <h1 style="margin-top:.25rem">${esc(title)}</h1>
     <p class="card-meta">${esc(dateTxt(m))}${m.startTime ? ' at ' + esc(m.startTime) : ''}${venue ? ` · ${esc(venue.name)}` : ''}${venue?.city ? `, ${esc(venue.city)}` : ''}</p>
+    ${scopeBadge(tourn) ? `<p style="margin-top:.75rem">${scopeBadge(tourn)}${scopeOf(tourn) !== 'division' ? ` <span class="card-meta">External match — archived because a Rewa player featured in it.</span>` : ''}</p>` : ''}
     ${m.resultText ? `<p class="btn btn-primary" style="margin-top:1rem;pointer-events:none">${esc(m.resultText)}</p>` : ''}
   </div>
   <section><h2>Scorecard</h2>
@@ -1109,15 +1223,7 @@ const aggregates = [
 // ============================================================
 // SITEMAP + ROBOTS
 // ============================================================
-function writeSitemap() {
-  const locs = [...new Set(pages)].sort();
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${locs.map((p) => `  <url><loc>${absUrl(p)}</loc></url>`).join('\n')}
-</urlset>
-`;
-  writeFileSync(join(DIST, 'sitemap.xml'), xml);
-}
+// writeSitemap is defined above (with validation).
 
 function writeRobots() {
   const txt = `User-agent: *
@@ -1130,6 +1236,7 @@ Sitemap: ${absUrl('/sitemap.xml')}
 }
 
 // ---------- build ----------
+rmSync(DIST, { recursive: true, force: true }); // clean stale pages first
 mkdirSync(DIST, { recursive: true });
 
 renderHome();
@@ -1154,10 +1261,27 @@ renderStatic({
   <div class="split">
     <div class="prose">
       <p>${esc(org.description)}</p>
+      <h2>About the Rewa Cricket Division</h2>
+      <p>The ${esc(org.name)} is the governing body for organised cricket in the Rewa region of Madhya Pradesh — the district known as <strong>सफ़ेद शेरों की धरती</strong>, the Land of the White Tigers. The division administers inter-district, age-group and divisional competitions, and acts as the local pathway for players progressing to Madhya Pradesh state cricket and beyond.</p>
+      <p>Rewa cricketers have represented Madhya Pradesh in the Ranji Trophy, the Vijay Hazare Trophy and the Syed Mushtaq Ali Trophy, and the district's franchise teams — such as the Rewa Jaguars — compete in state-level leagues like the Madhya Pradesh League. This archive records that journey.</p>
       <h2>Our Competitions</h2>
-      <p>The division organises and administers cricket tournaments, league matches and fixtures across the Rewa region. Official schedules, results, team and player information are published here as they are confirmed.</p>
+      <p>The division organises and administers cricket tournaments, league matches and fixtures across the Rewa region. Official schedules, results, team and player information are published here as they are confirmed. The archive covers:</p>
+      <ul>
+        <li><strong>Rewa Division competitions</strong> — inter-district senior, U-22, U-18, U-15 and other age-group tournaments conducted under the division.</li>
+        <li><strong>Local leagues &amp; cups</strong> — city and community tournaments played across Rewa.</li>
+        <li><strong>State &amp; national matches</strong> — external matches (Ranji Trophy, Vijay Hazare, Syed Mushtaq Ali, Madhya Pradesh League and similar) archived because a Rewa player featured in them.</li>
+      </ul>
+      <h2>How the archive is organised</h2>
+      <p>The collection follows a single rule: <strong>no Rewa connection, no entry.</strong> Every match, team, player and statistic in this archive is included because it belongs to the Rewa Cricket Division, or because a Rewa player appeared in it. External matches are clearly labelled so the division's own competitions always remain the centre of the record. Browse it from the <a href="/archive/">archive index</a>.</p>
       <h2>Accuracy &amp; Integrity</h2>
-      <p>As an official website, all information published — matches, scorecards, statistics, teams, players and results — is sourced from official records. Content is added only when confirmed, and corrections are made through the division's administrative process.</p>
+      <p>As an official archive, all information published — matches, scorecards, statistics, teams, players and results — is sourced from official records. Content is added only when confirmed, and corrections are made through the division's administrative process. Where a figure is computed from match data rather than published officially, it is labelled as such.</p>
+      <h2>Official sources</h2>
+      <p>The archive cross-references official and authoritative sources for verification:</p>
+      <ul>
+        <li><a href="https://rewa.nic.in" rel="noopener" target="_blank">Rewa District official portal</a> (Government of Madhya Pradesh)</li>
+        <li><a href="https://www.mp.gov.in" rel="noopener" target="_blank">Madhya Pradesh Government</a></li>
+        <li><a href="https://www.bcci.tv" rel="noopener" target="_blank">Board of Control for Cricket in India (BCCI)</a></li>
+      </ul>
       <h2>Contact</h2>
       <p>For official enquiries, use the <a href="/contact/">contact page</a>.</p>
     </div>
@@ -1167,9 +1291,14 @@ renderStatic({
         <dl style="margin-top:.75rem;line-height:1.9">
           <dt style="color:var(--muted);font-size:.85rem">Name</dt><dd style="font-weight:600">${esc(org.name)}</dd>
           ${org.headquarters ? `<dt style="color:var(--muted);font-size:.85rem">Headquarters</dt><dd>${esc(org.headquarters)}</dd>` : ''}
+          ${org.foundedYear ? `<dt style="color:var(--muted);font-size:.85rem">Founded</dt><dd>${esc(org.foundedYear)}</dd>` : ''}
           <dt style="color:var(--muted);font-size:.85rem">Website</dt><dd><a href="${esc(org.website)}">${esc(org.website)}</a></dd>
         </dl>
       </div>
+      ${db.officials.length ? `<div class="card" style="margin-top:1rem">
+        <p class="eyebrow">Match officials</p>
+        <dl style="margin-top:.75rem;line-height:1.9">${db.officials.map((o) => `<dt style="color:var(--muted);font-size:.85rem">${esc(o.role)}</dt><dd style="font-weight:600">${esc(o.name)}</dd>`).join('')}</dl>
+      </div>` : ''}
     </aside>
   </div>`,
 });
