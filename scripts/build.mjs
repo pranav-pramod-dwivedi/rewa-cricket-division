@@ -18,11 +18,14 @@ const SRC = join(ROOT, 'src');
 const DIST = join(ROOT, 'dist');
 const DATA = join(ROOT, 'data');
 
-const SITE = 'https://rewacricketdivision.in';
+const SITE = (process.env.SITE_URL || 'https://rewacricketdivision.in').replace(/\/$/, '');
 
 // ---------- data ----------
 const org = JSON.parse(readFileSync(join(DATA, 'organization.json'), 'utf8'));
 const db = JSON.parse(readFileSync(join(DATA, 'records.json'), 'utf8'));
+
+// Production domain (confirmed) — used when SITE_URL is not set.
+// Override per deploy: SITE_URL=https://... npm run build
 
 // ---------- helpers ----------
 const esc = (s) =>
