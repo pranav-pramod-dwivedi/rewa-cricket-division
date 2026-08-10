@@ -29,74 +29,87 @@ function getPlayer(name, teamId, role) {
   return p;
 }
 
-// Innings blocks: "TEAM 1st Innings\n670-7 d (160 Ov)\nBatter\nR\nB\n4s\n6s\nSR"
+// Innings blocks: "MP 1st Innings\nMadhya Pradesh 1st Innings\n425-8 d\n(140 Ov)\nBatter\nR\nB\n4s\n6s\nSR"
 function inningsBlocks(text) {
   const blocks = [];
-  const re = /([A-Z][A-Za-z .'-]+?)\s+(1st|2nd|3rd|4th) Innings\n(\d{1,4})-(\d{1,2})\s*(d)?\s*\(([\d.]+) Ov\)\nBatter\nR\nB\n4s\n6s\nSR/g;
+  // header: SHORT Xth Innings / FULL NAME Xth Innings / SCORE[-W] [d] / (OV Ov)
+  const re = /([A-Z][A-Za-z .'-]+?) (\d+)(?:st|nd|rd|th) Innings\n([A-Z][A-Za-z .'-]+?) \d+(?:st|nd|rd|th) Innings\n(\d{1,4})-(\d{1,2})\s*(d)?\s*\n\s*\(([\d.]+) Ov\)\nBatter\nR\nB\n4s\n6s\nSR/g;
   let m;
   while ((m = re.exec(text))) {
     const bodyStart = m.index + m[0].length;
     const rest = text.slice(bodyStart);
-    const end = rest.search(/(?=[A-Z][A-Za-z .'-]+?\s+(?:1st|2nd|3rd|4th) Innings\n\d{1,4}-\d{1,2}\s*(?:d)?\s*\([\d.]+ Ov\)\nBatter)|(?=INFOMatch)/);
+    const end = rest.search(/(?=[A-Z][A-Za-z .'-]+? \d+(?:st|nd|rd|th) Innings\n[A-Z][A-Za-z .'-]+? \d+(?:st|nd|rd|th) Innings\n\d{1,4}-\d{1,2})|(?=INFOMatch)/);
     const body = rest.slice(0, end < 0 ? 40000 : end);
-    blocks.push({ team: m[1].trim(), runs: parseInt(m[3], 10), wickets: parseInt(m[4], 10), declared: !!m[5], overs: parseFloat(m[6]), body });
+    blocks.push({ team: m[2].trim(), fullTeam: m[3].trim(), runs: parseInt(m[4], 10), wickets: parseInt(m[5], 10), declared: !!m[6], overs: parseFloat(m[7]), body });
+  }
+  // fallback: single-innings format without duplicate name line
+  if (!blocks.length) {
+    const re2 = /([A-Z][A-Za-z .'-]+?) (\d+)(?:st|nd|rd|th) Innings\n(\d{1,4})-(\d{1,2})\s*(d)?\s*\n\s*\(([\d.]+) Ov\)\nBatter\nR\nB\n4s\n6s\nSR/g;
+    while ((m = re2.exec(text))) {
+      const bodyStart = m.index + m[0].length;
+      const rest = text.slice(bodyStart);
+      const end = rest.search(/(?=[A-Z][A-Za-z .'-]+? \d+(?:st|nd|rd|th) Innings\n\d{1,4}-\d{1,2})|(?=INFOMatch)/);
+      const body = rest.slice(0, end < 0 ? 40000 : end);
+      blocks.push({ team: m[1].trim(), fullTeam: m[1].trim(), runs: parseInt(m[3], 10), wickets: parseInt(m[4], 10), declared: !!m[5], overs: parseFloat(m[6]), body });
+    }
   }
   return blocks;
 }
 
 function battingRows(body) {
   const rows = [];
-  const linesArr = body.split('\n');
+  const linesArr = body.split('\n').map((s) => s.trim());
   let i = 0;
   while (i < linesArr.length) {
-    const name = (linesArr[i] || '').trim();
+    const name = linesArr[i];
     if (!name) { i++; continue; }
     if (/^(Extras|Total|Did not Bat|Bowler|Fall of Wickets|Powerplays|Partnerships|INFO)/.test(name)) break;
-    const dismissal = (linesArr[i + 1] || '').trim();
-    const nums = linesArr.slice(i + 2, i + 6).map((n) => parseInt(n, 10));
+    if (/^View match performance$|^View profile$/.test(name)) { i++; continue; }
+    // skip noise between name and dismissal
+    let j = i + 1;
+    while (j < linesArr.length && (/^View match performance$|^View profile$/.test(linesArr[j]) || !linesArr[j])) j++;
+    const dismissal = linesArr[j] || '';
+    const nums = linesArr.slice(j + 1, j + 5).map((n) => parseInt(n, 10));
     if (nums.some((n) => isNaN(n))) { i++; continue; }
-    const sr = parseFloat(linesArr[i + 6]);
+    const sr = parseFloat(linesArr[j + 5]);
     rows.push({ name: name.replace(/\s*\((c|wk|c\/wk|vc)\)\s*$/i, '').trim(), dismissal, runs: nums[0], balls: nums[1], fours: nums[2], sixes: nums[3], strikeRate: isNaN(sr) ? null : sr });
-    i += 7;
+    i = j + 6;
   }
   return rows;
 }
 
 function bowlingRows(body) {
   const rows = [];
-  const linesArr = body.split('\n');
-  const bi = linesArr.findIndex((l) => /^Bowler$/.test(l.trim()));
+  const linesArr = body.split('\n').map((s) => s.trim());
+  const bi = linesArr.findIndex((l) => /^Bowler$/.test(l));
   if (bi < 0) return rows;
   let i = bi + 1;
   while (i < linesArr.length) {
-    const name = (linesArr[i] || '').trim();
+    const name = linesArr[i];
     if (!name) { i++; continue; }
-    if (/^(Fall of Wickets|Powerplays|Partnerships|INFO|Batter|Extras|Total)/.test(name)) break;
-    const nums = linesArr.slice(i + 1, i + 8).map((n) => parseFloat(n));
+    if (/^(Fall of Wickets|Powerplays|Partnerships|INFO|Batter|Extras|Total|Did not Bat)/.test(name)) break;
+    if (/^View match performance$|^View profile$/.test(name)) { i++; continue; }
+    let j = i + 1;
+    while (j < linesArr.length && (/^View match performance$|^View profile$/.test(linesArr[j]) || !linesArr[j])) j++;
+    const nums = linesArr.slice(j, j + 8).map((n) => parseFloat(n));
     if (nums.slice(0, 4).some((n) => isNaN(n))) { i++; continue; }
     rows.push({ name: name.replace(/\s*\((c|wk|c\/wk|vc)\)\s*$/i, '').trim(), overs: nums[0], maidens: nums[1], runs: nums[2], wickets: nums[3], economy: nums[6] || null });
-    let j = i + 1;
-    while (j < linesArr.length && !isNaN(parseFloat(linesArr[j])) && linesArr[j].trim() !== '') j++;
-    i = j;
+    let k = j;
+    while (k < linesArr.length && !isNaN(parseFloat(linesArr[k])) && linesArr[k] !== '') k++;
+    i = k;
   }
   return rows;
 }
 
-// ---- match metadata from scorecard text ----
-function matchInfo(text) {
-  const titleM = text.match(/([A-Z][A-Za-z .']+?) vs ([A-Z][A-Za-z .']+?), ([^,]+), ([^\n]+) - Scorecard/);
-  const dateM = text.match(/Date & Time:\s*\w+,\s*([A-Za-z]+)\s+(\d{1,2}),?\s*(\d{4})/);
-  const venueM = text.match(/Venue:\s*([^\n•]+)/);
-  const resultM = text.match(/(?:Match|:)\s*([A-Za-z ].{0,80}?)\n(?:[A-Z]{2,}|Info|Live|Scorecard)/);
-  const seriesM = text.match(/Series:\s*([^\n]+)/);
-  return {
-    title: titleM ? titleM[0] : null,
-    teamA: titleM?.[1]?.trim(), teamB: titleM?.[2]?.trim(),
-    date: dateM ? `${dateM[3]}-${String({ january: 1, february: 2, march: 3, april: 4, may: 5, june: 6, july: 7, august: 8, september: 9, october: 10, november: 11, december: 12 }[dateM[1].toLowerCase()]).padStart(2, '0')}-${String(Number(dateM[2])).padStart(2, '0')}` : null,
-    venue: venueM ? venueM[1].trim() : null,
-    result: resultM ? resultM[1].trim() : null,
-    series: seriesM ? seriesM[1].trim() : null,
-  };
+// ---- match metadata: mobile fetch provides title/startDate/venue directly ----
+function matchInfo(cap) {
+  const text = cap.text;
+  const title = cap.title || '';
+  const tm = title.match(/([A-Z][A-Za-z .']+?) vs ([A-Z][A-Za-z .']+?), ([^,]+), (.+)/);
+  const series = tm ? tm[4].trim() : (text.match(/Series:\s*([^\n]+)/)?.[1]?.trim() || '');
+  const date = cap.startDate ? cap.startDate.slice(0, 10) : (text.match(/(\d{4}-\d{2}-\d{2})/)?.[1] || null);
+  const venue = cap.venue || (text.match(/Venue:\s*([^\n•]+)/)?.[1]?.trim() || null);
+  return { teamA: tm?.[1]?.trim(), teamB: tm?.[2]?.trim(), group: tm?.[3]?.trim(), series, date, venue, result: null };
 }
 
 // season/tournament from series name
@@ -141,12 +154,12 @@ let created = 0, skipped = 0;
 for (const cap of captures) {
   const text = cap.text;
   const id = (cap.url.match(/scorecard\/(\d+)/) || [])[1];
-  const info = matchInfo(text);
+  const info = matchInfo(cap);
   const blocks = inningsBlocks(text);
   if (!blocks.length) { console.log('NO-INNINGS', id); skipped++; continue; }
 
-  const teamA = getTeam(blocks[0].team);
-  const teamB = getTeam(blocks.find((b) => norm(b.team) !== norm(teamA.name))?.team || blocks[1]?.team || '');
+  const teamA = getTeam(blocks[0].fullTeam || blocks[0].team);
+  const teamB = getTeam(blocks.find((b) => norm(b.fullTeam || b.team) !== norm(teamA.name))?.fullTeam || blocks.find((b) => norm(b.fullTeam || b.team) !== norm(teamA.name))?.team || '');
   const t = getTournament(info.series, info.date);
   const venue = getVenue(info.venue || 'Unknown Ground');
 
