@@ -650,6 +650,11 @@ function renderPlayer(p) {
   if (Array.isArray(p.teams)) for (const id of p.teams) playedTeamIds.add(id);
   const playedTeams = [...playedTeamIds].map((id) => teamsById.get(id)).filter(Boolean)
     .sort((a, b) => a.name.localeCompare(b.name));
+  // verified/featured players show ONLY their explicit team memberships (hides trial-side teams
+  // like Central XI / India Central XI / India West XI / Red etc. from the profile)
+  const shownTeams = Array.isArray(p.teams) && p.teams.length
+    ? p.teams.map((id) => teamsById.get(id)).filter(Boolean).sort((a, b) => a.name.localeCompare(b.name))
+    : playedTeams;
   const ageOf = (dob) => {
     if (!dob) return null;
     const d = new Date(dob);
@@ -685,7 +690,7 @@ function renderPlayer(p) {
   </dl>`;
   if (p.bio) html += `<section class="section"><h2>About</h2><p class="prose" style="max-width:62ch;margin-top:.6rem">${esc(p.bio)}</p></section>`;
   if (playedTeams.length) {
-    html += `<section class="section"><h2>Teams</h2><div class="chip-row" style="margin-top:.6rem">${playedTeams.map((t) => (UNLINKABLE_TEAMS.has(t.id) ? `<span class="chip">${esc(t.name)}</span>` : `<a class="chip" href="/teams/${esc(t.slug)}/">${esc(t.name)}</a>`)).join('')}</div></section>`;
+    html += `<section class="section"><h2>Teams</h2><div class="chip-row" style="margin-top:.6rem">${shownTeams.map((t) => (UNLINKABLE_TEAMS.has(t.id) ? `<span class="chip">${esc(t.name)}</span>` : `<a class="chip" href="/teams/${esc(t.slug)}/">${esc(t.name)}</a>`)).join('')}</div></section>`;
   }
 
   // Rewa archive classification: external matches (state/national) on a Rewa player's record
