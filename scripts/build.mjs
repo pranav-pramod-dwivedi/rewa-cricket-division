@@ -1016,15 +1016,17 @@ function renderMatches() {
   writePage('matches', html);
 }
 
-// hidden/fictional archived tournaments (trial intra-squad & representative sides) —
+// hidden/fictional archived tournaments (intra-squad trial sides) —
 // their scorecards do not deep-link to player profiles ("hidden in profiles only").
 const FICTIONAL_TOURS = new Set([
-  't-akhil-rj-fc', 't-akhil-rj-odi', 't-akhil-rj-t20', 't-akhil-mi-intra',
-  't-akhil-mp-challenger', 't-akhil-interstate', 't-akhil-xi',
+  't-akhil-mp-trials', 't-akhil-rj-trials', 't-akhil-mi-trials', 't-akhil-de-trials',
 ]);
 const isFictionalMatch = (m) => FICTIONAL_TOURS.has(m && m.tournamentId);
-// teams withheld from linking on player profiles (per request: RCB / MI unclickable)
-const UNLINKABLE_TEAMS = new Set(['t-mumbai-indians', 't-royal-challengers-bengaluru']);
+// teams withheld from linking on player profiles (per request: RCB / MI + trial sides unclickable)
+const UNLINKABLE_TEAMS = new Set([
+  't-mumbai-indians', 't-royal-challengers-bengaluru',
+  't-mp-a', 't-mp-b', 't-rj-a', 't-rj-b', 't-mi-a', 't-mi-b', 't-de', 't-des',
+]);
 
 function renderMatch(m) {
   const teamA = teamsById.get(m.teamAId);

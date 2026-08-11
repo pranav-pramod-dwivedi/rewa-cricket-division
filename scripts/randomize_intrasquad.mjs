@@ -105,7 +105,7 @@ function processMatch(m, pool) {
   if (inns.length < 2) return;
   const [innA, innB] = inns;
   const format = m.format;
-  const isMI = m.tournamentId === 't-akhil-mi-intra';
+  const isMI = m.tournamentId === 't-akhil-mi-trials';
 
   const batRunsUsedA = db.batting.filter((b) => b.inningsId === innA.id).reduce((s, b) => s + (b.runs || 0), 0);
   const wktUsedA = db.bowling.filter((b) => b.inningsId === innA.id).reduce((s, b) => s + (b.wickets || 0), 0);
@@ -171,8 +171,8 @@ function processMatch(m, pool) {
     existingBowl.add(`${pid}|${innA.id}`); bowlAdded++;
   }
 }
-const poolForMatch = (m) => (m.tournamentId === 't-akhil-mi-intra' ? MI : RJ);
-const TARGET_TOURS = ['t-akhil-rj-fc', 't-akhil-rj-odi', 't-akhil-rj-t20', 't-akhil-mi-intra'];
+const poolForMatch = (m) => (m.tournamentId === 't-akhil-mi-trials' ? MI : RJ);
+const TARGET_TOURS = ['t-akhil-rj-trials', 't-akhil-mi-trials'];
 const targets = db.matches.filter((m) => TARGET_TOURS.includes(m.tournamentId));
 for (const m of targets) processMatch(m, poolForMatch(m));
 
