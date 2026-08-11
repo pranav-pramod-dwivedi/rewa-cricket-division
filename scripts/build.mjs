@@ -685,7 +685,7 @@ function renderPlayer(p) {
   </dl>`;
   if (p.bio) html += `<section class="section"><h2>About</h2><p class="prose" style="max-width:62ch;margin-top:.6rem">${esc(p.bio)}</p></section>`;
   if (playedTeams.length) {
-    html += `<section class="section"><h2>Teams</h2><div class="chip-row" style="margin-top:.6rem">${playedTeams.map((t) => `<a class="chip" href="/teams/${esc(t.slug)}/">${esc(t.name)}</a>`).join('')}</div></section>`;
+    html += `<section class="section"><h2>Teams</h2><div class="chip-row" style="margin-top:.6rem">${playedTeams.map((t) => (UNLINKABLE_TEAMS.has(t.id) ? `<span class="chip">${esc(t.name)}</span>` : `<a class="chip" href="/teams/${esc(t.slug)}/">${esc(t.name)}</a>`)).join('')}</div></section>`;
   }
 
   // Rewa archive classification: external matches (state/national) on a Rewa player's record
@@ -1011,6 +1011,16 @@ function renderMatches() {
   writePage('matches', html);
 }
 
+// hidden/fictional archived tournaments (trial intra-squad & representative sides) —
+// their scorecards do not deep-link to player profiles ("hidden in profiles only").
+const FICTIONAL_TOURS = new Set([
+  't-akhil-rj-fc', 't-akhil-rj-odi', 't-akhil-rj-t20', 't-akhil-mi-intra',
+  't-akhil-mp-challenger', 't-akhil-interstate', 't-akhil-xi',
+]);
+const isFictionalMatch = (m) => FICTIONAL_TOURS.has(m && m.tournamentId);
+// teams withheld from linking on player profiles (per request: RCB / MI unclickable)
+const UNLINKABLE_TEAMS = new Set(['t-mumbai-indians', 't-royal-challengers-bengaluru']);
+
 function renderMatch(m) {
   const teamA = teamsById.get(m.teamAId);
   const teamB = teamsById.get(m.teamBId);
@@ -1063,7 +1073,9 @@ function renderMatch(m) {
               out += `<table><thead><tr><th>Batter</th><th class="num">R</th><th class="num">B</th><th class="num">4s</th><th class="num">6s</th><th class="num">SR</th></tr></thead><tbody>${bat
                 .map((b) => {
                   const p = playersById.get(b.playerId);
-                  return `<tr><td><a href="/players/${esc(p?.slug ?? '')}/">${esc(p?.name ?? '—')}</a><div class="card-meta">${esc(b.dismissal || (b.notOut ? 'not out' : ''))}</div></td><td class="num">${b.runs}</td><td class="num">${b.balls ? b.balls : '—'}</td><td class="num">${b.fours ?? 0}</td><td class="num">${b.sixes ?? 0}</td><td class="num">${b.strikeRate?.toFixed(2) ?? '—'}</td></tr>`;
+                  const clickable = p && p.slug && !isFictionalMatch(m);
+                  const cell = clickable ? `<a href="/players/${esc(p.slug)}/">${esc(p.name)}</a>` : esc(p?.name ?? '—');
+                  return `<tr><td>${cell}<div class="card-meta">${esc(b.dismissal || (b.notOut ? 'not out' : ''))}</div></td><td class="num">${b.runs}</td><td class="num">${b.balls ? b.balls : '—'}</td><td class="num">${b.fours ?? 0}</td><td class="num">${b.sixes ?? 0}</td><td class="num">${b.strikeRate?.toFixed(2) ?? '—'}</td></tr>`;
                 })
                 .join('\n')}</tbody></table>`;
             }
@@ -1071,7 +1083,9 @@ function renderMatch(m) {
               out += `<h3 style="margin:.75rem 0 .5rem;font-size:.95rem">Bowling</h3><table><thead><tr><th>Bowler</th><th class="num">O</th><th class="num">M</th><th class="num">R</th><th class="num">W</th><th class="num">Econ</th></tr></thead><tbody>${bowl
                 .map((b) => {
                   const p = playersById.get(b.playerId);
-                  return `<tr><td><a href="/players/${esc(p?.slug ?? '')}/">${esc(p?.name ?? '—')}</a></td><td class="num">${b.overs}</td><td class="num">${b.maidens}</td><td class="num">${b.runs}</td><td class="num">${b.wickets}</td><td class="num">${b.economy?.toFixed(2) ?? '—'}</td></tr>`;
+                  const clickable = p && p.slug && !isFictionalMatch(m);
+                  const cell = clickable ? `<a href="/players/${esc(p.slug)}/">${esc(p.name)}</a>` : esc(p?.name ?? '—');
+                  return `<tr><td>${cell}</td><td class="num">${b.overs}</td><td class="num">${b.maidens}</td><td class="num">${b.runs}</td><td class="num">${b.wickets}</td><td class="num">${b.economy?.toFixed(2) ?? '—'}</td></tr>`;
                 })
                 .join('\n')}</tbody></table>`;
             }
