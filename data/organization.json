@@ -1,8 +1,18 @@
 {
-  "name": "Rewa Cricket Division",
+  "name": "Rewa Division Cricket Association (RDCA)",
+  "alternateName": "Rewa Cricket Division",
   "slug": "rewa-cricket-division",
-  "tagline": "The official home of cricket in Rewa",
-  "description": "Rewa Cricket Division is the governing body for organised cricket in the Rewa region. This is the official website, operated with permission of the Rewa Cricket Division, providing authentic news, fixtures, results, tournaments, teams, players and statistics.",
+  "tagline": "Official website & archive of the Rewa Division Cricket Association (RDCA) — the official cricket association of the Rewa region, Madhya Pradesh.",
+  "description": "Rewa Division Cricket Association (RDCA) is the governing body for organised cricket in the Rewa region of Madhya Pradesh. This is the official website and archive of the Rewa cricket association — the official RDCA — providing authentic news, fixtures, results, tournaments, teams, players, records and statistics from official sources.",
+  "keywords": [
+    "official RDCA",
+    "Rewa Division Cricket Association",
+    "official Rewa cricket association",
+    "official MP cricket association",
+    "Rewa cricket association website and archive",
+    "Rewa cricket",
+    "RDCA cricket Madhya Pradesh"
+  ],
   "foundedYear": null,
   "headquarters": "Rewa, Madhya Pradesh, India",
   "address": "Rewa District, Madhya Pradesh 486001, India",

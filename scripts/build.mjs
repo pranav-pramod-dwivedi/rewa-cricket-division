@@ -41,7 +41,8 @@ const absUrl = (p) => SITE + (p.startsWith('/') ? p : '/' + p);
 const ld = (obj) =>
   `<script type="application/ld+json">${JSON.stringify(obj)}</script>`;
 
-const titleFor = (t) => (t === org.name ? org.name : `${t} | ${org.name}`);
+const titleFor = (t) =>
+  t === org.name ? `${org.name} — Official Website & Archive` : `${t} | ${org.name}`;
 
 // team-name disambiguation for player page titles (common names collide)
 const teamOf = (p) => (p.teamId ? teamsById.get(p.teamId) : null);
@@ -129,7 +130,7 @@ function footer() {
         <img src="/img/logo-rewa-official.jpg" alt="Official emblem of Rewa District" width="40" height="40" />
         <h3>${esc(org.name)}</h3>
       </div>
-      <p class="footer-note">The official archive of the ${esc(org.name)}, built with the permission of the division. सफ़ेद शेरों की धरती — Land of the White Tigers.</p>
+      <p class="footer-note">The official website &amp; archive of the ${esc(org.name)}, built with the permission of the division. सफ़ेद शेरों की धरती — Land of the White Tigers.</p>
     </div>
     <div>
       <h3>Explore</h3>
@@ -150,7 +151,7 @@ function footer() {
   <div class="footer-bottom">
     <div class="container footer-legal">
       <p class="footer-copyright">&copy; <span data-year>${new Date().getFullYear()}</span> ${esc(org.name)}. All rights reserved.</p>
-      <p class="footer-about">The ${esc(org.name)} archive is a permanent, searchable record of organised cricket in the Rewa region — division competitions, local leagues, and the state and national matches of Rewa's players — built with the permission of the division and sourced only from official records. सफ़ेद शेरों की धरती · Land of the White Tigers.</p>
+      <p class="footer-about">Official website &amp; archive of the ${esc(org.name)} — the official cricket association of the Rewa region, Madhya Pradesh. This archive is a permanent, searchable record of organised cricket in the Rewa region — division competitions, local leagues, and the state and national matches of Rewa's players — built with the permission of the division and sourced only from official records. सफ़ेद शेरों की धरती · Land of the White Tigers.</p>
     </div>
   </div>
 </footer>
@@ -272,8 +273,10 @@ const orgLd = {
   '@context': 'https://schema.org',
   '@type': 'SportsOrganization',
   name: org.name,
+  ...(org.alternateName ? { alternateName: org.alternateName } : {}),
   url: org.website,
   description: org.description,
+  ...(org.keywords?.length ? { keywords: org.keywords.join(', ') } : {}),
   ...(org.headquarters
     ? { address: { '@type': 'PostalAddress', addressLocality: org.headquarters } }
     : {}),
@@ -283,8 +286,10 @@ const websiteLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: org.name,
+  ...(org.alternateName ? { alternateName: org.alternateName } : {}),
   url: org.website,
   description: org.description,
+  ...(org.keywords?.length ? { keywords: org.keywords.join(', ') } : {}),
   potentialAction: {
     '@type': 'SearchAction',
     target: { '@type': 'EntryPoint', urlTemplate: absUrl('/search/?q={search_term_string}') },
@@ -418,7 +423,7 @@ function renderHome() {
   html += `<section class="hero">
     <img class="hero-logo" src="/img/logo-rewa-official.jpg" alt="Official emblem of Rewa District" width="88" height="88" />
     <p class="eyebrow">सफ़ेद शेरों की धरती · Land of the White Tigers</p>
-    <h1>The Official Home of Cricket in Rewa</h1>
+    <h1>Rewa Division Cricket Association (RDCA) — The Official Home of Cricket in Rewa</h1>
     <p>${esc(org.description)}</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="/archive/">Explore the Archive</a>
