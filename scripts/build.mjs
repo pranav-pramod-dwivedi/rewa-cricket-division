@@ -545,7 +545,10 @@ function renderTeams() {
 }
 
 function renderTeam(t) {
-  const squad = db.players.filter((p) => p.teamId === t.id);
+  const inTeams = (p, tid) => Array.isArray(p.teams) && p.teams.includes(tid);
+  const squad = db.players
+    .filter((p) => p.teamId === t.id || inTeams(p, t.id))
+    .sort((a, b) => a.name.localeCompare(b.name));
   const teamMatches = db.matches.filter((m) => m.teamAId === t.id || m.teamBId === t.id);
   const teamDesc = t.description && t.description.trim()
     ? t.description
@@ -643,6 +646,8 @@ function renderPlayer(p) {
     const m = inn && matchByInn.get(inn.id);
     if (m) playedTeamIds.add(m.teamAId === inn.teamId ? m.teamBId : m.teamAId);
   }
+  // explicit multi-team membership recorded on the player (verified/featured players)
+  if (Array.isArray(p.teams)) for (const id of p.teams) playedTeamIds.add(id);
   const playedTeams = [...playedTeamIds].map((id) => teamsById.get(id)).filter(Boolean)
     .sort((a, b) => a.name.localeCompare(b.name));
   const ageOf = (dob) => {
