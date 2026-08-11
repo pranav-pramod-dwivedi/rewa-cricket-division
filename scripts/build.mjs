@@ -71,6 +71,9 @@ function head({ title, description, path, jsonLd = [], ogType = 'website' }) {
 <meta name="twitter:description" content="${esc(description)}" />
 <meta name="twitter:image" content="${absUrl('/img/og-cover.png')}" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
+<link rel="icon" href="/favicon-48x48.png" sizes="48x48" type="image/png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="stylesheet" href="/css/styles.css" />
 ${blocks.map(ld).join('\n')}
 </head>`;
