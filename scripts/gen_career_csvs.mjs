@@ -91,59 +91,59 @@ const pHeader = 'seq,date,match,format,R,B,4s,6s,dismissal,O,M,RW,W,note';
 const pRows = P.map((r, i) => [i + 1, ...r.map((v) => (v === '' ? '' : v))].join(','));
 writeFileSync(join(ROOT, 'data/pranav.career.csv'), [pHeader, ...pRows].join('\n') + '\n');
 
-// --- Akhil (opener) — mirrored on shared matches/last rows; 10 Test / 12 ODI / 12 shared T20 + 2 MI T20
+// --- Akhil (opener/part-time bowler) — 10 Test / 12 ODI / 12 shared T20 + 2 MI T20
 const A = [];
 const aHeader = 'num,match,date,format,R,B,4s,6s,SR,dismissal,O,M,RW,W,note';
-// rows: [fmt, match, date, R, B, 4s, 6s, dis, O, M, RW, W]
+// rows: [fmt, match, date, R, B, dismissal, 4s, 6s, O, M, RW, W]
 const aTest = [
-  ['Test', 'MP A v MP B', '2023-10-05', 51, 72, 'c Hooda b Patel', 5, 0, 34, 0],
-  ['Test', 'MP A v MP B', '2023-10-12', 34, 41, 'run out', 4, 0, 28, 0],
-  ['Test', 'MP A v MP B', '2023-10-19', 60, 88, 'c S b Kelkar', 6, 0, 36, 1],
-  ['Test', 'MP A v MP B', '2023-10-26', 22, 31, 'b Nirwan', 3, 0, 24, 0],
-  ['Test', 'MP A v MP B', '2023-11-02', 77, 96, 'c Rathore b Soni', 8, 1, 38, 1],
-  ['Test', 'MP A v MP B', '2024-10-03', 42, 55, 'b Tiwari', 4, 0, 30, 0],
-  ['Test', 'MP A v MP B', '2024-10-10', 70, 82, 'c Rawat b Sen', 7, 1, 32, 1],
-  ['Test', 'MP A v MP B', '2024-10-17', 45, 66, 'b Rathore', 5, 0, 29, 0],
-  ['Test', 'MP A v MP B', '2024-10-24', 92, 120, 'c Pandey b Varma', 11, 2, 40, 2],
-  ['Test', 'MP A v MP B', '2024-10-31', 38, 50, 'c Soni b Tiwari', 4, 0, 27, 0],
+  ['Test', 'MP A v MP B', '2023-10-05', 51, 72, 'c Hooda b Patel', 5, 0, 8, 0, 34, 0],
+  ['Test', 'MP A v MP B', '2023-10-12', 34, 41, 'run out', 4, 0, 6, 0, 28, 0],
+  ['Test', 'MP A v MP B', '2023-10-19', 60, 88, 'c S b Kelkar', 6, 0, 9, 1, 36, 1],
+  ['Test', 'MP A v MP B', '2023-10-26', 22, 31, 'b Nirwan', 3, 0, 5, 0, 24, 0],
+  ['Test', 'MP A v MP B', '2023-11-02', 77, 96, 'c Rathore b Soni', 8, 1, 8, 1, 38, 1],
+  ['Test', 'MP A v MP B', '2024-10-03', 42, 55, 'b Tiwari', 4, 0, 6, 0, 30, 0],
+  ['Test', 'MP A v MP B', '2024-10-10', 70, 82, 'c Rawat b Sen', 7, 1, 7, 1, 32, 1],
+  ['Test', 'MP A v MP B', '2024-10-17', 45, 66, 'b Rathore', 5, 0, 6, 0, 29, 0],
+  ['Test', 'MP A v MP B', '2024-10-24', 92, 120, 'c Pandey b Varma', 11, 2, 9, 1, 40, 2],
+  ['Test', 'MP A v MP B', '2024-10-31', 38, 50, 'c Soni b Tiwari', 4, 0, 6, 0, 27, 0],
 ];
 const aOdi = [
-  ['ODI', 'MP A v MP B', '2022-09-04', 58, 60, 'c Mantri b Khejroliya', 6, 1, 32, 0],
-  ['ODI', 'MP A v MP B', '2022-09-07', 42, 46, 'b Avesh', 4, 0, 26, 0],
-  ['ODI', 'MP A v MP B', '2022-09-10', 33, 38, 'c Iyer b Senapati', 3, 0, 22, 0],
-  ['ODI', 'MP A v MP B', '2022-09-14', 66, 72, 'run out Mantri', 7, 2, 34, 1],
-  ['ODI', 'MP A v MP B', '2022-09-18', 29, 35, 'b Batham', 3, 0, 25, 0],
-  ['ODI', 'MP A v MP B', '2023-09-05', 45, 50, 'c Dubey b Arshad', 4, 1, 28, 0],
-  ['ODI', 'MP A v MP B', '2023-09-08', 61, 68, 'c Kartikeya b Khejroliya', 6, 1, 31, 1],
-  ['ODI', 'MP A v MP B', '2023-09-12', 25, 30, 'b Khan', 2, 0, 20, 0],
-  ['ODI', 'MP A v MP B', '2023-09-16', 50, 55, 'c Patidar b Avesh', 5, 0, 27, 1],
-  ['ODI', 'MP A v MP B', '2024-09-05', 37, 41, 'lbw b Senapati', 3, 0, 23, 0],
-  ['ODI', 'MP A v MP B', '2024-09-08', 69, 75, 'c Batham b Kartikeya', 8, 2, 33, 1],
-  ['ODI', 'MP A v MP B', '2024-09-16', 48, 54, 'b Arshad', 5, 0, 29, 0],
+  ['ODI', 'MP A v MP B', '2022-09-04', 58, 60, 'c Mantri b Khejroliya', 6, 1, 6, 0, 32, 0],
+  ['ODI', 'MP A v MP B', '2022-09-07', 42, 46, 'b Avesh', 4, 0, 5, 0, 26, 0],
+  ['ODI', 'MP A v MP B', '2022-09-10', 33, 38, 'c Iyer b Senapati', 3, 0, 4, 0, 22, 0],
+  ['ODI', 'MP A v MP B', '2022-09-14', 66, 72, 'run out Mantri', 7, 2, 6, 1, 34, 1],
+  ['ODI', 'MP A v MP B', '2022-09-18', 29, 35, 'b Batham', 3, 0, 5, 0, 25, 0],
+  ['ODI', 'MP A v MP B', '2023-09-05', 45, 50, 'c Dubey b Arshad', 4, 1, 5, 0, 28, 0],
+  ['ODI', 'MP A v MP B', '2023-09-08', 61, 68, 'c Kartikeya b Khejroliya', 6, 1, 6, 1, 31, 1],
+  ['ODI', 'MP A v MP B', '2023-09-12', 25, 30, 'b Khan', 2, 0, 4, 0, 20, 0],
+  ['ODI', 'MP A v MP B', '2023-09-16', 50, 55, 'c Patidar b Avesh', 5, 0, 5, 1, 27, 1],
+  ['ODI', 'MP A v MP B', '2024-09-05', 37, 41, 'lbw b Senapati', 3, 0, 4, 0, 23, 0],
+  ['ODI', 'MP A v MP B', '2024-09-08', 69, 75, 'c Batham b Kartikeya', 8, 2, 6, 1, 33, 1],
+  ['ODI', 'MP A v MP B', '2024-09-16', 48, 54, 'b Arshad', 5, 0, 5, 0, 29, 0],
 ];
 const aT20 = [
-  ['T20', 'RJ A v RJ B', '2021-01-20', 41, 24, 'c S b Tomar', 3, 0, 20, 0],
-  ['T20', 'RJ A v RJ B', '2022-01-18', 37, 28, 'c A b Rohera', 3, 0, 19, 1],
-  ['T20', 'RJ A v RJ B', '2023-01-22', 28, 20, 'b Shukla', 2, 0, 15, 0],
-  ['T20', 'RJ A v RJ B', '2024-01-25', 52, 34, 'c G b Khan', 4, 1, 24, 1],
-  ['T20', 'DE v DES', '2021-08-01', 62, 38, 'c Kulkarni b PATEL', 6, 2, 25, 1],
-  ['T20', 'DE v DES', '2021-08-04', 41, 27, 'c Rao b Sen', 4, 1, 21, 0],
-  ['T20', 'DE v DES', '2021-08-07', 50, 31, 'c Das b Gupta', 5, 2, 23, 1],
-  ['T20', 'DE v DES', '2021-08-11', 44, 29, 'b Tiwari', 4, 1, 22, 0],
-  ['T20', 'DE v DES', '2021-08-15', 58, 36, 'c Kulkarni b Bansal', 6, 2, 26, 1],
-  ['T20', 'DE v DES', '2021-08-20', 35, 22, 'b Verma', 3, 1, 18, 0],
-  ['T20', 'DE v DES', '2022-08-10', 51, 35, 'c Mishra b Patel', 5, 1, 24, 1],
-  ['T20', 'DE v DES', '2022-08-12', 39, 26, 'c Khan b Sen', 4, 0, 20, 0],
-  // 2 MI A v MI B (Nov 2024) — final two T20 rows
-  ['T20', 'MI A v MI B', '2024-11-14', 45, 30, 'c Skyler b Boult', 0, 0, 0, 0],
-  ['T20', 'MI A v MI B', '2024-11-16', 38, 27, 'c Varma b Chahar', 0, 0, 0, 0],
+  ['T20', 'RJ A v RJ B', '2021-01-20', 41, 24, 'c S b Tomar', 3, 0, 3, 0, 20, 0],
+  ['T20', 'RJ A v RJ B', '2022-01-18', 37, 28, 'c A b Rohera', 3, 0, 3, 0, 19, 1],
+  ['T20', 'RJ A v RJ B', '2023-01-22', 28, 20, 'b Shukla', 2, 0, 2, 0, 15, 0],
+  ['T20', 'RJ A v RJ B', '2024-01-25', 52, 34, 'c G b Khan', 4, 1, 3, 0, 24, 1],
+  ['T20', 'DE v DES', '2021-08-01', 62, 38, 'c Kulkarni b PATEL', 6, 2, 3, 0, 25, 1],
+  ['T20', 'DE v DES', '2021-08-04', 41, 27, 'c Rao b Sen', 4, 1, 3, 0, 21, 0],
+  ['T20', 'DE v DES', '2021-08-07', 50, 31, 'c Das b Gupta', 5, 2, 3, 0, 23, 1],
+  ['T20', 'DE v DES', '2021-08-11', 44, 29, 'b Tiwari', 4, 1, 3, 0, 22, 0],
+  ['T20', 'DE v DES', '2021-08-15', 58, 36, 'c Kulkarni b Bansal', 6, 2, 3, 0, 26, 1],
+  ['T20', 'DE v DES', '2021-08-20', 35, 22, 'b Verma', 3, 1, 2, 0, 18, 0],
+  ['T20', 'DE v DES', '2022-08-10', 51, 35, 'c Mishra b Patel', 5, 1, 3, 0, 24, 1],
+  ['T20', 'DE v DES', '2022-08-12', 39, 26, 'c Khan b Sen', 4, 0, 3, 0, 20, 0],
+  // 2 MI A v MI B (Nov 2024) — final two T20 rows (DNB bowling)
+  ['T20', 'MI A v MI B', '2024-11-14', 45, 30, 'c Skyler b Boult', 0, 0, 0, 0, 0, 0],
+  ['T20', 'MI A v MI B', '2024-11-16', 38, 27, 'c Varma b Chahar', 0, 0, 0, 0, 0, 0],
 ];
 const aRows = [...aTest, ...aOdi, ...aT20].map((r, i) => {
   const runs = r[3], balls = r[4];
   const sr = runs && balls ? ((runs / balls) * 100).toFixed(2) : '0.00';
   // num, match, date, format, R, B, 4s, 6s, SR, dismissal, O, M, RW, W, note
-  // Akhil is an opener/non-bowler: O=0, M=0, RW=0, W=0
-  return [i + 1, r[1], r[2], r[0], runs, balls, r[6], r[7], sr, r[5], 0, 0, 0, 0, ''].join(',');
+  const O = r[8], M = r[9], RW = r[10], W = r[11];
+  return [i + 1, r[1], r[2], r[0], runs, balls, r[6], r[7], sr, r[5], O, M, RW, W, ''].join(',');
 });
 writeFileSync(join(ROOT, 'data/akhil.career.csv'), [aHeader, ...aRows].join('\n') + '\n');
 

@@ -4,9 +4,14 @@
 // Interstate, India/Central/West XI + trial sides Red/Blue/Gold) and re-creates everything.
 // Excludes DNB rows from the bowling record ("remove missed matches from bowling table").
 // Recomputes the player summary from the CSV so profile stats == match data.
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { readFileSync, writeFileSync } from 'fs';
-const DATA = '/Users/tanutripathi/Downloads/RAPID/rewa-cricket-division/data/records.json';
-const CSV = '/Users/tanutripathi/Downloads/RAPID/rewa-cricket-division/data/akhil.career.csv';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dirname, '..');
+const DATA = join(ROOT, 'data/records.json');
+const CSV = join(ROOT, 'data/akhil.career.csv');
 const db = JSON.parse(readFileSync(DATA, 'utf8'));
 const rows = readFileSync(CSV, 'utf8').trim().split('\n').slice(1)
   .map((l) => l.split(','))
@@ -25,8 +30,8 @@ const oldMatchIds = new Set(db.matches.filter((m) => m.id.startsWith('m-akhil-')
 const oldInnIds = new Set(db.innings.filter((i) => oldMatchIds.has(i.matchId)).map((i) => i.id));
 db.matches = db.matches.filter((m) => !oldMatchIds.has(m.id));
 db.innings = db.innings.filter((i) => !oldInnIds.has(i.id));
-db.batting = db.batting.filter((b) => !oldInnIds.has(b.inningsId) && !b.id.startsWith('b-akhil-'));
-db.bowling = db.bowling.filter((w) => !oldInnIds.has(w.inningsId) && !w.id.startsWith('w-akhil-'));
+db.batting = db.batting.filter((b) => b.playerId !== PID && !oldInnIds.has(b.inningsId) && !b.id.startsWith('b-akhil-'));
+db.bowling = db.bowling.filter((w) => w.playerId !== PID && !oldInnIds.has(w.inningsId) && !w.id.startsWith('w-akhil-'));
 db.tournaments = db.tournaments.filter((t) => !t.id.startsWith('t-akhil-'));
 const OLD_TEAMS = ['t-red', 't-blue', 't-gold', 't-central-xi', 't-south-xi', 't-west-xi', 't-india-central-xi', 't-india-south-xi', 't-india-west-xi'];
 db.teams = db.teams.filter((t) => !OLD_TEAMS.includes(t.id));
@@ -42,15 +47,15 @@ for (const [id, [name, sl, sc]] of Object.entries(TEAMS)) {
   if (!db.teams.some((t) => t.id === id)) db.teams.push({ id, name, slug: sl, shortCode: sc, description: 'Intra-squad trial side.', establishedYear: 2021 });
 }
 const TOURS = {
-  't-akhil-mp-trials': ['MP A v MP B', 'mp-a-v-mp-b', 'First-class', 'state', 'Madhya Pradesh intra-squad trial matches.' ],
-  't-akhil-rj-trials': ['RJ A v RJ B', 'rj-a-v-rj-b', 'T20', 'division', 'Rewa Jaguars intra-squad trial T20 matches.'],
-  't-akhil-mi-trials': ['MI A v MI B', 'mi-a-v-mi-b', 'T20', 'ipl', 'Mumbai Indians intra-squad practice matches.'],
-  't-akhil-de-trials': ['DE v DES', 'de-v-des', 'ODI', 'division', 'Division elite intra-squad one-day trial matches.'],
+  't-shared-mp': ['MP A v MP B', 'mp-a-v-mp-b', 'First-class', 'state', 'Madhya Pradesh intra-squad trial matches.' ],
+  't-shared-rj': ['RJ A v RJ B', 'rj-a-v-rj-b', 'T20', 'division', 'Rewa Jaguars intra-squad trial T20 matches.'],
+  't-shared-mi': ['MI A v MI B', 'mi-a-v-mi-b', 'T20', 'ipl', 'Mumbai Indians intra-squad practice matches.'],
+  't-shared-de-odi': ['DE v DES ODI Series', 'de-v-des-odi-series', 'ODI', 'division', 'Division elite intra-squad one-day trial matches.'],
 };
 for (const [id, [name, sl, fmt, scope, desc]] of Object.entries(TOURS)) {
   if (!db.tournaments.some((t) => t.id === id)) db.tournaments.push({ id, name, slug: sl, format: fmt, status: 'completed', category: 'official', scope, description: desc });
 }
-const tourOf = (fmt, match) => fmt === 'Test' ? 't-akhil-mp-trials' : fmt === 'ODI' ? 't-akhil-de-trials' : /MI A/.test(match) ? 't-akhil-mi-trials' : 't-akhil-rj-trials';
+const tourOf = (fmt, match) => fmt === 'Test' ? 't-shared-mp' : fmt === 'ODI' ? 't-shared-de-odi' : /MI A/.test(match) ? 't-shared-mi' : /DE v DES/.test(match) ? 't-shared-de' : 't-shared-rj';
 const teamOf = (side, match, fmt) => {
   if (fmt === 'Test') return side === 'A' ? 't-mp-a' : 't-mp-b';
   if (fmt === 'ODI') return side === 'A' ? 't-de' : 't-des';
@@ -89,7 +94,7 @@ for (const row of rows) {
     fours: row.fours, sixes: row.sixes, dismissal: row.dismissal === 'not out' ? null : row.dismissal,
     notOut: row.dismissal === 'not out', strikeRate: row.sr,
   });
-  if (row.O !== '-') {
+  if (row.O !== '-' && +row.O > 0) {
     db.bowling.push({ id: `w-akhil-${row.num}`, inningsId: innB, playerId: PID, overs: +row.O, maidens: +row.M, runs: +row.R, wickets: +row.W, economy: +((+row.R) / (+row.O)).toFixed(2) });
   }
   added++;
