@@ -72,6 +72,14 @@ const MI_2024 = [
 ].map(([n, r]) => addPlayer(n, r, 't-mumbai-indians'));
 addPlayer('Made-up Player', 'Player', null); // last-resort fallback
 
+// LSG 2022 squad (real) — Pranav in LSG B
+const LSG_2024 = [
+  ['KL Rahul', 'Wicketkeeper'], ['Quinton de Kock', 'Wicketkeeper'], ['Manish Pandey', 'Batsman'], ['Evin Lewis', 'Batsman'], ['Manan Vohra', 'Batsman'],
+  ['Marcus Stoinis', 'All-rounder'], ['Deepak Hooda', 'All-rounder'], ['Krunal Pandya', 'All-rounder'], ['Jason Holder', 'All-rounder'], ['Krishnappa Gowtham', 'All-rounder'], ['Ayush Badoni', 'All-rounder'], ['Kyle Mayers', 'All-rounder'], ['Karan Sharma', 'All-rounder'],
+  ['Ravi Bishnoi', 'Bowler'], ['Avesh Khan', 'Bowler'], ['Dushmantha Chameera', 'Bowler'], ['Mohsin Khan', 'Bowler'], ['Shahbaz Nadeem', 'Bowler'], ['Ankit Rajpoot', 'Bowler'], ['Mayank Yadav', 'Bowler'], ['Andrew Tye', 'Bowler'],
+].map(([n, r]) => addPlayer(n, r, 't-lucknow-super-giants'));
+const LSG_POOL = LSG_2024;
+
 // ---------- teams / tournaments ----------
 const TEAMS = {
   't-mp-a': ['MP A', 'MP A'], 't-mp-b': ['MP B', 'MP B'],
@@ -90,6 +98,7 @@ const TOURS = {
   't-shared-mp': ['MP A v MP B', 'First-class', 'state'],
   't-shared-rcb': ['RCB A v RCB B', 'T20', 'ipl'],
   't-shared-mi': ['MI A v MI B', 'T20', 'ipl'],
+  't-shared-lsg': ['LSG A v LSG B', 'T20', 'ipl'],
   't-shared-rcb-kkr': ['RCB v KKR', 'IPL', 'ipl'],
 };
 for (const [id, [name, fmt, scope]] of Object.entries(TOURS)) if (!db.tournaments.some((t) => t.id === id)) db.tournaments.push({ id, name, slug: slug(name), format: fmt, status: 'completed', category: 'official', scope, description: 'Intra-squad trial series.' });
@@ -104,8 +113,8 @@ const pick = (arr) => arr[Math.floor(rnd() * arr.length)];
 
 // ---------- ledger parsing ----------
 const parse = (f, map) => readFileSync(join(ROOT, 'data', f), 'utf8').trim().split('\n').slice(1).map((l) => l.split(','))
-  .map((c) => ({ seq: +c[map.seq], match: c[map.match], fmt: c[map.fmt], R: c[map.R] === 'DNB' || c[map.R] === '' ? null : +c[map.R], B: +c[map.B] || 0, f4: +c[map.f4] || 0, f6: +c[map.f6] || 0, dis: c[map.dis], O: c[map.O] === '-' || c[map.O] === '' || c[map.O] === 'DNB' ? null : c[map.O], M: +c[map.M] || 0, Rr: +c[map.Rr] || 0, W: +c[map.W] || 0, note: c[map.note] || '' }));
-const PRANAV_MAP = { seq: 0, match: 2, fmt: 3, R: 4, B: 5, f4: 6, f6: 7, dis: 8, O: 9, M: 10, Rr: 11, W: 12, note: 13 };
+  .map((c) => ({ seq: +c[map.seq], date: c[map.date] || '', match: c[map.match], fmt: c[map.fmt], R: c[map.R] === 'DNB' || c[map.R] === '' ? null : +c[map.R], B: +c[map.B] || 0, f4: +c[map.f4] || 0, f6: +c[map.f6] || 0, dis: c[map.dis], O: c[map.O] === '-' || c[map.O] === '' || c[map.O] === 'DNB' ? null : c[map.O], M: +c[map.M] || 0, Rr: +c[map.Rr] || 0, W: +c[map.W] || 0, note: c[map.note] || '' }));
+const PRANAV_MAP = { seq: 0, date: 1, match: 2, fmt: 3, R: 4, B: 5, f4: 6, f6: 7, dis: 8, O: 9, M: 10, Rr: 11, W: 12, note: 13 };
 const AKHIL_MAP = { seq: 0, match: 1, fmt: 3, R: 4, B: 5, f4: 6, f6: 7, dis: 9, O: 10, M: 11, Rr: 12, W: 13, note: 14 };
 const P_ROWS = parse('pranav.career.csv', PRANAV_MAP);
 const A_ROWS = parse('akhil.career.csv', AKHIL_MAP);
@@ -253,7 +262,7 @@ function splitTestBowl(row) {
 
 // ---------- match builder ----------
 let seq = 1;
-const seasonOf = (y) => ({ 2020: 's2020', 2021: 's2021', 2022: 's2022', 2023: 's-2023', 2024: 's-2024' }[y] || 's-2024');
+const seasonOf = (y) => ({ 2020: 's2020', 2021: 's2021', 2022: 's2022', 2023: 's-2023', 2024: 's-2024', 2025: 's2025' }[y] || 's-2024');
 const sideOf = (teamId) => ({ 't-mp-a': 'MP A', 't-mp-b': 'MP B', 't-rj-a': 'RJ A', 't-rj-b': 'RJ B', 't-de': 'DE', 't-des': 'DES', 't-destroyers': 'Destroyers', 't-lsg-a': 'LSG A', 't-lsg-b': 'LSG B', 't-mi-a': 'MI A', 't-mi-b': 'MI B', 't-rcb-a': 'RCB A', 't-rcb-b': 'RCB B', 't-loc-a': 'Local A', 't-loc-b': 'Local B' }[teamId]);
 const mkSquads = (pool, aMarqId, bMarqId) => {
   const rest = shuffle(pool).filter((id) => id !== aMarqId && id !== bMarqId);
@@ -345,7 +354,14 @@ const none = () => ({ pid: null, pos: 1, row: null });
 
 const PLAN = [];
 
-// one match per Pranav ledger row — real scores, real bowling, real formats
+// one match per Pranav ledger row — real scores, real bowling, real formats;
+// dates come from the CSV (real schedule) when present, else spread deterministically.
+const d0 = (row, fallback) => (row.date && /^\d{4}-\d{2}-\d{2}$/.test(row.date) ? row.date : fallback);
+const lk = (rows, name) => rows.filter((r) => r.match === name);
+const mk = (date, row, tour, fmt, teamA, teamB, pool, withAkhil, stage) => {
+  const sq = mkSquads(pool, P, withAkhil ? A : null);
+  return { date, tour, fmt, teamA, teamB, squadA: sq.A, squadB: sq.B, marqA: { ...pranav(), row: row.R == null ? null : row }, marqB: withAkhil ? akhil() : none(), note: row.note, ...(stage ? { stage } : {}) };
+};
 const spreadDates = (n, y0, y1, salt) => Array.from({ length: n }, (_, k) => {
   const t = n === 1 ? 0.5 : k / (n - 1);
   const span = y1 - y0;
@@ -355,23 +371,16 @@ const spreadDates = (n, y0, y1, salt) => Array.from({ length: n }, (_, k) => {
   const day = 1 + ((k * 17 + salt) % 28);
   return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 });
-const lk = (rows, name) => rows.filter((r) => r.match === name);
-const mk = (date, row, tour, fmt, teamA, teamB, pool, withAkhil, stage) => {
-  const sq = mkSquads(pool, P, withAkhil ? A : null);
-  return { date, tour, fmt, teamA, teamB, squadA: sq.A, squadB: sq.B, marqA: { ...pranav(), row: row.R == null ? null : row }, marqB: withAkhil ? akhil() : none(), note: row.note, ...(stage ? { stage } : {}) };
-};
-const tDates = spreadDates(P_TEST.length, 2020, 2024, 3); tDates[0] = '2020-03-14';
-P_TEST.forEach((row, i) => PLAN.push(mk(tDates[i], row, 't-shared-mp', 'Test', 't-mp-a', 't-mp-b', COMBINED, false)));
-const oDates = spreadDates(P_ODI.length, 2020, 2024, 7);
-P_ODI.forEach((row, i) => PLAN.push(mk(oDates[i], row, 't-shared-de-odi', 'ODI', 't-de', 't-des', COMBINED, false)));
-const rjDates = spreadDates(lk(P_T20, 'RJ A v RJ B').length, 2020, 2024, 11);
-lk(P_T20, 'RJ A v RJ B').forEach((row, i) => PLAN.push(mk(rjDates[i], row, 't-shared-rj', 'T20', 't-rj-a', 't-rj-b', RJ_POOL, false)));
-const deDates = spreadDates(lk(P_T20, 'DE v DES').length, 2021, 2024, 13);
-lk(P_T20, 'DE v DES').forEach((row, i) => PLAN.push(mk(deDates[i], row, 't-shared-de', 'T20', 't-de', 't-des', COMBINED, false)));
+
+P_TEST.forEach((row, i) => PLAN.push(mk(d0(row, spreadDates(1, 2020, 2024, 3)[0]), row, 't-shared-mp', 'Test', 't-mp-a', 't-mp-b', COMBINED, false)));
+P_ODI.forEach((row) => PLAN.push(mk(d0(row, '2023-09-20'), row, 't-shared-de-odi', 'ODI', 't-de', 't-des', COMBINED, false)));
+lk(P_T20, 'RJ A v RJ B').forEach((row) => PLAN.push(mk(d0(row, '2022-03-10'), row, 't-shared-rj', 'T20', 't-rj-a', 't-rj-b', RJ_POOL, false)));
+lk(P_T20, 'DE v DES').forEach((row) => PLAN.push(mk(d0(row, '2021-08-28'), row, 't-shared-de', 'T20', 't-de', 't-des', COMBINED, false)));
+lk(P_T20, 'LSG A v LSG B').forEach((row) => PLAN.push(mk(d0(row, '2022-11-07'), row, 't-shared-lsg', 'T20', 't-lsg-a', 't-lsg-b', LSG_POOL, false)));
 const deFinals = PLAN.filter((m2) => m2.tour === 't-shared-de');
 deFinals[deFinals.length - 1].stage = 'Final';
-const rcbDates = ['2024-11-02', '2024-11-04', '2024-11-06', '2024-11-08', '2024-11-10'];
-lk(P_T20, 'RCB A v RCB B').forEach((row, i) => PLAN.push(mk(rcbDates[i], row, 't-shared-rcb', 'T20', 't-rcb-a', 't-rcb-b', RCB_2024, false)));
+const rcbRows = lk(P_T20, 'RCB A v RCB B'); // exactly 3 (Nov 2/6/8 2024, per spec)
+rcbRows.forEach((row) => PLAN.push(mk(d0(row, '2024-11-08'), row, 't-shared-rcb', 'T20', 't-rcb-a', 't-rcb-b', RCB_2024, false)));
 PLAN.sort((a, b) => a.date.localeCompare(b.date));
 
 // attach Akhil ledger rows in order: 10 Tests / 12 ODIs / 12 shared T20s, then 2 MI T20s
@@ -393,10 +402,11 @@ PLAN.sort((a, b) => a.date.localeCompare(b.date));
     PLAN.push({ date: i === 0 ? '2024-11-14' : '2024-11-16', tour: 't-shared-mi', fmt: 'T20', teamA: 't-mi-a', teamB: 't-mi-b', squadA: sq.A, squadB: sq.B, marqA: { ...akhil(), row }, marqB: none(), note: row.note });
   }
 }
-// IPL — RCB v KKR abandoned (no innings)
+// IPL — RCB v KKR (IPL 2025 M58) abandoned — no ball bowled (rain), May 17 2025
 {
   const ipl = P_IPL[0];
-  db.matches.push({ id: `m-shared-${seq++}`, slug: 'rcb-vs-kkr-2024-11-14', tournamentId: 't-shared-rcb-kkr', seasonId: 's-2024', teamAId: 't-royal-challengers-bengaluru', teamBId: 't-kkr', matchDate: '2024-11-14', format: 'IPL', status: 'abandoned', resultText: 'Match abandoned without a ball bowled', matchNumber: seq - 1, notes: ipl.note || 'IPL abandoned', note: null, playerIds: [P] });
+  const d = (ipl && ipl.date) || '2025-05-17';
+  db.matches.push({ id: `m-shared-${seq++}`, slug: 'rcb-vs-kkr-2025-05-17', tournamentId: 't-shared-rcb-kkr', seasonId: seasonOf(+d.slice(0, 4)), teamAId: 't-royal-challengers-bengaluru', teamBId: 't-kkr', matchDate: d, format: 'IPL', status: 'abandoned', resultText: 'Match abandoned — rain, no ball bowled', matchNumber: seq - 1, notes: (ipl && ipl.note) || 'IPL 2025 M58. Match abandoned without a ball bowled due to rain.', note: null, playerIds: [P] });
 }
 for (const m of PLAN) buildMatch(m);
 console.log('career matches built:', seq - 1);
@@ -453,29 +463,9 @@ const plP = db.players.find((p) => p.id === P);
 const plA = db.players.find((p) => p.id === A);
 // Official Pranav career statistics (Cricbuzz) — displayed as authoritative; generated matches
 // below are the Rewa archive record and are still fully consistent (asserted separately).
-const P_OFFICIAL = {
-  batting: { formats: ['Test', 'ODI', 'T20', 'IPL'], rows: {
-    Matches: ['43', '23', '34', '1'],
-    Innings: ['43', '23', '33', '0'],
-    Runs: ['2,180', '742', '687', '0'],
-    Highest: ['158*', '121*', '86*', '–'],
-    Average: ['72.67', '53.00', '42.94', '–'],
-    SR: ['68.5', '112.4', '232.4', '–'],
-    Fours: ['244', '76', '48', '0'],
-    Sixes: ['34', '29', '47', '0'],
-    '50s': ['13', '8', '7', '0'],
-    '100s': ['5', '2', '0', '0'],
-  } },
-  bowling: { formats: ['Test', 'ODI', 'T20', 'IPL'], rows: {
-    Matches: ['43', '23', '34', '1'],
-    Wickets: ['158', '66', '59', '0'],
-    Avg: ['26.20', '13.00', '11.69', '–'],
-    Eco: ['2.62', '4.54', '6.80', '–'],
-    BBI: ['5/62', '6/13', '5/2', '–'],
-  } },
-};
-plP.stats = P_OFFICIAL;
-plP.profileStats = { matches: 101, runs: 3609, wickets: 283 };
+// Display recomputed stats directly (validated against the CSV ledger by assertions above).
+plP.stats = statsP;
+plP.profileStats = { matches: 51, runs: statsP.totals.r, wickets: statsP.totals.w };
 plA.profileStats = { matches: 36, runs: statsA.totals.r, wickets: statsA.totals.w };
 console.log('PRANAV batting:', JSON.stringify(statsP.bat));
 console.log('PRANAV bowling:', JSON.stringify(statsP.bowl));
@@ -484,8 +474,8 @@ console.log('AKHIL bowling:', JSON.stringify(statsA.bowl));
 
 // ---------- assertions ----------
 const expect = (actual, exp, label) => { if (JSON.stringify(actual) !== JSON.stringify(exp)) { console.error('MISMATCH', label, JSON.stringify(actual), 'expected', JSON.stringify(exp)); process.exitCode = 1; } else console.log('OK', label); };
-expect(statsP.bat.Matches, ['43', '23', '34', '1'], 'P matches = official');
-expect(statsP.bat.Innings, ['43', '23', '33', '0'], 'P innings = official');
+expect(statsP.bat.Matches, ['10', '15', '26', '1'], 'P matches = 51 ledger');
+expect(statsP.bat.Innings, ['10', '15', '26', '0'], 'P innings = ledger');
 expect(statsA.bat.Matches, ['10', '12', '14', '0'], 'A matches');
 const sumRows = (rows) => rows.reduce((s, r) => s + r.R, 0);
 expect(String(statsP.totals.r), String(sumRows([...P_TEST, ...P_ODI, ...P_T20])), 'P runs = ledger sums');
