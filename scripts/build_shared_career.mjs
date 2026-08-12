@@ -124,8 +124,34 @@ const P_TEST = allOf(P_ROWS, 'Test'), P_ODI = allOf(P_ROWS, 'ODI'), P_T20 = allO
 const A_TEST = lastN(A_ROWS, 'Test', 10), A_ODI = lastN(A_ROWS, 'ODI', 12), A_T20 = lastN(A_ROWS, 'T20', 14);
 
 // ---------- cricket helpers ----------
-const canonOvers = (ov) => { const f = Math.floor(ov); return f + Math.round((ov - f) * 10) / 10; };
-const legalBalls = (ov) => Math.floor(ov) * 6 + Math.round((ov - Math.floor(ov)) * 10);
+const canonOvers = (ov) => {
+  if (typeof ov === 'string') {
+    const parts = ov.split('.');
+    const overs = parseInt(parts[0], 10) || 0;
+    const balls = parseInt(parts[1], 10) || 0;
+    const totalBalls = overs * 6 + balls;
+    const f = Math.floor(totalBalls / 6);
+    const b = totalBalls % 6;
+    return b === 0 ? f : f + b / 10;
+  }
+  const f = Math.floor(ov);
+  const b = Math.round((ov - f) * 10);
+  const totalBalls = f * 6 + b;
+  const finalF = Math.floor(totalBalls / 6);
+  const finalB = totalBalls % 6;
+  return finalB === 0 ? finalF : finalF + finalB / 10;
+};
+const legalBalls = (ov) => {
+  if (typeof ov === 'string') {
+    const parts = ov.split('.');
+    const overs = parseInt(parts[0], 10) || 0;
+    const balls = parseInt(parts[1], 10) || 0;
+    return overs * 6 + balls;
+  }
+  const f = Math.floor(ov);
+  const b = Math.round((ov - f) * 10);
+  return f * 6 + Math.min(5, Math.max(0, b));
+};
 const fmtParams = {
   Test: { maxOv: 90, extras: [12, 30], wkts: [6, 10] },
   ODI: { maxOv: 50, totalLo: 205, totalHi: 290, extras: [8, 20], wkts: [6, 10] },
