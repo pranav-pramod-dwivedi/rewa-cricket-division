@@ -546,8 +546,12 @@ function renderTeams() {
 
 function renderTeam(t) {
   const inTeams = (p, tid) => Array.isArray(p.teams) && p.teams.includes(tid);
+  // Pranav/Akhil stay on their own profiles but are not listed on the RCB/MI squad rosters
+  const hiddenFromSquad = (p) =>
+    (t.id === 't-royal-challengers-bengaluru' && p.id === 'p-pranav-dwivedi') ||
+    (t.id === 't-mumbai-indians' && p.id === 'p-akhil-mishra');
   const squad = db.players
-    .filter((p) => p.teamId === t.id || inTeams(p, t.id))
+    .filter((p) => !hiddenFromSquad(p) && (p.teamId === t.id || inTeams(p, t.id)))
     .sort((a, b) => a.name.localeCompare(b.name));
   const teamMatches = db.matches.filter((m) => m.teamAId === t.id || m.teamBId === t.id);
   const teamDesc = t.description && t.description.trim()
@@ -1019,13 +1023,14 @@ function renderMatches() {
 // hidden/fictional archived tournaments (intra-squad trial sides) —
 // their scorecards do not deep-link to player profiles ("hidden in profiles only").
 const FICTIONAL_TOURS = new Set([
-  't-akhil-mp-trials', 't-akhil-rj-trials', 't-akhil-mi-trials', 't-akhil-de-trials',
+  't-shared-mp', 't-shared-rj', 't-shared-de', 't-shared-odide', 't-shared-rcb', 't-shared-mi',
 ]);
 const isFictionalMatch = (m) => FICTIONAL_TOURS.has(m && m.tournamentId);
 // teams withheld from linking on player profiles (per request: RCB / MI + trial sides unclickable)
 const UNLINKABLE_TEAMS = new Set([
   't-mumbai-indians', 't-royal-challengers-bengaluru',
   't-mp-a', 't-mp-b', 't-rj-a', 't-rj-b', 't-mi-a', 't-mi-b', 't-de', 't-des',
+  't-rcb-a', 't-rcb-b', 't-destroyers', 't-daredevils', 't-kkr',
 ]);
 
 function renderMatch(m) {
