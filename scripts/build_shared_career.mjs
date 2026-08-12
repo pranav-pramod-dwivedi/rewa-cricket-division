@@ -1,108 +1,93 @@
-// Build the MERGED Pranav + Akhil shared career with fully-generated, randomised scorecards.
-// Model (per Pranav's answers):
-//  - One shared fixture pool from BOTH ledgers (no new matches). Remove 4 Pranav rows (seeded random).
-//  - Shared team-pairs (MP A/B, RJ A/B, DE/DES): BOTH players on the same XI (Pranav #3, Akhil opener);
-//    a few RJ/MP matches see them on OPPOSITE sides.
-//  - Own-team matches: RCB A/B + RCB v KKR → Pranav only; MI A/B → Akhil only.
-//  - Dates re-assigned so formats INTERLEAVE across 2021-2025 (fixes the "Test Test Test… ODI ODI" error).
-//  - Scorecards generated bottom-up: innings.runs = sum(batter runs)+extras, so totals always match.
-//  - Pranav's own ledger numbers are kept on every fixture he sources; Akhil's kept on fixtures he sources.
-//  - The co-present partner in a shared fixture gets a realistic supporting score.
+// Build Pranav's (101) and Akhil's (51) careers from their ledgers, with rule-consistent scorecards.
+// - Each player plays ONLY their own fixtures (P: 43 Test/23 ODI/34 T20/1 IPL, A: 23 Test/12 ODI/16 T20).
+// - Scorecards follow basic cricket laws: 11-player XIs, <=2 not outs, dismissed=wickets,
+//   team score = batter runs + extras, bowler wickets <= team wickets, legal-ball economy.
+// - Fill players are real Rewa/MP players (no synthetic club names).
 import { readFileSync, writeFileSync } from 'fs';
-const DATA = '/Users/tanutripathi/Downloads/RAPID/rewa-cricket-division/data/records.json';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+const DATA = join(ROOT, 'data/records.json');
 const db = JSON.parse(readFileSync(DATA, 'utf8'));
 
-// ---------- PURGE prior akhil/shared data (idempotent) ----------
-const oldMatchIds = new Set(db.matches.filter((m) => m.id.startsWith('m-akhil-') || m.id.startsWith('m-shared-')).map((m) => m.id));
+// ---------- purge prior generated career data ----------
+const oldMatchIds = new Set(db.matches.filter((m) => /^m-(shared|akhil|pranav)-/.test(m.id)).map((m) => m.id));
 const oldInnIds = new Set(db.innings.filter((i) => oldMatchIds.has(i.matchId)).map((i) => i.id));
 db.matches = db.matches.filter((m) => !oldMatchIds.has(m.id));
 db.innings = db.innings.filter((i) => !oldInnIds.has(i.id));
 db.batting = db.batting.filter((b) => !oldInnIds.has(b.inningsId));
 db.bowling = db.bowling.filter((w) => !oldInnIds.has(w.inningsId));
-db.tournaments = db.tournaments.filter((t) => !t.id.startsWith('t-akhil-'));
-// reset the removed akhil combo teams we no longer need (they were only for akhil matches)
-const DROP_TEAMS = ['t-red', 't-blue', 't-gold', 't-central-xi', 't-south-xi', 't-west-xi', 't-india-central-xi', 't-india-south-xi', 't-india-west-xi'];
-db.teams = db.teams.filter((t) => !DROP_TEAMS.includes(t.id));
-// purge prior generated entities so each run recreates them cleanly (no stale slugs)
-const GEN_TEAMS = new Set(['t-mp-a','t-mp-b','t-rj-a','t-rj-b','t-mi-a','t-mi-b','t-de','t-des','t-rcb-a','t-rcb-b','t-rcb-v-kkr-a','t-rcb-v-kkr-b','t-destroyers','t-daredevils','t-kkr']);
-db.teams = db.teams.filter((t) => !GEN_TEAMS.has(t.id));
+db.tournaments = db.tournaments.filter((t) => !t.id.startsWith('t-shared-'));
+const GEN_TEAMS = ['t-mp-a', 't-mp-b', 't-rj-a', 't-rj-b', 't-mi-a', 't-mi-b', 't-de', 't-des', 't-rcb-a', 't-rcb-b', 't-rcb-v-kkr-a', 't-rcb-v-kkr-b', 't-destroyers', 't-daredevils'];
+db.teams = db.teams.filter((t) => !GEN_TEAMS.includes(t.id));
 db.players = db.players.filter((p) => !p.id.startsWith('p-club-'));
-// keep the real clubs un-touched
 
+// ---------- real player pools ----------
 const P = 'p-pranav-dwivedi', A = 'p-akhil-mishra';
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-const seasonOf = (y) => ({ 2021: 's2021', 2022: 's2022', 2023: 's-2023', 2024: 's-2024', 2025: 's2025' }[y] || 's-2024');
+const byName = new Map(db.players.map((p) => [p.name.toLowerCase(), p]));
+const ids = (names) => names.map((n) => { const p = byName.get(n.toLowerCase()); if (!p) throw new Error('missing player: ' + n); return p.id; });
+const MP_POOL = ids([
+  'Rajat Patidar', 'Yash Dubey', 'Himanshu Mantri', 'Harsh Gawli', 'Aditya Shrivastava', 'Subhranshu Senapati',
+  'Venkatesh Iyer', 'Saransh Jain', 'Shubham Sharma', 'Anubhav Agarwal', 'Avesh Khan', 'Kuldeep Sen',
+  'Kumar Kartikeya', 'Kulwant Khejroliya', 'Arshad Khan', 'Rahul Batham',
+]);
+const RJ_POOL = ids([
+  'Prithviraj Singh Tomar', 'Akshat Raghuwanshi', 'Atharv Mahajan', 'Sagar Pratap Singh', 'Anant Verma', 'Jaydev Singh',
+  'Himanshu Mantri', 'Chanchal Rathore', 'Kanishk Dubey', 'Ajay Rohera', 'Sagar Solanki', 'Ankit Singh Kushwaha',
+  'Naveen Singh Chouhan', 'Mohd Arham Aquil', 'Aryan Deshmukh', 'Saransh Surana', 'Ramveer Singh Gurjar', 'Ashwin Das',
+  'Rohit Rajawat', 'Prabhanshu Shukla', 'Ritesh Shakya', 'Radhakrishna Dwivedi', 'Kuldeep Sen', 'Kumar Kartikeya',
+  'Shivam Shukla', 'Mohd Arshad Khan', 'Kulwant Khejroliya', 'Amarjeet Kumar Singh',
+]);
+const COMBINED = [...new Set([...MP_POOL, ...RJ_POOL])];
+const poolFor = (tp) => (tp === 'rj' ? RJ_POOL : COMBINED);
+const playerName = (id) => byName.get(db.players.find((p) => p.id === id).name.toLowerCase()).name;
+
+// ---------- teams / tournaments ----------
+const TEAMS = {
+  't-mp-a': ['MP A', 'MP A'], 't-mp-b': ['MP B', 'MP B'],
+  't-rj-a': ['RJ A', 'RJ A'], 't-rj-b': ['RJ B', 'RJ B'],
+  't-de': ['DE', 'DE'], 't-des': ['DES', 'DES'],
+  't-rcb-a': ['RCB A', 'RCB A'], 't-rcb-b': ['RCB B', 'RCB B'],
+  't-mi-a': ['MI A', 'MI A'], 't-mi-b': ['MI B', 'MI B'],
+};
+for (const [id, [name, slug2]] of Object.entries(TEAMS)) if (!db.teams.some((t) => t.id === id)) db.teams.push({ id, name, slug: slug(slug2), shortCode: name, description: 'Intra-squad / trial side.', establishedYear: 2021 });
+for (const [id, name, sc] of [['t-royal-challengers-bengaluru', 'Royal Challengers Bengaluru', 'RCB'], ['t-mumbai-indians', 'Mumbai Indians', 'MI'], ['t-madhya-pradesh', 'Madhya Pradesh', 'MP'], ['t-rewa-jaguars', 'Rewa Jaguars', 'RJ'], ['t-kkr', 'Kolkata Knight Riders', 'KKR']]) if (!db.teams.some((t) => t.id === id)) db.teams.push({ id, name, slug: slug(sc), shortCode: sc, description: '', establishedYear: 2021 });
+
+const TOURS = {
+  't-shared-mp': ['MP A v MP B', 'First-class', 'state'],
+  't-shared-rj': ['RJ A v RJ B', 'T20', 'division'],
+  't-shared-de': ['DE v DES', 'ODI', 'division'],
+  't-shared-odide': ['DE v DES T20', 'T20', 'division'],
+  't-shared-rcb': ['RCB A v RCB B', 'T20', 'ipl'],
+  't-shared-mi': ['MI A v MI B', 'T20', 'ipl'],
+};
+for (const [id, [name, fmt, scope]] of Object.entries(TOURS)) if (!db.tournaments.some((t) => t.id === id)) db.tournaments.push({ id, name, slug: slug(name), format: fmt, status: 'completed', category: 'official', scope, description: 'Intra-squad trial series.' });
 
 // ---------- deterministic RNG ----------
 function mulberry32(seed) { let a = seed >>> 0; return function () { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
-const rnd = mulberry32(2026081250);
-const shuffle = (arr) => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-const pick = (arr) => arr[Math.floor(rnd() * arr.length)];
+const rnd = mulberry32(2026081251);
 const ri = (lo, hi) => lo + Math.floor(rnd() * (hi - lo + 1));
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+const shuffle = (arr) => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const pick = (arr) => arr[Math.floor(rnd() * arr.length)];
 
-// ---------- pools (existing DB players, + born for the shared career) ----------
-const existing = new Set(db.players.map((p) => p.id));
-const namesById = Object.fromEntries(db.players.map((p) => [p.id, p.name]));
-const RJ_BOWLERS = ['p-ashwin-das','p-rohit-rajawat','p-kuldeep-sen','p-kumar-kartikeya','p-shivam-shukla','p-kulwant-khejroliya','p-ritesh-shakya','p-radhakrishna-dwivedi'];
-const RJ_BATS = ['p-prithviraj-singh-tomar','p-akshat-raghuwanshi','p-atharv-mahajan','p-anant-verma','p-himanshu-mantri','p-chanchal-rathore','p-sagar-solanki','p-naveen-singh-chouhan'];
-const MP_BATS = ['p-aditya-shrivastava','p-yash-dubey','p-shubham-sharma','p-harpreet-singh-bhatia','p-rakesh-thakur','p-subhranshu-senapati','p-arshad-khan','p-saransh-jain'];
-const MP_BOWLERS = ['p-avesh-khan','p-gaurav-yadav','p-mihir-hirwani','p-ishwar-pandey','p-rahul-batham'];
-// friendly filler names (Render as text only; not in DB -> non-clickable)
-const FILL_NAMES = ['S. Verma','A. Choubey','R. Tiwari','V. Tripathi','N. Sen','P. Baghel','M. Patel','K. Singh','D. Yadav','R. Prajapati','S. Mishra','T. Gupta','L. Ahirwar','B. Kushwaha','G. Pateria','H. Nema'];
-let FILL_COUNTER = 0;
-// Real-ish destroyers/daredevils/professional names (created as real players so scorecards link back)
-const CLUB_BATS = ['K. Yadav','R. Sharma','S. Khan','A. Singh','M. Ahmed','D. Kumar','N. Iqbal','P. Rao','T. Khan','V. Anand','L. Verma','B. Joshi','S. Nair','R. Menon'];
-const CLUB_BOWLERS = ['Z. Khan','A. Kumar','S. Yadav','R. Chawla','P. Mehta','J. Choudhary','T. Prasad','O. Sharma','Y. Gill','H. Rao'];
-// create club players once (id -> name)
-const CLUB_PLAYERS = {};
-{
-  let n = 0;
-  const taken = new Set(db.players.map((p) => p.slug));
-  for (const nm of [...CLUB_BATS, ...CLUB_BOWLERS]) {
-    const id = `p-club-${String(++n).padStart(2, '0')}`;
-    if (!db.players.some((p) => p.id === id)) {
-      let name = nm, sl = slug(nm), k = 1;
-      while (taken.has(sl)) { k++; name = `${nm} ${k}`; sl = slug(name); }
-      taken.add(sl);
-      db.players.push({ id, name, slug: sl, role: n <= CLUB_BATS.length ? 'Batter' : 'Bowler', bio: '' });
-    }
-    CLUB_PLAYERS[nm] = id;
-  }
-}
-const POOL_ALL = [...RJ_BATS, ...RJ_BOWLERS, ...MP_BATS, ...MP_BOWLERS, ...Object.values(CLUB_PLAYERS)].filter((id) => db.players.some((p) => p.id === id));
-
-// ---------- read ledgers ----------
-// pranav.career.csv: seq,date,match,format,R,B,4s,6s,dismissal,O,M,RW,W,note
-// akhil.career.csv:  num,match,date,format,R,B,4s,6s,SR,dismissal,O,M,RW,W,note
-const parse = (f, map) => readFileSync(f, 'utf8').trim().split('\n').slice(1).map((l) => l.split(','))
-  .map((c) => ({ seq: +c[map.seq], match: c[map.match], fmt: c[map.fmt], R: c[map.R] === 'DNB' ? -1 : +c[map.R], B: +c[map.B], f4: +c[map.f4], f6: +c[map.f6], dis: c[map.dis], O: c[map.O], M: c[map.M], Rr: c[map.Rr], W: c[map.W], note: c[map.note] || '' }));
+// ---------- ledger parsing ----------
+const parse = (f, map) => readFileSync(join(ROOT, 'data', f), 'utf8').trim().split('\n').slice(1).map((l) => l.split(','))
+  .map((c) => ({ seq: +c[map.seq], match: c[map.match], fmt: c[map.fmt], R: c[map.R] === 'DNB' ? null : +c[map.R], B: +c[map.B], f4: +c[map.f4], f6: +c[map.f6], dis: c[map.dis], O: c[map.O], M: c[map.M], Rr: c[map.Rr], W: c[map.W], note: c[map.note] || '' }));
 const PRANAV_MAP = { seq: 0, match: 2, fmt: 3, R: 4, B: 5, f4: 6, f6: 7, dis: 8, O: 9, M: 10, Rr: 11, W: 12, note: 13 };
 const AKHIL_MAP = { seq: 0, match: 1, fmt: 3, R: 4, B: 5, f4: 6, f6: 7, dis: 9, O: 10, M: 11, Rr: 12, W: 13, note: 14 };
-const P_ROWS = parse('/Users/tanutripathi/Downloads/RAPID/rewa-cricket-division/data/pranav.career.csv', PRANAV_MAP);
-const A_ROWS = parse('/Users/tanutripathi/Downloads/RAPID/rewa-cricket-division/data/akhil.career.csv', AKHIL_MAP);
+const P_ROWS = parse('pranav.career.csv', PRANAV_MAP);
+const A_ROWS = parse('akhil.career.csv', AKHIL_MAP);
 
-// ---------- remove 4 Pranav rows (seeded random, skip IPL + HS + first/last) ----------
-{
-  const removable = P_ROWS.filter((r) => !/IPL/.test(r.fmt) && r.note !== 'HS158*' && r.note !== 'HS121*' && r.seq !== 1 && r.seq !== P_ROWS.length);
-  const todrop = shuffle(removable).slice(0, 4).map((r) => r.seq);
-  const dropped = new Set(todrop);
-  const filtered = P_ROWS.filter((r) => !dropped.has(r.seq));
-  console.log('dropped Pranav rows:', dropped);
-  // reassign seq so ordering is contiguous
-  P_ROWS.length = 0; P_ROWS.push(...filtered.map((r, i) => ({ ...r, seq: i })));
-}
-
-// ---------- interleave formats per player chronologically ----------
-// Take each player's rows-grouped-by-format and round-robin them so formats mix.
+// interleave formats within a player's timeline (avoid all-Tests-then-all-ODIs)
 function interleave(rows) {
   const groups = {};
   for (const fmt of [...new Set(rows.map((r) => r.fmt))]) groups[fmt] = rows.filter((r) => r.fmt === fmt);
   const out = []; let guard = 0;
   while (guard++ < 10000) {
     let moved = false;
-    const fmts = Object.keys(groups);
-    for (const fmt of fmts) if (groups[fmt].length) { out.push(groups[fmt].shift()); moved = true; }
+    for (const fmt of Object.keys(groups)) if (groups[fmt].length) { out.push(groups[fmt].shift()); moved = true; }
     if (!moved) break;
   }
   return out;
@@ -110,24 +95,77 @@ function interleave(rows) {
 const P_MIX = interleave(P_ROWS);
 const A_MIX = interleave(A_ROWS);
 
-// ---------- assign dates, interleaved across 2021-2025 ----------
-function assignDates(rows, teamSlotFilter) {
-  // generate candidate dates from 2021-01 to 2025-12, ~6 every month (avoid identity of exact day buckets)
-  const dates = [];
-  for (let y = 2021; y <= 2025; y++) for (let mo = 1; mo <= 12; mo++) {
-    const d = [3, 8, 13, 18, 23, 28]; for (const dd of d) dates.push(`${y}-${String(mo).padStart(2, '0')}-${String(dd).padStart(2, '0')}`);
-  }
-  rows.forEach((r, i) => {
-    const slot = dates[Math.min(i, dates.length - 1)];
-    r.date = slot;
-  });
-  return rows;
-}
-assignDates(P_MIX, null);
-assignDates(A_MIX, null);
+// dates: one pool for the whole career timeline, unique per match
+const DATES = [];
+for (let y = 2021; y <= 2025; y++) for (let mo = 1; mo <= 12; mo++) for (const dd of [3, 8, 13, 18, 23, 28]) DATES.push(`${y}-${String(mo).padStart(2, '0')}-${String(dd).padStart(2, '0')}`);
+let dateCursor = 0;
+const nextDate = () => DATES[dateCursor++ % DATES.length];
+const seasonOf = (y) => ({ 2021: 's2021', 2022: 's2022', 2023: 's-2023', 2024: 's-2024', 2025: 's2025' }[y] || 's-2024');
 
-// ---------- participation model ----------
-// team-pair -> which marquees play, and whether both or opponents
+// ---------- cricket helpers ----------
+const legalOvers = (ov) => Math.floor(ov) + Math.round((ov - Math.floor(ov)) * 10) / 6;
+const legalBalls = (ov) => Math.floor(ov) * 6 + Math.round((ov - Math.floor(ov)) * 10);
+const fmtParams = {
+  Test: { maxOv: 90, totalLo: 285, totalHi: 430, extras: [10, 30], bowlOvers: [10, 18], eco: [2.5, 4.6], ballsMul: 2.3, f6Div: 22, f4Div: 5.5, wkts: [6, 10] },
+  ODI: { maxOv: 50, totalLo: 205, totalHi: 290, extras: [8, 22], bowlOvers: [5, 10], eco: [3.8, 6.4], ballsMul: 1.15, f6Div: 14, f4Div: 5, wkts: [6, 10] },
+  T20: { maxOv: 20, totalLo: 140, totalHi: 185, extras: [4, 14], bowlOvers: [2, 4], eco: [5.5, 10], ballsMul: 0.65, f6Div: 9, f4Div: 4.5, wkts: [5, 10] },
+};
+const FICTIONAL = { Saini: 0, Vora: 1, Malhotra: 2, Tessitore: 3, Bedi: 4, 'S. Verma': 5, Verma: 5, 'A. Choubey': 6, 'R. Tiwari': 7, 'V. Tripathi': 8, 'N. Sen': 9, 'P. Baghel': 10, 'M. Patel': 11, 'K. Singh': 12, 'D. Yadav': 13, 'R. Prajapati': 14, 'S. Mishra': 15, 'T. Gupta': 16, 'L. Ahirwar': 17, 'B. Kushwaha': 18, 'G. Pateria': 19, 'H. Nema': 20 };
+function realisticDismissal(ledgerDis, xiNames) {
+  if (!ledgerDis) return null;
+  const names = xiNames;
+  let out = ledgerDis;
+  const subName = (nm) => (FICTIONAL[nm] != null ? names[FICTIONAL[nm] % names.length] : nm);
+  out = out
+    .replace(/^c & b (.+)$/, (_, b) => `c & b ${subName(b)}`)
+    .replace(/^c (.+) b (.+)$/, (_, f, b) => `c ${subName(f)} b ${subName(b)}`)
+    .replace(/^c (.+)$/, (_, f) => `c ${subName(f)}`)
+    .replace(/^st b (.+) \(wk (.+)\)$/, (_, b, f) => `st b ${subName(b)} (wk ${subName(f)})`)
+    .replace(/^lbw b (.+)$/, (_, b) => `lbw b ${subName(b)}`)
+    .replace(/^b (.+)$/, (_, b) => `b ${subName(b)}`);
+  return out;
+}
+function genFillBat(fmt, runs) {
+  const fp = fmtParams[fmt];
+  const f6 = clamp(Math.round(runs / fp.f6Div), 0, Math.floor(runs / 6));
+  const f4 = clamp(Math.round((runs - 6 * f6) / fp.f4Div), 0, Math.floor((runs - 6 * f6) / 4));
+  const balls = clamp(Math.round(runs * fp.ballsMul), Math.max(1, f4 + f6), Math.max(Math.max(1, f4 + f6), Math.round(runs * fp.ballsMul) + 10));
+  return { runs, balls, fours: f4, sixes: f6, sr: +(balls ? (runs / balls) * 100 : 0).toFixed(2) };
+}
+function distributeSum(S, n) {
+  const out = new Array(n).fill(0);
+  let remaining = S;
+  for (let k = 0; k < n - 1; k++) {
+    const left = n - k - 1;
+    const maxK = Math.min(95, remaining - left);
+    if (maxK <= 0) { out[k] = 0; continue; }
+    const r = rnd();
+    let v;
+    if (r < 0.3) v = ri(0, Math.min(12, maxK));
+    else if (r < 0.62) v = ri(10, Math.min(35, maxK));
+    else if (r < 0.88) v = ri(28, Math.min(60, maxK));
+    else v = ri(50, maxK);
+    out[k] = clamp(v, 0, maxK);
+    remaining -= out[k];
+  }
+  out[n - 1] = Math.max(0, Math.min(95, remaining));
+  return out;
+}
+function genBowlingCard(fmt, xiNames, wktsLeft, oversHint) {
+  const fp = fmtParams[fmt];
+  const ov = oversHint || ri(fp.bowlOvers[0], fp.bowlOvers[1]);
+  const maidens = fmt === 'Test' ? clamp(Math.round(ov / 3), 0, Math.floor(ov / 2)) : fmt === 'ODI' ? (rnd() < 0.4 ? 1 : 0) : (rnd() < 0.2 ? 1 : 0);
+  const runs = clamp(Math.round(ov * (fp.eco[0] + rnd() * (fp.eco[1] - fp.eco[0]))), 0, 200);
+  const w = Math.min(ri(0, 3), wktsLeft);
+  return { overs: ov, maidens, runs, wickets: w, eco: +(runs / ov).toFixed(2) };
+}
+
+// ---------- match builder ----------
+const fixtures = [];
+for (const r of P_MIX) fixtures.push({ pid: P, prefix: 'm-pranav', row: r });
+for (const r of A_MIX) fixtures.push({ pid: A, prefix: 'm-akhil', row: r });
+let seq = 1;
+
 function teamPair(match) {
   if (/MP A/.test(match)) return 'mp';
   if (/RJ A/.test(match)) return 'rj';
@@ -136,284 +174,227 @@ function teamPair(match) {
   if (/MI A/.test(match)) return 'mi';
   return 'other';
 }
-// For shared (mp/rj/de) matches decide side; most same team, a few opposite (Pranav's opponent matches)
-function sidesFor(tp, i) {
-  if (tp === 'mp' || tp === 'rj') { const opp = i % 11 === 7; return opp ? 'opp' : 'same'; } // a few opponents
-  if (tp === 'de') return 'same';
-  return 'solo';
-}
-
-// ---------- teams ----------
-const TEAMS = {
-  't-mp-a': ['MP A', 'MP A'], 't-mp-b': ['MP B', 'MP B'],
-  't-rj-a': ['RJ A', 'RJ A'], 't-rj-b': ['RJ B', 'RJ B'],
-  't-de': ['DE', 'DE'], 't-des': ['DES', 'DES'],
-  't-rcb-a': ['RCB A', 'RCB A'], 't-rcb-b': ['RCB B', 'RCB B'],
-  't-mi-a': ['MI A', 'MI A'], 't-mi-b': ['MI B', 'MI B'],
-  't-destroyers': ['Destroyers', 'Destroyers'], 't-daredevils': ['Daredevils', 'Daredevils'],
-};
-for (const [id, [name, slug2]] of Object.entries(TEAMS)) if (!db.teams.some((t) => t.id === id)) db.teams.push({ id, name, slug: slug(slug2), shortCode: name, description: 'Intra-squad / trial side.', establishedYear: 2021 });
-// ensure real clubs exist
-for (const id of ['t-royal-challengers-bengaluru', 't-mumbai-indians', 't-madhya-pradesh', 't-rewa-jaguars', 't-kkr']) if (!db.teams.some((t) => t.id === id)) db.teams.push({ id, name: ({ 't-royal-challengers-bengaluru': 'Royal Challengers Bengaluru', 't-mumbai-indians': 'Mumbai Indians', 't-madhya-pradesh': 'Madhya Pradesh', 't-rewa-jaguars': 'Rewa Jaguars', 't-kkr': 'Kolkata Knight Riders' }[id]), slug: slug({ 't-royal-challengers-bengaluru': 'RCB', 't-mumbai-indians': 'MI', 't-madhya-pradesh': 'MP', 't-rewa-jaguars': 'RJ', 't-kkr': 'KKR' }[id]), shortCode: { 't-royal-challengers-bengaluru': 'RCB', 't-mumbai-indians': 'MI', 't-madhya-pradesh': 'MP', 't-rewa-jaguars': 'RJ', 't-kkr': 'KKR' }[id], description: '' });
-
-const TOURS = {
-  't-shared-mp': ['MP A v MP B', 'First-class', 'state'], 't-shared-rj': ['RJ A v RJ B', 'T20', 'division'],
-  't-shared-de': ['DE v DES', 'ODI', 'division'], 't-shared-rcb': ['RCB A v RCB B', 'T20', 'ipl'],
-  't-shared-mi': ['MI A v MI B', 'T20', 'ipl'], 't-shared-odide': ['DE v DES T20', 'T20', 'division'],
-};
-for (const [id, [name, fmt, scope]] of Object.entries(TOURS)) if (!db.tournaments.some((t) => t.id === id)) db.tournaments.push({ id, name, slug: slug(name), format: fmt, status: 'completed', category: 'official', scope, description: 'Intra-squad trial series.' });
-
-const tourFor = (tp, fmt, match) => {
-  if (tp === 'mp') return 't-shared-mp';
-  if (tp === 'rj') return 't-shared-rj';
-  if (tp === 'de') return /T20/.test(fmt) ? 't-shared-odide' : 't-shared-de';
-  if (tp === 'rcb') return /IPL/.test(fmt) ? 't-shared-rcb' : 't-shared-rcb';
-  if (tp === 'mi') return 't-shared-mi';
-  return 't-shared-rcb';
-};
+const tourFor = (tp, fmt) => ({ mp: 't-shared-mp', rj: 't-shared-rj', de: /T20/.test(fmt) ? 't-shared-odide' : 't-shared-de', rcb: 't-shared-rcb', mi: 't-shared-mi' }[tp] || 't-shared-rcb');
 const sideTeams = (tp, side, match) => {
   if (tp === 'mp') return side === 'A' ? 't-mp-a' : 't-mp-b';
   if (tp === 'rj') return side === 'A' ? 't-rj-a' : 't-rj-b';
   if (tp === 'de') return side === 'A' ? 't-de' : 't-des';
   if (tp === 'rcb' && !/IPL/.test(match)) return side === 'A' ? 't-rcb-a' : 't-rcb-b';
   if (tp === 'rcb') return side === 'A' ? 't-royal-challengers-bengaluru' : 't-kkr';
-  if (tp === 'mi') return side === 'A' ? 't-mi-a' : 't-mi-b';
-  return side === 'A' ? 't-destroyers' : 't-daredevils';
+  return side === 'A' ? 't-mi-a' : 't-mi-b';
 };
 
-// ---------- score generation ----------
-let seq = 1;
-const DISMISS = ['c {f} b {b}', 'b {b}', 'lbw b {b}', 'c & b {b}'];
-function genBat(fmt, maxScore) {
-  const cap = clamp(maxScore, 3, 95);
-  let runs, balls, f4, f6;
-  if (fmt === 'Test') { runs = ri(8, Math.min(90, cap)); balls = clamp(Math.round(runs * 1.4), runs, 180); f6 = clamp(Math.round(runs / 26), 0, Math.floor(runs / 6)); f4 = clamp(Math.round(runs / 7), 0, Math.floor((runs - f6 * 6) / 4)); }
-  else if (fmt === 'ODI') { runs = ri(5, Math.min(70, cap)); balls = clamp(Math.round(runs * 0.85), Math.round(runs / 3), 100); f6 = clamp(Math.round(runs / 14), 0, Math.floor(runs / 6)); f4 = clamp(Math.round(runs / 6), 0, Math.floor((runs - f6 * 6) / 4)); }
-  else { runs = ri(2, Math.min(55, cap)); balls = clamp(Math.round(runs * 0.6), Math.max(1, Math.round(runs / 4)), 45); f6 = clamp(Math.round(runs / 8), 0, Math.floor(runs / 6)); f4 = clamp(Math.round(runs / 5), 0, Math.floor((runs - f6 * 6) / 4)); }
-  return { runs, balls, fours: f4, sixes: f6, sr: +(balls ? (runs / balls) * 100 : 0).toFixed(2) };
-}
-function supportingBat(fmt) { const g = genBat(fmt, fmt === 'Test' ? 40 : 30); g.runs = clamp(g.runs, 4, fmt === 'Test' ? 45 : 28); g.notOut = g.runs < 16; return g; }
-function genBowl(fmt, oppWktsMax) {
-  let ov, md, rr, w;
-  if (fmt === 'Test') { ov = ri(6, 16); md = Math.round(ov / 3); rr = Math.round(ov * ri(24, 34) / 10); w = Math.min(ri(0, 3), oppWktsMax); }
-  else if (fmt === 'ODI') { ov = ri(4, 9); md = rnd() < 0.35 ? 1 : 0; rr = Math.round(ov * ri(40, 60) / 10); w = Math.min(ri(0, 3), oppWktsMax); }
-  else { ov = ri(1, 4); md = 0; rr = Math.round(ov * ri(45, 90) / 10); w = Math.min(ri(0, 2), oppWktsMax); }
-  return { overs: ov, maidens: md, runs: rr, wickets: w, eco: +(rr / ov).toFixed(2) };
-}
-
-// build a full 2-innings match with the given marquee cards
-// marqueeBat: [{playerId, runs,balls,fours,sixes,dismissal|null,notOut, side}]
-function buildMatch(slot, marqueeBat, extrasNote) {
-  const { date, tp, fmt, match } = slot;
-  const teams = { A: sideTeams(tp, 'A', match), B: sideTeams(tp, 'B', match) };
-  const mid = `m-shared-${seq}`;
-  const innA = `inn-shared-${seq}-1`, innB = `inn-shared-${seq}-2`;
-  const isTest = fmt === 'Test';
-  const runsUsed = {};
-  // assign each marquee to their side innings
-  const sideBatters = { [innA]: [], [innB]: [] };
-  const sideBowlers = { [innA]: [], [innB]: [] };
-  for (const mb of marqueeBat) {
-    const inn = mb.side === 'A' ? innA : innB;
-    if (mb.runs >= 0) sideBatters[inn] = sideBatters[inn].concat([mb]);
-  }
-  // choose extras header
-  const extrapad = isTest ? 40 : fmt === 'ODI' ? 25 : 15;
-  // fill each side with randomized batters + bowlers so totals are plausible
-  function fill(inn) {
-    const cur = sideBatters[inn].reduce((s, b) => s + (b.runs || 0), 0);
-    const desired = Math.max(cur + 60, (isTest ? 320 : fmt === 'ODI' ? 250 : 165));
-    const batters = sideBatters[inn].slice();
-    const used = new Set(batters.map((b) => b.pid));
-    let sum = cur;
-    let guard = 0;
-    while (sum < desired && batters.length < 11 && guard++ < 40) {
-      const cap = clamp(desired - sum - 12, 4, 60);
-      const g = genBat(fmt, cap);
-      if (g.runs < 3) break;
-      const notOut = g.runs % 3 === 0;
-      const cands = shuffle(POOL_ALL.filter((id) => !used.has(id) && id !== 'p-pranav-dwivedi' && id !== 'p-akhil-mishra'));
-      const pid = cands[0];
-      if (!pid) break;
-      used.add(pid);
-      sum += g.runs;
-      batters.push({ pid, runs: g.runs, balls: g.balls, fours: g.fours, sixes: g.sixes, dismissal: notOut ? null : pick(DISMISS).replace('{f}', pick(Object.keys(CLUB_PLAYERS))).replace('{b}', pick(Object.keys(CLUB_PLAYERS))), notOut, sr: g.sr });
-    }
-    return { batters, total: sum + extrapad };
-  }
-  const A = fill(innA);
-  const B = fill(innB);
-  // batting-order correctness: Akhil opens (idx 0), Pranav bats #3 (idx 2) when both in the XI
-  const orderEleven = (arr) => {
-    const a = arr.slice();
-    const find = (pid) => a.findIndex((b) => b.pid === pid);
-    const iA = find('p-akhil-mishra'), iP = find('p-pranav-dwivedi');
-    if (iA >= 0 && iP >= 0) {
-      const akh = a.splice(iA, 1)[0]; const pra = a.splice(iP >= iA ? iP - 1 : iP, 1)[0];
-      a.unshift(akh, pra);
-      // now akh at 0, pra at 1 -> move pra to 2 by inserting a filler marker shifted
-      const keep = a.splice(0, 2); a.unshift(keep[0]); a.splice(2, 0, keep[1]);
-    }
-    return a;
-  };
-  A.batters = orderEleven(A.batters);
-  B.batters = orderEleven(B.batters);
-  // bowling: give ~5 bowlers on the opposite innings
-  function bowlSide(oppInn, wktsMax) {
-    const arr = [];
-    let remaining = wktsMax;
-    const used = new Set();
-    for (let k = 0; k < 5 && remaining >= 0; k++) {
-      const g = genBowl(fmt, remaining);
-      const cands = shuffle(POOL_ALL.filter((id) => !used.has(id) && id !== 'p-pranav-dwivedi' && id !== 'p-akhil-mishra'));
-      const pid = cands[0]; if (!pid) break;
-      used.add(pid);
-      arr.push({ pid, overs: g.overs, maidens: g.maidens, runs: g.runs, wickets: g.wickets, eco: g.eco });
-      remaining -= g.wickets;
-    }
-    return arr;
-  }
-  // bowling: owner ledger figures attach on the opponent innings (innB) in orchestration below
-  const bowlA_onB = bowlSide(innB, isTest ? 10 : fmt === 'ODI' ? 10 : 8);
-  const bowlB_onA = bowlSide(innA, isTest ? 10 : fmt === 'ODI' ? 10 : 8);
-
-  const wktsA = A.batters.filter((b) => !b.notOut).length;
-  const wktsB = B.batters.filter((b) => !b.notOut).length;
-  const ovA = isTest ? 90 : fmt === 'ODI' ? 50 : 20;
-  const ovB = isTest ? 90 : fmt === 'ODI' ? 47 : 20;
-
-  const tA = TEAMS[teams.A][0], tB = TEAMS[teams.B][0];
-  db.matches.push({ id: mid, slug: `${slug(tA)}-vs-${slug(tB)}-${date}`, tournamentId: tourFor(tp, fmt, match), seasonId: seasonOf(+date.slice(0, 4)), teamAId: teams.A, teamBId: teams.B, matchDate: date, format: fmt, status: 'completed', resultText: `${tA} won by ${isTest ? 3 + (seq % 5) + ' wickets' : 15 + (seq % 18) + ' runs'}`, matchNumber: seq, notes: extrasNote, note: null });
-  db.innings.push({ id: innA, matchId: mid, teamId: teams.A, battingOrder: 1, runs: A.total, wickets: wktsA, overs: ovA }, { id: innB, matchId: mid, teamId: teams.B, battingOrder: 2, runs: B.total, wickets: wktsB, overs: ovB });
-  for (const b of A.batters) db.batting.push({ id: `z-${mid}-${b.pid}`, inningsId: innA, playerId: b.pid, runs: b.runs, balls: b.balls, fours: b.fours, sixes: b.sixes, dismissal: b.dismissal, notOut: !!b.notOut, strikeRate: b.sr });
-  for (const b of B.batters) db.batting.push({ id: `z-${mid}-${b.pid}`, inningsId: innB, playerId: b.pid, runs: b.runs, balls: b.balls, fours: b.fours, sixes: b.sixes, dismissal: b.dismissal, notOut: !!b.notOut, strikeRate: b.sr });
-  for (const w of bowlA_onB) db.bowling.push({ id: `wz-${mid}-${w.pid}`, inningsId: innB, playerId: w.pid, overs: w.overs, maidens: w.maidens, runs: w.runs, wickets: w.wickets, economy: w.eco });
-  for (const w of bowlB_onA) db.bowling.push({ id: `wz-${mid}-${w.pid}`, inningsId: innA, playerId: w.pid, overs: w.overs, maidens: w.maidens, runs: w.runs, wickets: w.wickets, economy: w.eco });
-  seq++;
-}
-
-// ---------- orchestrate ----------
-// Build a combined chronological list of fixtures: each row from either player becomes ONE match.
-// For shared team-pairs both marquees appear; for solo pairs only the owner.
-const fixtures = [];
-for (const r of P_MIX) fixtures.push({ src: 'P', row: r });
-for (const r of A_MIX) fixtures.push({ src: 'A', row: r });
-// interleave the two player timelines by date so the shared career mixes both players too
-fixtures.sort((a, b) => a.row.date.localeCompare(b.row.date) || (a.src === 'P' ? -1 : 1));
-// reassign strictly unique dates across the merged timeline (prevents duplicate slugs)
-const DATE_POOL = [];
-for (let y = 2021; y <= 2025; y++) for (let mo = 1; mo <= 12; mo++) for (const dd of [3, 8, 13, 18, 23, 28]) DATE_POOL.push(`${y}-${String(mo).padStart(2, '0')}-${String(dd).padStart(2, '0')}`);
-fixtures.forEach((f, i) => { f.row.date = DATE_POOL[i % DATE_POOL.length]; });
-
-for (let i = 0; i < fixtures.length; i++) {
-  const { src, row } = fixtures[i];
+function buildMatch({ pid, prefix, date, row }) {
   const tp = teamPair(row.match);
   const fmt = row.fmt === 'IPL' ? 'IPL' : row.fmt;
   const isIPL = fmt === 'IPL';
-  if (isIPL) continue; // handled as the single abandoned IPL match below
-  const sides = sidesFor(tp, i);
-  const marqueeBat = [];
-  const bowlerRows = [];
-  const marqueePidOf = src === 'P' ? P : A;
-  const otherPidOf = src === 'P' ? A : P;
-  // owner bats their ledger figure
-  if (!isIPL) {
-    const dis = row.dis === 'not out' ? null : row.dis;
-    marqueeBat.push({ pid: marqueePidOf, runs: row.R, balls: row.B, fours: row.f4, sixes: row.f6, dismissal: dis, notOut: row.dis === 'not out', sr: +((row.R / row.B) * 100).toFixed(2), side: 'A' });
+  const pool = poolFor(tp).filter((id) => id !== pid);
+  const teamA = sideTeams(tp, 'A', row.match), teamB = sideTeams(tp, 'B', row.match);
+  const tNameA = db.teams.find((t) => t.id === teamA).name, tNameB = db.teams.find((t) => t.id === teamB).name;
+  const fp = fmtParams[fmt];
+
+  const mid = `${prefix}-${seq}`;
+  const innA = `${mid}-1`, innB = `${mid}-2`;
+  const innOvers = isIPL ? 0 : fp.maxOv;
+
+  if (isIPL) {
+    db.matches.push({ id: mid, slug: `${slug(tNameA)}-vs-${slug(tNameB)}-${date}`, tournamentId: 't-shared-rcb', seasonId: seasonOf(+date.slice(0, 4)), teamAId: teamA, teamBId: teamB, matchDate: date, format: 'IPL', status: 'abandoned', resultText: 'Match abandoned without a ball bowled (rain)', matchNumber: seq, notes: 'IPL match — abandoned before play.', note: null, playerIds: [pid] });
+    seq++;
+    return;
   }
-  // shared team-pair: the partner also plays (same team mostly; opponent for a few rj/mp)
-  let partnerSide = null;
-  if ((tp === 'mp' || tp === 'rj' || tp === 'de') && !isIPL) {
-    partnerSide = sides === 'opp' ? 'B' : 'A';
-    const g = supportingBat(fmt);
-    marqueeBat.push({ pid: otherPidOf, runs: g.runs, balls: g.balls, fours: g.fours, sixes: g.sixes, dismissal: g.notOut ? null : pick(DISMISS).replace('{f}', pick(CLUB_BATS)).replace('{b}', pick(CLUB_BOWLERS)), notOut: g.notOut, sr: g.sr, side: partnerSide });
+
+  const used = new Set([pid]);
+  const xiA = shuffle(pool).filter((id) => !used.has(id)).slice(0, 10); // + marquee = 11
+  for (const id of xiA) used.add(id);
+  const xiB = shuffle(pool).filter((id) => !used.has(id)).slice(0, 11);
+  for (const id of xiB) used.add(id);
+  const xiAAll = [pid, ...xiA], xiBNames = xiB.map((id) => playerName(id)), xiANames = xiAAll.map((id) => playerName(id));
+
+  // ---- innings A: team A bats (marquee bats) ----
+  const marqueeBats = row.R !== null;
+  const marqueeDis = !marqueeBats ? null : row.dis === 'not out' ? null : realisticDismissal(row.dis, xiBNames);
+  const marqueeNO = marqueeBats && row.dis === 'not out';
+  const extrasA = isIPL ? 0 : ri(fp.extras[0], fp.extras[1]);
+  let W_A = ri(fp.wkts[0], fp.wkts[1]);
+  if (marqueeBats && !marqueeNO) W_A = clamp(W_A, 1, 10);
+  if (marqueeBats && marqueeNO) W_A = clamp(W_A, fp.wkts[0], 9);
+  const NO_A = W_A === 10 ? 0 : 2;
+  const slotsA = W_A + NO_A;
+  const TA = Math.max(ri(fp.totalLo, fp.totalHi), (marqueeBats ? row.R : 0) + extrasA + slotsA);
+  const batSumA = TA - extrasA;
+  const marqRuns = marqueeBats ? row.R : 0;
+  const fillRunsA = distributeSum(batSumA - marqRuns, slotsA - (marqueeBats ? 1 : 0));
+  let disLeftA = W_A - (marqueeBats && !marqueeNO ? 1 : 0);
+  let noLeftA = NO_A - (marqueeNO ? 1 : 0);
+  const batA = [];
+  if (marqueeBats) batA.push({ pid, runs: marqRuns, balls: row.B, fours: row.f4, sixes: row.f6, dismissal: marqueeDis, notOut: marqueeNO, sr: row.B ? +((row.R / row.B) * 100).toFixed(2) : 0 });
+  const batOrder = shuffle(xiA);
+  const disTypes = (fn, bn) => { const r = rnd(); if (r < 0.45) return `c ${fn} b ${bn}`; if (r < 0.7) return `b ${bn}`; if (r < 0.88) return `lbw b ${bn}`; return `st b ${bn} (wk ${fn})`; };
+  for (let k = 0; k < fillRunsA.length; k++) {
+    const id = batOrder[k % batOrder.length];
+    const g = genFillBat(fmt, fillRunsA[k]);
+    const isNO = noLeftA > 0 && (disLeftA === 0 || (rnd() < 0.2 && noLeftA > 0));
+    let dis = null, no = false;
+    if (isNO) { no = true; noLeftA--; }
+    else { disLeftA--; const fn = xiBNames[Math.floor(rnd() * xiBNames.length)], bn = xiBNames[Math.floor(rnd() * xiBNames.length)]; dis = disTypes(fn, bn); }
+    batA.push({ pid: id, runs: g.runs, balls: g.balls, fours: g.fours, sixes: g.sixes, dismissal: dis, notOut: no, sr: g.sr });
   }
-  // bowling: owner's ledger figures go on the opponent innings (owner always side A -> innB)
-  const extrasNote = row.note || null;
-  buildMatch({ date: row.date, tp, fmt, match: row.match }, marqueeBat, extrasNote);
-  // attach owner bowling figures (from ledger) onto opponent innings (innB)
-  if (row.O !== '-' && !isIPL) {
-    const mid = `m-shared-${seq - 1}`;
-    const oppInn = `inn-shared-${seq - 1}-2`;
-    db.bowling.push({ id: `wo-${mid}-${marqueePidOf}`, inningsId: oppInn, playerId: marqueePidOf, overs: +row.O, maidens: +row.M, runs: +row.Rr, wickets: +row.W, economy: +((+row.Rr) / (+row.O)).toFixed(2) });
+  if (disLeftA > 0 || noLeftA > 0) throw new Error('battter slot mismatch');
+
+  // bowling for innings A: 5 bowlers from team B XI, sum wickets = W_A
+  const bowlA = [];
+  let wLeftA = W_A;
+  const bA = shuffle(xiB).slice(0, 5);
+  const ovSumA = fp.maxOv - ri(0, 5);
+  let ovLeftA = ovSumA;
+  const runsDesiredA = batSumA + Math.min(extrasA, ri(2, 8));
+  let runsLeftA = runsDesiredA;
+  for (let k = 0; k < bA.length; k++) {
+    const last = k === bA.length - 1;
+    const ov = last ? ovLeftA : clamp(Math.round(ovLeftA / (bA.length - k)) + ri(-2, 2), 1, ovLeftA - (bA.length - k - 1));
+    const w = last ? wLeftA : Math.min(ri(0, 3), wLeftA - (bA.length - k - 1));
+    const runs = last ? Math.max(0, runsLeftA) : clamp(ri(0, 60), 0, runsLeftA - (bA.length - k - 1));
+    bowlA.push({ pid: bA[k], overs: ov, maidens: fmt === 'Test' ? clamp(Math.round(ov / 3), 0, Math.floor(ov / 2)) : (rnd() < 0.4 ? 1 : 0), runs, wickets: w, eco: ov ? +(runs / ov).toFixed(2) : 0 });
+    ovLeftA -= ov; runsLeftA -= runs; wLeftA -= w;
   }
+  if (wLeftA !== 0) bowlA[bowlA.length - 1].wickets += wLeftA;
+
+  // ---- innings B: team B bats (marquee bowls) ----
+  const marqBowl = row.O && row.O !== '-';
+  const marqW = marqBowl ? +row.W : 0;
+  const extrasB = ri(fp.extras[0], fp.extras[1]);
+  let W_B = marqBowl ? clamp(ri(fp.wkts[0], fp.wkts[1]), marqW, 10) : ri(fp.wkts[0], fp.wkts[1]);
+  const NO_B = W_B === 10 ? 0 : 2;
+  const slotsB = W_B + NO_B;
+  const winB = rnd() < 0.55;
+  const TB = winB ? TA + ri(1, 30) : Math.max(TA - ri(5, 45), slotsB + extrasB);
+  const batSumB = TB - extrasB;
+  const fillRunsB = distributeSum(batSumB, slotsB);
+  let disLeftB = W_B, noLeftB = NO_B;
+  const batB = [];
+  const batOrderB = shuffle(xiB);
+  for (let k = 0; k < fillRunsB.length; k++) {
+    const id = batOrderB[k % batOrderB.length];
+    const g = genFillBat(fmt, fillRunsB[k]);
+    const isNO = noLeftB > 0 && (disLeftB === 0 || (rnd() < 0.2 && noLeftB > 0));
+    let dis = null, no = false;
+    if (isNO) { no = true; noLeftB--; }
+    else { disLeftB--; const fn = xiANames[Math.floor(rnd() * xiANames.length)], bn = xiANames[Math.floor(rnd() * xiANames.length)]; dis = disTypes(fn, bn); }
+    batB.push({ pid: id, runs: g.runs, balls: g.balls, fours: g.fours, sixes: g.sixes, dismissal: dis, notOut: no, sr: g.sr });
+  }
+  if (disLeftB !== 0 || noLeftB !== 0) throw new Error('batter slot mismatch B');
+
+  // bowling for innings B: marquee (ledger) + 4 bowlers from team A XI
+  const bowlB = [];
+  if (marqBowl) {
+    bowlB.push({ pid, overs: +row.O, maidens: +row.M || 0, runs: +row.Rr, wickets: marqW, eco: legalOvers(+row.O) ? +((+row.Rr) / legalOvers(+row.O)).toFixed(2) : 0 });
+  }
+  const fillB = shuffle(xiAAll.filter((id) => id !== pid)).slice(0, 4);
+  let wLeftB = W_B - marqW;
+  const runsDesiredB = batSumB + Math.min(extrasB, ri(2, 8)) - (marqBowl ? +row.Rr : 0);
+  let runsLeftB = runsDesiredB;
+  const ovTargetB = fp.maxOv - (marqBowl ? legalOvers(+row.O) : 0);
+  let ovLeftB = Math.max(0, ovTargetB);
+  for (let k = 0; k < fillB.length; k++) {
+    const last = k === fillB.length - 1;
+    const ov = last ? Math.max(1, ovLeftB) : clamp(Math.round(ovLeftB / (fillB.length - k)) + ri(-2, 2), 1, Math.max(1, ovLeftB - (fillB.length - k - 1)));
+    const w = last ? Math.max(0, wLeftB) : Math.min(ri(0, 3), wLeftB);
+    const runs = last ? Math.max(0, runsLeftB) : clamp(ri(0, 60), 0, Math.max(0, runsLeftB));
+    bowlB.push({ pid: fillB[k], overs: ov, maidens: fmt === 'Test' ? clamp(Math.round(ov / 3), 0, Math.floor(ov / 2)) : (rnd() < 0.4 ? 1 : 0), runs, wickets: w, eco: ov ? +(runs / ov).toFixed(2) : 0 });
+    ovLeftB -= ov; runsLeftB -= runs; wLeftB -= w;
+  }
+  if (wLeftB > 0) bowlB[bowlB.length - 1].wickets += wLeftB;
+
+  const resultText = TB > TA ? `${tNameB} won by ${10 - W_B} wickets` : `${tNameA} won by ${TA - TB} runs`;
+  db.matches.push({ id: mid, slug: `${slug(tNameA)}-vs-${slug(tNameB)}-${date}`, tournamentId: tourFor(tp, fmt), seasonId: seasonOf(+date.slice(0, 4)), teamAId: teamA, teamBId: teamB, matchDate: date, format: fmt, status: 'completed', resultText, matchNumber: seq, notes: row.note || null, note: null, playerIds: [pid] });
+  db.innings.push({ id: innA, matchId: mid, teamId: teamA, battingOrder: 1, runs: TA, wickets: W_A, overs: innOvers }, { id: innB, matchId: mid, teamId: teamB, battingOrder: 2, runs: TB, wickets: W_B, overs: innOvers });
+  for (const b of batA) db.batting.push({ id: `z-${mid}-${b.pid}`, inningsId: innA, playerId: b.pid, runs: b.runs, balls: b.balls, fours: b.fours, sixes: b.sixes, dismissal: b.dismissal, notOut: b.notOut, strikeRate: b.sr });
+  for (const b of batB) db.batting.push({ id: `z-${mid}-${b.pid}`, inningsId: innB, playerId: b.pid, runs: b.runs, balls: b.balls, fours: b.fours, sixes: b.sixes, dismissal: b.dismissal, notOut: b.notOut, strikeRate: b.sr });
+  for (const w of bowlA) db.bowling.push({ id: `w-${mid}-${w.pid}`, inningsId: innA, playerId: w.pid, overs: w.overs, maidens: w.maidens, runs: w.runs, wickets: w.wickets, economy: w.eco });
+  for (const w of bowlB) db.bowling.push({ id: `w-${mid}-${w.pid}`, inningsId: innB, playerId: w.pid, overs: w.overs, maidens: w.maidens, runs: w.runs, wickets: w.wickets, economy: w.eco });
+  seq++;
 }
 
-// IPL match: abandoned before play — match row only, zero innings (rule #8)
-const iplRow = P_MIX.find((r) => r.fmt === 'IPL');
-if (iplRow) {
-  const mid = `m-shared-${seq++}`;
-  db.matches.push({ id: mid, slug: `rcb-vs-kkr-${iplRow.date}`, tournamentId: 't-shared-rcb', seasonId: seasonOf(+iplRow.date.slice(0, 4)), teamAId: 't-royal-challengers-bengaluru', teamBId: 't-kkr', matchDate: iplRow.date, format: 'IPL', status: 'abandoned', resultText: 'Match abandoned without a ball bowled (rain)', matchNumber: seq - 1, notes: 'IPL match #58 — abandoned before play.', note: null });
+for (const f of fixtures) {
+  f.row.date = nextDate();
+  buildMatch({ pid: f.pid, prefix: f.prefix, date: f.row.date, row: f.row });
 }
 
-// ---------- recompute BOTH players' summaries from the final match rows (rule #9) ----------
-const mById2 = new Map(db.matches.map((m) => [m.id, m]));
-const innById2 = new Map(db.innings.map((i) => [i.id, i]));
-const fmtOfM = (m) => (m.format === 'IPL' ? 'IPL' : m.format);
+// ---------- recompute player stats from the match data ----------
+const mById = new Map(db.matches.map((m) => [m.id, m]));
+const innById = new Map(db.innings.map((i) => [i.id, i]));
 function recompute(pid) {
   const bat = db.batting.filter((b) => b.playerId === pid);
   const bowl = db.bowling.filter((b) => b.playerId === pid);
-  const S = {}; for (const f of ['Test', 'ODI', 'T20', 'IPL']) S[f] = { matches: new Set(), inns: 0, runs: 0, balls: 0, fours: 0, sixes: 0, notOut: 0, dismissals: 0, hs: 0, hsNo: false, wkts: 0, br: 0, ov: 0, bbiW: 0, bbiR: Infinity };
+  const S = {}; for (const f of ['Test', 'ODI', 'T20', 'IPL']) S[f] = { matches: new Set(), inns: 0, runs: 0, balls: 0, fours: 0, sixes: 0, notOut: 0, dismissals: 0, hs: 0, hsNo: false, wkts: 0, br: 0, ballsB: 0, bbiW: 0, bbiR: Infinity };
   for (const b of bat) {
-    const inn = innById2.get(b.inningsId); if (!inn) continue;
-    const m = mById2.get(inn.matchId); const f = fmtOfM(m);
-    if (!S[f]) { console.log('UNKNOWN FORMAT', f, 'match', m && m.id, 'pid', pid); continue; }
+    const inn = innById.get(b.inningsId); if (!inn) continue;
+    const m = mById.get(inn.matchId); const f = m.format;
     const s = S[f];
     s.matches.add(m.id); s.inns++; s.runs += b.runs || 0; s.balls += b.balls || 0; s.fours += b.fours || 0; s.sixes += b.sixes || 0;
     if (b.notOut) s.notOut++; else s.dismissals++;
     if ((b.runs || 0) > s.hs) { s.hs = b.runs; s.hsNo = !!b.notOut; }
   }
   for (const w of bowl) {
-    const inn = innById2.get(w.inningsId); if (!inn) continue;
-    const m = mById2.get(inn.matchId); const f = fmtOfM(m); const s = S[f];
-    s.matches.add(m.id); s.wkts += w.wickets || 0; s.br += w.runs || 0; s.ov += w.overs || 0;
-    if ((w.wickets || 0) > s.bbiW || ((w.wickets || 0) === s.bbiW && (w.runs || 0) < s.bbiR)) { s.bbiW = w.wickets; s.bbiR = w.runs; }
+    const inn = innById.get(w.inningsId); if (!inn) continue;
+    const m = mById.get(inn.matchId); const s = S[m.format];
+    s.matches.add(m.id); s.wkts += w.wickets || 0; s.br += w.runs || 0; s.ballsB += legalBalls(w.overs || 0);
+    if ((w.wickets || 0) > s.bbiW || ((w.wickets || 0) === s.bbiW && (w.runs || 0) < s.bbiR)) { s.bbiW = w.wickets; s.bbiR = w.runs || 0; }
   }
-  // IPL abandoned match: counts as a match only for the player whose club it is (RCB -> Pranav)
-  const plTeams = (db.players.find((p) => p.id === pid).teams) || [];
-  if (plTeams.includes('t-royal-challengers-bengaluru')) {
-    for (const m of db.matches.filter((x) => x.format === 'IPL')) S.IPL.matches.add(m.id);
-  }
+  // matches with no cards (abandoned IPL) count via playerIds
+  for (const m of db.matches) if (m.playerIds && m.playerIds.includes(pid)) S[m.format].matches.add(m.id);
   const F = ['Test', 'ODI', 'T20', 'IPL'];
   const row = (fn) => F.map((f) => fn(S[f]));
   const num = (v) => (v == null || isNaN(v) ? '–' : String(v));
-  const batRows = {
-    Matches: row((s) => num(s.matches.size)), Innings: row((s) => num(s.inns)), Runs: row((s) => num(s.runs)),
-    Highest: row((s) => (s.hs ? `${s.hs}${s.hsNo ? '*' : ''}` : '–')),
-    Average: row((s) => (s.dismissals ? (s.runs / s.dismissals).toFixed(2) : s.runs ? '–' : '–')),
-    SR: row((s) => (s.balls ? Math.round((s.runs / s.balls) * 100) : '–')),
-    Fours: row((s) => num(s.fours)), Sixes: row((s) => num(s.sixes)),
-    '50s': row((s) => num('--')), '100s': row((s) => num('--')),
-  };
   const fifties = {}, hundreds = {};
   for (const f of F) { fifties[f] = 0; hundreds[f] = 0; }
   for (const b of bat) {
-    const inn = innById2.get(b.inningsId); if (!inn) continue;
-    const m = mById2.get(inn.matchId); const f = fmtOfM(m);
+    const inn = innById.get(b.inningsId); if (!inn) continue;
+    const m = mById.get(inn.matchId); const f = m.format;
     if ((b.runs || 0) >= 100) hundreds[f]++; else if ((b.runs || 0) >= 50) fifties[f]++;
   }
-  batRows['50s'] = F.map((f) => num(fifties[f]));
-  batRows['100s'] = F.map((f) => num(hundreds[f]));
-  const bowlRows = {
-    Matches: row((s) => num(s.matches.size)), Wickets: row((s) => num(s.wkts)),
-    Avg: row((s) => (s.wkts ? (s.br / s.wkts).toFixed(2) : '–')),
-    Eco: row((s) => (s.ov ? (s.br / s.ov).toFixed(2) : '–')),
-    BBI: row((s) => (s.bbiW ? `${s.bbiW}/${s.bbiR}` : '–')),
-  };
   const pl = db.players.find((p) => p.id === pid);
   pl.stats = {
-    batting: { formats: F, rows: Object.fromEntries(Object.entries(batRows).map(([k, v]) => [k, v.map(String)])) },
-    bowling: { formats: F, rows: Object.fromEntries(Object.entries(bowlRows).map(([k, v]) => [k, v.map(String)])) },
+    batting: { formats: F, rows: {
+      Matches: row((s) => num(s.matches.size)), Innings: row((s) => num(s.inns)), Runs: row((s) => num(s.runs)),
+      Highest: row((s) => (s.hs ? `${s.hs}${s.hsNo ? '*' : ''}` : '–')),
+      Average: row((s) => (s.dismissals ? (s.runs / s.dismissals).toFixed(2) : '–')),
+      SR: row((s) => (s.balls ? String(Math.round((s.runs / s.balls) * 1000) / 10) : '–')),
+      Fours: row((s) => num(s.fours)), Sixes: row((s) => num(s.sixes)),
+      '50s': row((s) => num(fifties[s] != null ? 0 : 0)),
+      '50s': F.map((f) => num(fifties[f])), '100s': F.map((f) => num(hundreds[f])),
+    } },
+    bowling: { formats: F, rows: {
+      Matches: row((s) => num(s.matches.size)), Wickets: row((s) => num(s.wkts)),
+      Avg: row((s) => (s.wkts ? (s.br / s.wkts).toFixed(2) : '–')),
+      Eco: row((s) => (s.ballsB ? (s.br / (s.ballsB / 6)).toFixed(2) : '–')),
+      BBI: row((s) => (s.bbiW ? `${s.bbiW}/${s.bbiR}` : '–')),
+    } },
   };
-  return { bat: batRows, bowl: bowlRows };
+  return { bat: pl.stats.batting.rows, bowl: pl.stats.bowling.rows };
 }
 const statsP = recompute(P);
 const statsA = recompute(A);
-console.log('PRANAV summary:', JSON.stringify(statsP));
-console.log('AKHIL summary:', JSON.stringify(statsA));
+console.log('PRANAV batting:', JSON.stringify(statsP.bat));
+console.log('PRANAV bowling:', JSON.stringify(statsP.bowl));
+
+// ---------- assertions ----------
+const expect = (actual, exp, label) => { if (JSON.stringify(actual) !== JSON.stringify(exp)) { console.error('MISMATCH', label, JSON.stringify(actual), 'expected', JSON.stringify(exp)); process.exitCode = 1; } else console.log('OK', label); };
+expect(statsP.bat.Matches, ['43', '23', '34', '1'], 'P matches');
+expect(statsP.bat.Innings, ['43', '23', '33', '0'], 'P innings');
+expect(statsP.bat.Runs, ['2180', '742', '688', '0'], 'P runs');
+expect(statsP.bat.Highest, ['158*', '121*', '86*', '–'], 'P HS');
+expect(statsP.bat.Average, ['72.67', '53.00', '43.00', '–'], 'P avg');
+expect(statsP.bat.SR, ['68.5', '112.4', '232.4', '–'], 'P SR');
+expect(statsP.bat.Fours, ['244', '76', '48', '0'], 'P fours');
+expect(statsP.bat.Sixes, ['34', '29', '47', '0'], 'P sixes');
+expect(statsP.bat['50s'], ['13', '8', '7', '0'], 'P 50s');
+expect(statsP.bat['100s'], ['5', '2', '0', '0'], 'P 100s');
+expect(statsP.bowl.Matches, ['43', '23', '34', '1'], 'P bowl matches');
+expect(statsP.bowl.Wickets, ['158', '66', '59', '0'], 'P wickets');
+expect(statsP.bowl.Avg, ['26.20', '13.00', '11.69', '–'], 'P bowl avg');
+expect(statsP.bowl.Eco, ['2.62', '4.54', '6.80', '–'], 'P eco');
+expect(statsP.bowl.BBI, ['5/62', '6/13', '5/2', '–'], 'P BBI');
 
 writeFileSync(DATA, JSON.stringify(db, null, 2) + '\n');
-console.log('fixtures built:', fixtures.length, '+1 IPL =', seq - 1);
-console.log('totals -> matches:', db.matches.length, 'teams:', db.teams.length, 'tournaments:', db.tournaments.length, 'innings:', db.innings.length, 'batting:', db.batting.length, 'bowling:', db.bowling.length);
-console.log('Pranav batting cards:', db.batting.filter((b) => b.playerId === P).length, 'Akhil:', db.batting.filter((b) => b.playerId === A).length);
-console.log('Pranav bowling cards:', db.bowling.filter((b) => b.playerId === P).length, 'Akhil:', db.bowling.filter((b) => b.playerId === A).length);
+console.log('career built: matches', db.matches.length, 'innings', db.innings.length, 'batting', db.batting.length, 'bowling', db.bowling.length);

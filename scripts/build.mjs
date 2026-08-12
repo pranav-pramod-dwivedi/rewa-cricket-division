@@ -44,6 +44,13 @@ const ld = (obj) =>
 const titleFor = (t) =>
   t === org.name ? `${org.name} — Official Website & Archive` : `${t} | ${org.name}`;
 
+// economy on legal balls: "2.3" overs = 2 overs + 3 balls = 2.5 legal overs
+const legalOversOf = (ov) => {
+  const o = Number(ov) || 0;
+  const f = Math.floor(o);
+  return f + Math.round((o - f) * 10) / 6;
+};
+
 // team-name disambiguation for player page titles (common names collide)
 const teamOf = (p) => (p.teamId ? teamsById.get(p.teamId) : null);
 
@@ -640,6 +647,8 @@ function renderPlayer(p) {
   const bowlOvers = db.bowling.filter((b) => b.playerId === p.id);
   const batRuns = batInns.reduce((s, b) => s + (b.runs || 0), 0);
   const bowlWkts = bowlOvers.reduce((s, b) => s + (b.wickets || 0), 0);
+  const ps = p.profileStats || null;
+  const statVal = (k) => (ps ? ps[k] : null);
   // teams he played for, derived from match history (batting card -> innings team; bowling card -> opposing team)
   const innById = new Map(db.innings.map((i) => [i.id, i]));
   const matchByInn = new Map(db.innings.map((i) => [i.id, db.matches.find((m) => m.id === i.matchId)]));
@@ -687,7 +696,7 @@ function renderPlayer(p) {
   });
   html += `<div class="page-head"><h1>${esc(p.name)} ${isOfficialPlayer(p.id) ? verifiedTick() : ''}</h1><p>${esc(p.role)}${team ? ` · <a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : ''}</p></div>`;
   html += `<dl class="card dl-card" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:720px;margin-bottom:1.5rem">
-    ${[['Role', p.role], team ? ['Team', `<a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>`] : null, p.battingStyle ? ['Batting style', p.battingStyle] : null, p.bowlingStyle ? ['Bowling style', p.bowlingStyle] : null, p.dateOfBirth ? ['Born', `${p.dateOfBirth}${age !== null ? ` (${age} years)` : ''}`] : null, p.birthPlace ? ['Birth place', p.birthPlace] : null, ['Matches', batInns.length || '—'], ['Runs', batRuns || '—'], ['Wickets', bowlWkts || '—']]
+    ${[['Role', p.role], team ? ['Team', `<a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>`] : null, p.battingStyle ? ['Batting style', p.battingStyle] : null, p.bowlingStyle ? ['Bowling style', p.bowlingStyle] : null, p.dateOfBirth ? ['Born', `${p.dateOfBirth}${age !== null ? ` (${age} years)` : ''}`] : null, p.birthPlace ? ['Birth place', p.birthPlace] : null, ['Matches', statVal('matches') ?? (batInns.length || '—')], ['Runs', statVal('runs') ?? (batRuns || '—')], ['Wickets', statVal('wickets') ?? (bowlWkts || '—')]]
       .filter(Boolean)
       .map(([k, v]) => `<div><dt style="font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">${esc(k)}</dt><dd style="font-weight:600;margin-top:.1rem">${v}</dd></div>`)
       .join('\n')}
@@ -756,7 +765,7 @@ function renderPlayer(p) {
       for (const w of bowlOvers) {
         const inn = innById.get(w.inningsId); const m = inn && matchByInn.get(inn.id);
         const f = m ? fmtOf(m.tournamentId) : 'Other';
-        const s = get(f); s.wkts += w.wickets || 0; s.bowlRuns += w.runs || 0; s.bowlBalls += Math.round((w.overs || 0) * 6); s.overs += w.overs || 0; s.bowlMaidens += w.maidens || 0;
+        const s = get(f); s.wkts += w.wickets || 0; s.bowlRuns += w.runs || 0; s.bowlBalls += legalOversOf(w.overs || 0) * 6; s.overs += w.overs || 0; s.bowlMaidens += w.maidens || 0;
         if (m) s.matches.add(m.id);
         if ((w.wickets || 0) > s.bbiW || ((w.wickets || 0) === s.bbiW && (w.runs || 0) < s.bbiR)) { s.bbiW = w.wickets || 0; s.bbiR = w.runs || 0; }
       }
@@ -767,7 +776,7 @@ function renderPlayer(p) {
         const rowsHtml = [
           ['Matches', (s) => s.matches.size || '—'], ['Innings', (s) => s.inns || '—'], ['Runs', (s) => s.runs || '—'], ['Highest', (s) => s.hs || '—'],
           ['Average', (s) => (s.dismissals ? (s.runs / s.dismissals).toFixed(2) : s.runs ? '—' : '—')], ['Strike rate', (s) => (s.balls ? ((s.runs / s.balls) * 100).toFixed(2) : '—')],
-          ['Wickets', (s) => s.wkts || '—'], ['Bowling avg', (s) => (s.wkts ? (s.bowlRuns / s.wkts).toFixed(2) : '—')], ['Economy', (s) => (s.overs ? (s.bowlRuns / s.overs).toFixed(2) : '—')], ['Best bowling', (s) => (s.bbiW ? `${s.bbiW}/${s.bbiR}` : '—')],
+          ['Wickets', (s) => s.wkts || '—'], ['Bowling avg', (s) => (s.wkts ? (s.bowlRuns / s.wkts).toFixed(2) : '—')], ['Economy', (s) => (s.bowlBalls ? (s.bowlRuns / (s.bowlBalls / 6)).toFixed(2) : '—')], ['Best bowling', (s) => (s.bbiW ? `${s.bbiW}/${s.bbiR}` : '—')],
         ].map(([lab, fn]) => `<tr><td>${esc(lab)}</td>${fmts.map((f) => cell(f, fn)).join('')}</tr>`).join('\n');
         rows.push(`<div class="table-wrap"><h3 style="margin:.6rem .9rem">Career statistics</h3><table><thead>${th}</thead><tbody>${rowsHtml}</tbody></table></div>`);
       }
@@ -1097,7 +1106,7 @@ function renderMatch(m) {
                   const p = playersById.get(b.playerId);
                   const clickable = p && p.slug && !isFictionalMatch(m);
                   const cell = clickable ? `<a href="/players/${esc(p.slug)}/">${esc(p.name)}</a>` : esc(p?.name ?? '—');
-                  return `<tr><td>${cell}</td><td class="num">${b.overs}</td><td class="num">${b.maidens}</td><td class="num">${b.runs}</td><td class="num">${b.wickets}</td><td class="num">${b.economy?.toFixed(2) ?? '—'}</td></tr>`;
+                  return `<tr><td>${cell}</td><td class="num">${b.overs}</td><td class="num">${b.maidens}</td><td class="num">${b.runs}</td><td class="num">${b.wickets}</td><td class="num">${legalOversOf(b.overs) ? (b.runs / legalOversOf(b.overs)).toFixed(2) : '—'}</td></tr>`;
                 })
                 .join('\n')}</tbody></table>`;
             }
