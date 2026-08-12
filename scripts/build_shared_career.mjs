@@ -219,6 +219,18 @@ function distributeSum(S, n) {
 }
 const disTypes = (fn, bn) => { const r = rnd(); if (r < 0.45) return `c ${fn} b ${bn}`; if (r < 0.7) return `b ${bn}`; if (r < 0.88) return `lbw b ${bn}`; return `st b ${bn} (wk ${fn})`; };
 const srOf = (r, b) => (b ? +((r / b) * 100).toFixed(2) : 0);
+const parse2ndInn = (note, names, pos) => {
+  if (!note) return null;
+  const m = note.match(/2nd inn:\s*(\d+)(\*)?\s*\((\d+)\)/i);
+  if (!m) return null;
+  const runs = +m[1];
+  const notOut = !!m[2];
+  const balls = +m[3];
+  const fours = Math.floor(runs / 5);
+  const sixes = Math.floor(runs / 25);
+  const dis = notOut ? 'not out' : disTypes(names[Math.floor(rnd() * names.length)], names[Math.floor(rnd() * names.length)]);
+  return { pid: P, pos: pos || 3, runs, balls, fours, sixes, dis, no: notOut, sr: srOf(runs, balls) };
+};
 
 // ---------- innings builder ----------
 // battingSide = XI batting (includes its marquees); fieldingSide = XI bowling/fielding
@@ -230,7 +242,7 @@ function makeInnings(match, fmt, innId, battingSide, fieldingSide, marqueeCards,
   else if (mode === 'chase') W = ri(6, 10);
   else W = ri(fp.wkts[0], fp.wkts[1]);
   const marqNOs = marqueeCards.filter((c) => c.no).length;
-  const marqDis = marqueeCards.filter((c) => c.dis).length;
+  const marqDis = marqueeCards.filter((c) => !c.no).length;
   if (W < marqDis) W = Math.min(10, marqDis + ri(0, 2));
   const NO = marqueeCards.length ? (W === 10 ? 1 : Math.min(2, 10 - W)) : 0;
   const slots = W + NO;
@@ -324,6 +336,13 @@ function buildMatch({ date, tour, fmt, teamA, teamB, squadA, squadB, marqA, marq
   db.matches.push({ id: mid, slug: `${slug(sideOf(teamA))}-vs-${slug(sideOf(teamB))}-${date}`, tournamentId: tour, seasonId: seasonOf(+date.slice(0, 4)), teamAId: teamA, teamBId: teamB, matchDate: date, format: fmt, status: 'completed', resultText: '', matchNumber: seq, notes: note || null, note: null, playerIds: [...new Set([marqA?.pid || null, marqB?.pid || null].filter(Boolean))], ...(stage ? { stage } : {}) });
   const m = db.matches[db.matches.length - 1];
   const card = (ma, names) => ma && ma.pid && ma.row ? [{ pid: ma.pid, pos: ma.pos, runs: ma.row.R, balls: ma.row.B, fours: ma.row.f4, sixes: ma.row.f6, dis: realisticDismissal(ma.row.dis, names), no: ma.row.dis === 'not out', sr: srOf(ma.row.R, ma.row.B) }] : [];
+  const card2 = (ma, names) => {
+    if (ma && ma.pid === P && ma.row && ma.row.note) {
+      const p2 = parse2ndInn(ma.row.note, names, ma.pos);
+      if (p2) return [p2];
+    }
+    return [];
+  };
 
   let a1, a2, b1, b2, innA1, innA2, innB1, innB2;
   a1 = makeInnings(m, fmt, `${mid}-1`, squadA, squadB, card(marqA, squadB.map(playerName)), 'open', 0);
@@ -332,7 +351,7 @@ function buildMatch({ date, tour, fmt, teamA, teamB, squadA, squadB, marqA, marq
   innB1 = { id: `${mid}-2`, matchId: mid, teamId: teamB, battingOrder: 2, runs: b1.total, wickets: b1.W, overs: fp.maxOv };
 
   if (isTest) {
-    a2 = makeInnings(m, fmt, `${mid}-3`, squadA, squadB, [], 'test2', 0);
+    a2 = makeInnings(m, fmt, `${mid}-3`, squadA, squadB, card2(marqA, squadB.map(playerName)), 'test2', 0);
     innA2 = { id: `${mid}-3`, matchId: mid, teamId: teamA, battingOrder: 3, runs: a2.total, wickets: a2.W, overs: fp.maxOv };
     const target = Math.max(1, a1.total + a2.total - b1.total);
     const r = rnd();
@@ -505,10 +524,11 @@ console.log('AKHIL bowling:', JSON.stringify(statsA.bowl));
 // ---------- assertions ----------
 const expect = (actual, exp, label) => { if (JSON.stringify(actual) !== JSON.stringify(exp)) { console.error('MISMATCH', label, JSON.stringify(actual), 'expected', JSON.stringify(exp)); process.exitCode = 1; } else console.log('OK', label); };
 expect(statsP.bat.Matches, ['10', '15', '26', '1'], 'P matches = 51 ledger');
-expect(statsP.bat.Innings, ['10', '15', '26', '0'], 'P innings = ledger');
+expect(statsP.bat.Innings, ['20', '15', '26', '0'], 'P innings = ledger');
 expect(statsA.bat.Matches, ['10', '12', '14', '0'], 'A matches');
 const sumRows = (rows) => rows.reduce((s, r) => s + r.R, 0);
-expect(String(statsP.totals.r), String(sumRows([...P_TEST, ...P_ODI, ...P_T20])), 'P runs = ledger sums');
+const sumTest2 = P_TEST.reduce((s, r) => { const m = r.note.match(/2nd inn:\s*(\d+)/i); return s + (m ? +m[1] : 0); }, 0);
+expect(String(statsP.totals.r), String(sumRows([...P_TEST, ...P_ODI, ...P_T20]) + sumTest2), 'P runs = ledger sums');
 expect(String(statsA.totals.r), String(sumRows([...A_TEST, ...A_ODI, ...A_T20])), 'A runs = ledger sums');
 
 // ---------- rules checker (career matches only) ----------

@@ -254,7 +254,7 @@ const scopeBadge = (tourn) => {
   if (s === 'division') return '';
   return `<span class="badge badge-${s}" title="External match featuring a Rewa player — part of the Rewa archive">${scopeLabel[s]}</span>`;
 };
-const dateSort = (a, b) => (b.matchDate ?? '9999') < (a.matchDate ?? '9999') ? -1 : (b.matchDate ?? '9999') > (a.matchDate ?? '9999') ? 1 : 0;
+const dateSort = (a, b) => (a.matchDate ?? '') > (b.matchDate ?? '') ? -1 : (a.matchDate ?? '') < (b.matchDate ?? '') ? 1 : 0;
 
 const matchCard = (m) => {
   const teamA = teamsById.get(m.teamAId);
