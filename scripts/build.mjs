@@ -100,14 +100,18 @@ const NAV = [
   ['Contact', '/contact/'],
 ];
 
-function header(pinned = false) {
-  const searchIcon = `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
+const extLinkIcon = () =>
+  `<svg class="ext-link-svg" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-left:0.2rem"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
+
+function header(pinned = true) {
+  const searchIcon = `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
+  const clearIcon = `<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
   const search = pinned
     ? `<form class="header-search" role="search" action="/search/" method="get">
       <label class="sr-only" for="q">Search the archive</label>
       <span class="header-search-icon">${searchIcon}</span>
       <input id="q" name="q" type="search" placeholder="Search players, teams, matches…" autocomplete="off" />
-      <button class="header-search-clear" type="button" data-search-clear aria-label="Clear search" hidden>&#10005;</button>
+      <button class="header-search-clear" type="button" data-search-clear aria-label="Clear search" hidden>${clearIcon}</button>
       <button class="btn btn-primary header-search-go" type="submit">Search</button>
     </form>`
     : `<a class="header-search-btn" href="/search/" aria-label="Search the archive" title="Search the archive">${searchIcon}</a>`;
@@ -373,7 +377,7 @@ function dsywSection() {
   const src = dsyw.source;
   return `<section class="section whats-new">
     <div class="section-title"><div><p class="eyebrow">Madhya Pradesh Sports</p><h2>What's New — MP Sports &amp; Youth Welfare</h2></div>
-    <a class="link" href="${esc(src)}" rel="noopener" target="_blank">Source: ${esc(dsyw.sourceName)} &nearr;</a></div>
+    <a class="link" href="${esc(src)}" rel="noopener" target="_blank">Source: ${esc(dsyw.sourceName)} ${extLinkIcon()}</a></div>
     <div class="grid grid-2">
       ${dsyw.whatsNew.map((n) => `<div class="card"><h3 style="font-size:1rem">${esc(n.title)}</h3><p class="card-meta" style="margin-top:.5rem">${esc(n.body)}</p></div>`).join('\n')}
     </div>
@@ -410,7 +414,7 @@ function academyCard() {
         <p class="eyebrow">State Academy</p>
         <h2>${esc(a.title)}</h2>
         <p>${esc(a.body.slice(0, 220))}…</p>
-        <p style="margin-top:1rem"><a class="btn btn-primary" href="/academy/">Visit the academy page</a> <a class="btn btn-ghost" href="${esc(a.pageUrl)}" rel="noopener" target="_blank">Original source &nearr;</a></p>
+        <p style="margin-top:1rem"><a class="btn btn-primary" href="/academy/">Visit the academy page</a> <a class="btn btn-ghost" href="${esc(a.pageUrl)}" rel="noopener" target="_blank">Original source ${extLinkIcon()}</a></p>
       </div>
       <a class="card" style="min-width:240px" href="/academy/">
         <img src="/img/academy/Cricket_Logo.jpg" alt="${esc(a.title)} — emblem" width="240" height="193" loading="lazy" />
@@ -618,25 +622,123 @@ function renderTeam(t) {
 // ============================================================
 function renderPlayers() {
   let html = layout({
-    bodyClass: 'search-pinned',
+    bodyClass: 'search-pinned page-players',
     title: 'Players',
     description: 'Official player profiles registered with the Rewa Cricket Division.',
     path: '/players/',
   });
   html += `<div class="page-head"><p class="eyebrow">Competition</p><h1>Players</h1>
     <p>Official player profiles as confirmed by the division.</p></div>`;
-  html += db.players.length
-    ? `<div class="grid grid-2 grid-3">${db.players
-        .map((p) => {
-          const team = p.teamId ? teamsById.get(p.teamId) : null;
-          const official = isOfficialPlayer(p.id);
-          return `<a class="card row-card card-link" href="/players/${esc(p.slug)}/">
-            <span class="avatar avatar-sm">${esc(p.name.split(' ').map((w) => w[0]).slice(0, 2).join(''))}</span>
-            <span><span class="card-title">${esc(p.name)} ${official ? verifiedTick() : ''}</span><div class="card-meta">${esc(p.role)}${team ? ' · ' + esc(team.name) : ''}</div></span>
-          </a>`;
-        })
-        .join('\n')}</div>`
-    : empty('No players published yet', 'Official player profiles will appear here once confirmed by the Rewa Cricket Division.');
+
+  // Sort players alphabetically A-Z by default
+  const sortedPlayers = [...db.players].sort(
+    (a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }) || a.id.localeCompare(b.id)
+  );
+
+  // Teams list for filter dropdown
+  const filterTeams = [...teamsById.values()].sort((a, b) => a.name.localeCompare(b.name));
+
+  const filterIcon = `<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>`;
+  const sortIcon = `<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="m21 8-4-4-4 4"/><path d="M17 4v16"/></svg>`;
+  const searchIcon = `<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`;
+
+  html += `<div class="filter-card">
+    <div class="filter-grid">
+      <div class="filter-group filter-search-group">
+        <label for="player-search-input" class="filter-label">Search Players</label>
+        <div class="filter-input-wrap">
+          <span class="filter-input-icon">${searchIcon}</span>
+          <input type="search" id="player-search-input" class="filter-control" placeholder="Search by name, role or team..." autocomplete="off" />
+        </div>
+      </div>
+      
+      <div class="filter-group">
+        <label for="player-role-select" class="filter-label">${filterIcon} Role</label>
+        <select id="player-role-select" class="filter-control">
+          <option value="">All Roles</option>
+          <option value="Batsman">Batsmen</option>
+          <option value="Bowler">Bowlers</option>
+          <option value="All-rounder">All-rounders</option>
+          <option value="Wicketkeeper">Wicketkeepers</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="player-team-select" class="filter-label">Team</label>
+        <select id="player-team-select" class="filter-control">
+          <option value="">All Teams</option>
+          ${filterTeams.map((t) => `<option value="${esc(t.id)}">${esc(t.name)}</option>`).join('')}
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="player-status-select" class="filter-label">Status</label>
+        <select id="player-status-select" class="filter-control">
+          <option value="">All Profiles</option>
+          <option value="official">Verified / Official Only</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="player-sort-select" class="filter-label">${sortIcon} Sort By</label>
+        <select id="player-sort-select" class="filter-control">
+          <option value="name-asc" selected>Name (A to Z)</option>
+          <option value="name-desc">Name (Z to A)</option>
+          <option value="runs-desc">Most Runs</option>
+          <option value="wickets-desc">Most Wickets</option>
+          <option value="matches-desc">Most Matches</option>
+        </select>
+      </div>
+
+      <div class="filter-group filter-actions">
+        <button type="button" id="player-filter-reset" class="btn btn-ghost btn-sm" style="width:100%;height:38px">Reset Filters</button>
+      </div>
+    </div>
+    <div class="filter-meta-bar">
+      <span class="card-meta" id="player-count-display">Showing <strong>${sortedPlayers.length}</strong> of ${sortedPlayers.length} players</span>
+    </div>
+  </div>`;
+
+  if (sortedPlayers.length) {
+    html += `<div class="grid grid-2 grid-3 players-grid" id="players-list-grid">`;
+    for (const p of sortedPlayers) {
+      const team = p.teamId ? teamsById.get(p.teamId) : null;
+      const official = isOfficialPlayer(p.id);
+      const ps = p.profileStats || null;
+      const batInns = db.batting.filter((b) => b.playerId === p.id);
+      const bowlOvers = db.bowling.filter((b) => b.playerId === p.id);
+      const batRuns = batInns.reduce((s, b) => s + (b.runs || 0), 0);
+      const bowlWkts = bowlOvers.reduce((s, b) => s + (b.wickets || 0), 0);
+      const totalRuns = ps && ps.runs != null ? ps.runs : batRuns;
+      const totalWkts = ps && ps.wickets != null ? ps.wickets : bowlWkts;
+      const totalMatches = ps && ps.matches != null ? ps.matches : batInns.length;
+      const initials = p.name.split(' ').map((w) => w[0]).slice(0, 2).join('');
+
+      html += `<a class="card row-card card-link player-card-item" href="/players/${esc(p.slug)}/"
+        data-name="${esc(p.name.toLowerCase())}"
+        data-role="${esc(p.role || '')}"
+        data-team-id="${esc(p.teamId || '')}"
+        data-official="${official ? 'true' : 'false'}"
+        data-runs="${totalRuns}"
+        data-wickets="${totalWkts}"
+        data-matches="${totalMatches}">
+        <span class="avatar avatar-sm">${esc(initials)}</span>
+        <span>
+          <span class="card-title">${esc(p.name)} ${official ? verifiedTick() : ''}</span>
+          <div class="card-meta">${esc(p.role)}${team ? ' · ' + esc(team.name) : ''}</div>
+        </span>
+      </a>`;
+    }
+    html += `</div>`;
+    html += `<div id="no-players-match" class="empty-state card hidden" style="text-align:center;padding:2.5rem 1rem;margin-top:1rem">
+      <h3>No matching players found</h3>
+      <p class="card-meta" style="margin-top:0.4rem">Try clearing your search query or selecting different filters.</p>
+      <button type="button" class="btn btn-primary btn-sm" id="empty-reset-btn" style="margin-top:1rem">Reset All Filters</button>
+    </div>`;
+  } else {
+    html += empty('No players published yet', 'Official player profiles will appear here once confirmed by the Rewa Cricket Division.');
+  }
+
   html += closeLayout();
   writePage('players', html);
 }
@@ -732,7 +834,9 @@ function renderPlayer(p) {
       const th = `<tr><th>Batting</th>${fmts.map((f) => `<th>${esc(fmtLabel(f))}</th>`).join('')}</tr>`;
       const body = [
         ['Matches', 'Matches'], ['Innings', 'Innings'], ['Runs', 'Runs'], ['Highest', 'Highest'], ['Average', 'Average'], ['Strike rate', 'SR'], ['Fours', 'Fours'], ['Sixes', 'Sixes'], ['50s', '50s'], ['100s', '100s'],
-      ].map(([lab, key]) => `<tr>${fmtRow(lab, (f) => b.rows[key]?.[fmts.indexOf(f)] ?? '—', '—')}</tr>`).join('\n');
+      ]
+        .filter(([lab, key]) => b.rows[key] && b.rows[key].some((v) => v !== '—' && v !== '–' && v != null))
+        .map(([lab, key]) => `<tr>${fmtRow(lab, (f) => b.rows[key]?.[fmts.indexOf(f)] ?? '—', '—')}</tr>`).join('\n');
       let bow = '';
       if (bw && bw.formats) {
         const bfmts = bw.formats;
