@@ -141,9 +141,9 @@ const aT20 = [
 const aRows = [...aTest, ...aOdi, ...aT20].map((r, i) => {
   const runs = r[3], balls = r[4];
   const sr = runs && balls ? ((runs / balls) * 100).toFixed(2) : '0.00';
-  // array layout: [fmt, match, date, R, B, dis, 4s, 6s, O, M, RW, W]
   // num, match, date, format, R, B, 4s, 6s, SR, dismissal, O, M, RW, W, note
-  return [i + 1, r[1], r[2], r[0], runs, balls, r[6], r[7], sr, r[5], r[8], r[9], r[10] ?? 0, r[11] ?? 0, ''].join(',');
+  // Akhil is an opener/non-bowler: O=0, M=0, RW=0, W=0
+  return [i + 1, r[1], r[2], r[0], runs, balls, r[6], r[7], sr, r[5], 0, 0, 0, 0, ''].join(',');
 });
 writeFileSync(join(ROOT, 'data/akhil.career.csv'), [aHeader, ...aRows].join('\n') + '\n');
 

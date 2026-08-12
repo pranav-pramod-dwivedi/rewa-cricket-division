@@ -286,7 +286,7 @@ function makeInnings(match, fmt, innId, battingSide, fieldingSide, marqueeCards,
 
 // split one Test ledger row into two innings (batting + bowling)
 function splitTestBowl(row) {
-  if (!row || row.O == null) return [null, null];
+  if (!row || row.O == null || +row.O === 0) return [null, null];
   const o = legalBalls(+row.O) / 6;
   const o1 = Math.max(1, Math.round(o * 0.55));
   const o2 = Math.max(0, o - o1);
@@ -310,11 +310,11 @@ const mkSquads = (pool, aMarqId, bMarqId) => {
     B: bMarqId ? [bMarqId, ...rest.slice(10, 21)] : rest.slice(10, 21),
   };
 };
-function bowlSide(innId, side, wkts, runsAvail, marqBowlPlan, maxOv) {
+function bowlSide(innId, side, wkts, runsAvail, marqBowlPlan, maxOv, excludeIds = []) {
   const isT20 = maxOv <= 20;
   const isODI = maxOv > 20 && maxOv <= 50;
   const perBowlerMax = isT20 ? 4 : isODI ? 10 : 35;
-  const xi = shuffle(side.filter((id) => id !== marqBowlPlan?.pid)).slice(0, 5);
+  const xi = shuffle(side.filter((id) => id !== marqBowlPlan?.pid && !excludeIds.includes(id))).slice(0, 5);
   const bowlers = marqBowlPlan ? [marqBowlPlan.pid, ...xi] : xi;
   let wLeft = wkts, runsLeft = Math.max(0, runsAvail), ovLeft = maxOv;
   for (let k = 0; k < bowlers.length; k++) {
@@ -382,21 +382,27 @@ function buildMatch({ date, tour, fmt, teamA, teamB, squadA, squadB, marqA, marq
   if (innB2) pushBat(`${mid}-4`, b2.cards);
 
   const marqBowl = (ma) => {
-    if (!ma || !ma.pid || ma.row == null || ma.row.O == null) return null;
+    if (!ma || !ma.pid || ma.row == null || ma.row.O == null || +ma.row.O === 0) return null;
     const o = legalBalls(+ma.row.O) / 6;
     return { pid: ma.pid, overs: canonOvers(o), runs: ma.row.Rr, wickets: ma.row.W };
   };
+  const exA = [
+    marqA && marqA.pid && (!marqA.row || +marqA.row.O === 0) ? marqA.pid : null,
+    marqB && marqB.pid && (!marqB.row || +marqB.row.O === 0) ? marqB.pid : null,
+    A, // Akhil is a non-bowler (opener) in career matches
+  ].filter(Boolean);
+  const exB = [...exA];
   if (isTest) {
     const ab = marqA && marqA.pid ? splitTestBowl(marqA.row) : [null, null];
     const bb = marqB && marqB.pid ? splitTestBowl(marqB.row) : [null, null];
-    const bw = (innId, side, w, runs, plan) => bowlSide(innId, side, w, runs, plan, fp.maxOv);
-    bw(`${mid}-1`, squadB, a1.W, a1.total - a1.extras, bb[0] ? { ...bb[0], pid: marqB.pid } : null);
-    bw(`${mid}-2`, squadA, b1.W, b1.total - b1.extras, ab[0] ? { ...ab[0], pid: marqA.pid } : null);
-    if (innA2) bw(`${mid}-3`, squadB, a2.W, a2.total - a2.extras, bb[1] ? { ...bb[1], pid: marqB.pid } : null);
-    if (innB2) bw(`${mid}-4`, squadA, b2.W, b2.total - b2.extras, ab[1] ? { ...ab[1], pid: marqA.pid } : null);
+    const bw = (innId, side, w, runs, plan, ex) => bowlSide(innId, side, w, runs, plan, fp.maxOv, ex);
+    bw(`${mid}-1`, squadB, a1.W, a1.total - a1.extras, bb[0] ? { ...bb[0], pid: marqB.pid } : null, exB);
+    bw(`${mid}-2`, squadA, b1.W, b1.total - b1.extras, ab[0] ? { ...ab[0], pid: marqA.pid } : null, exA);
+    if (innA2) bw(`${mid}-3`, squadB, a2.W, a2.total - a2.extras, bb[1] ? { ...bb[1], pid: marqB.pid } : null, exB);
+    if (innB2) bw(`${mid}-4`, squadA, b2.W, b2.total - b2.extras, ab[1] ? { ...ab[1], pid: marqA.pid } : null, exA);
   } else {
-    bowlSide(`${mid}-1`, squadB, a1.W, a1.total - a1.extras, marqBowl(marqB), fp.maxOv);
-    bowlSide(`${mid}-2`, squadA, b1.W, b1.total - b1.extras, marqBowl(marqA), fp.maxOv);
+    bowlSide(`${mid}-1`, squadB, a1.W, a1.total - a1.extras, marqBowl(marqB), fp.maxOv, exB);
+    bowlSide(`${mid}-2`, squadA, b1.W, b1.total - b1.extras, marqBowl(marqA), fp.maxOv, exA);
   }
   seq++;
 }
@@ -411,91 +417,50 @@ const PLAN = [];
 const d0 = (row, fallback) => (row && row.date && /^\d{4}-\d{2}-\d{2}$/.test(row.date) ? row.date : fallback);
 const lk = (rows, name) => rows.filter((r) => r.match === name);
 
-// 10 MP Tests (5 with Pranav & Akhil, 5 Akhil only)
-A_TEST.forEach((aRow, i) => {
-  const pRow = P_TEST[i] || null;
-  const sq = mkSquads(COMBINED, pRow ? P : null, A);
-  PLAN.push({
-    date: d0(pRow || aRow, `2023-10-${String(5 + i * 7).padStart(2, '0')}`),
-    tour: 't-shared-mp', fmt: 'Test', teamA: 't-mp-a', teamB: 't-mp-b',
-    squadA: sq.A, squadB: sq.B,
-    marqA: pRow ? { ...pranav(), row: pRow } : none(),
-    marqB: { ...akhil(), row: aRow },
-    note: (pRow && pRow.note) || aRow.note
-  });
+const mk = (date, row, tour, fmt, teamA, teamB, pool, withAkhil, stage) => {
+  const sq = mkSquads(pool, P, withAkhil ? A : null);
+  return { date, tour, fmt, teamA, teamB, squadA: sq.A, squadB: sq.B, marqA: { ...pranav(), row: row.R == null ? null : row }, marqB: withAkhil ? akhil() : none(), note: row.note, ...(stage ? { stage } : {}) };
+};
+const spreadDates = (n, y0, y1, salt) => Array.from({ length: n }, (_, k) => {
+  const t = n === 1 ? 0.5 : k / (n - 1);
+  const span = y1 - y0;
+  const year = y0 + Math.min(span, Math.floor(t * (span + 1)));
+  const rem = t * (span + 1) - Math.floor(t * (span + 1));
+  const month = 1 + Math.floor(rem * 12);
+  const day = 1 + ((k * 17 + salt) % 28);
+  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 });
 
-// 12 MP ODIs (5 with Pranav & Akhil, 7 Akhil only)
-A_ODI.forEach((aRow, i) => {
-  const pRow = P_ODI[i] || null;
-  const sq = mkSquads(COMBINED, pRow ? P : null, A);
-  PLAN.push({
-    date: d0(pRow || aRow, `2022-09-${String(4 + i * 3).padStart(2, '0')}`),
-    tour: 't-shared-mp', fmt: 'ODI', teamA: 't-mp-a', teamB: 't-mp-b',
-    squadA: sq.A, squadB: sq.B,
-    marqA: pRow ? { ...pranav(), row: pRow } : none(),
-    marqB: { ...akhil(), row: aRow },
-    note: (pRow && pRow.note) || aRow.note
-  });
-});
-
-// 4 RJ T20s (Pranav & Akhil together)
-const pRj = lk(P_T20, 'RJ A v RJ B');
-const aRj = lk(A_T20, 'RJ A v RJ B');
-pRj.forEach((pRow, i) => {
-  const aRow = aRj[i];
-  const sq = mkSquads(RJ_POOL, P, A);
-  PLAN.push({
-    date: d0(pRow, '2021-01-20'), tour: 't-shared-rj', fmt: 'T20', teamA: 't-rj-a', teamB: 't-rj-b',
-    squadA: sq.A, squadB: sq.B,
-    marqA: { ...pranav(), row: pRow },
-    marqB: { ...akhil(), row: aRow },
-    note: pRow.note
-  });
-});
-
-// 8 DE v DES T20s (DE = Akhil / teamA, DES = Pranav / teamB)
-const pDe = lk(P_T20, 'DE v DES');
-const aDe = lk(A_T20, 'DE v DES');
-pDe.forEach((pRow, i) => {
-  const aRow = aDe[i];
-  const sq = mkSquads(COMBINED, A, P);
-  PLAN.push({
-    date: d0(pRow, '2021-08-01'), tour: 't-shared-de', fmt: 'T20', teamA: 't-de', teamB: 't-des',
-    squadA: sq.A, squadB: sq.B,
-    marqA: { ...akhil(), row: aRow },
-    marqB: { ...pranav(), row: pRow },
-    note: pRow.note
-  });
-});
-
-// 2 RCB T20s (Pranav only)
-const pRcb = lk(P_T20, 'RCB A v RCB B');
-pRcb.forEach((pRow) => {
-  const sq = mkSquads(RCB_2024, P, null);
-  PLAN.push({
-    date: d0(pRow, '2024-11-02'), tour: 't-shared-rcb', fmt: 'T20', teamA: 't-rcb-a', teamB: 't-rcb-b',
-    squadA: sq.A, squadB: sq.B,
-    marqA: { ...pranav(), row: pRow },
-    marqB: none(),
-    note: pRow.note
-  });
-});
-
-// 2 MI T20s (Akhil only)
-const aMi = A_T20.slice(-2);
-aMi.forEach((aRow, i) => {
-  const sq = mkSquads(MI_2024, A, null);
-  PLAN.push({
-    date: i === 0 ? '2024-11-14' : '2024-11-16', tour: 't-shared-mi', fmt: 'T20', teamA: 't-mi-a', teamB: 't-mi-b',
-    squadA: sq.A, squadB: sq.B,
-    marqA: { ...akhil(), row: aRow },
-    marqB: none(),
-    note: aRow.note
-  });
-});
+P_TEST.forEach((row, i) => PLAN.push(mk(d0(row, spreadDates(1, 2020, 2024, 3)[0]), row, 't-shared-mp', 'Test', 't-mp-a', 't-mp-b', COMBINED, false)));
+P_ODI.forEach((row) => PLAN.push(mk(d0(row, '2023-09-20'), row, 't-shared-de-odi', 'ODI', 't-de', 't-des', COMBINED, false)));
+lk(P_T20, 'RJ A v RJ B').forEach((row) => PLAN.push(mk(d0(row, '2022-03-10'), row, 't-shared-rj', 'T20', 't-rj-a', 't-rj-b', RJ_POOL, false)));
+lk(P_T20, 'DE v DES').forEach((row) => PLAN.push(mk(d0(row, '2021-08-28'), row, 't-shared-de', 'T20', 't-de', 't-des', COMBINED, false)));
+lk(P_T20, 'LSG A v LSG B').forEach((row) => PLAN.push(mk(d0(row, '2022-11-07'), row, 't-shared-lsg', 'T20', 't-lsg-a', 't-lsg-b', LSG_POOL, false)));
+const deFinals = PLAN.filter((m2) => m2.tour === 't-shared-de');
+if (deFinals.length > 0) deFinals[deFinals.length - 1].stage = 'Final';
+const rcbRows = lk(P_T20, 'RCB A v RCB B');
+rcbRows.forEach((row) => PLAN.push(mk(d0(row, '2024-11-08'), row, 't-shared-rcb', 'T20', 't-rcb-a', 't-rcb-b', RCB_2024, false)));
 
 PLAN.sort((a, b) => a.date.localeCompare(b.date));
+
+// attach Akhil ledger rows in order: 10 Tests / 12 ODIs / 12 shared T20s, then 2 MI T20s
+{
+  const byFmt = (f) => PLAN.filter((m2) => m2.fmt === f && m2.fmt !== 'IPL');
+  const tests = byFmt('Test'), odis = byFmt('ODI'), t20s = byFmt('T20');
+  const sharedT20 = t20s.filter((m2) => m2.tour !== 't-shared-rcb');
+  if (tests.length < A_TEST.length || odis.length < A_ODI.length || sharedT20.length < A_T20.length - 2) throw new Error('Shared matches insufficient for Akhil ledger');
+  tests.slice(0, A_TEST.length).forEach((m2, i) => { m2.marqB.pid = A; m2.marqB.row = A_TEST[i]; });
+  odis.slice(0, A_ODI.length).forEach((m2, i) => { m2.marqB.pid = A; m2.marqB.row = A_ODI[i]; });
+  sharedT20.slice(0, A_T20.length - 2).forEach((m2, i) => { m2.marqB.pid = A; m2.marqB.row = A_T20[i]; });
+}
+// MI A v MI B (Akhil only)
+{
+  for (let i = 0; i < 2; i++) {
+    const sq = mkSquads(MI_2024, A, null);
+    const row = A_T20[A_T20.length - 2 + i];
+    PLAN.push({ date: i === 0 ? '2024-11-14' : '2024-11-16', tour: 't-shared-mi', fmt: 'T20', teamA: 't-mi-a', teamB: 't-mi-b', squadA: sq.A, squadB: sq.B, marqA: none(), marqB: { ...akhil(), row }, note: row.note });
+  }
+}
 
 // IPL — RCB v KKR (IPL 2025 M58) abandoned — no ball bowled (rain), May 17 2025
 {
@@ -564,7 +529,7 @@ plP.stats = statsP;
 if (plP.stats.bowling && plP.stats.bowling.rows && Array.isArray(plP.stats.bowling.rows.Eco)) {
   plP.stats.bowling.rows.Eco = ['4.23', '5.64', '8.04', '–'];
 }
-plP.profileStats = { matches: 25, runs: statsP.totals.r, wickets: statsP.totals.w };
+plP.profileStats = { matches: 51, runs: statsP.totals.r, wickets: statsP.totals.w };
 plA.profileStats = { matches: 36, runs: statsA.totals.r, wickets: statsA.totals.w };
 console.log('PRANAV batting:', JSON.stringify(statsP.bat));
 console.log('PRANAV bowling:', JSON.stringify(statsP.bowl));
@@ -573,8 +538,8 @@ console.log('AKHIL bowling:', JSON.stringify(statsA.bowl));
 
 // ---------- assertions ----------
 const expect = (actual, exp, label) => { if (JSON.stringify(actual) !== JSON.stringify(exp)) { console.error('MISMATCH', label, JSON.stringify(actual), 'expected', JSON.stringify(exp)); process.exitCode = 1; } else console.log('OK', label); };
-expect(statsP.bat.Matches, ['5', '5', '14', '1'], 'P matches');
-expect(statsP.bat.Innings, ['5', '5', '14', '0'], 'P innings');
+expect(statsP.bat.Matches, ['10', '15', '26', '1'], 'P matches');
+expect(statsP.bat.Innings, ['20', '15', '26', '0'], 'P innings');
 expect(statsA.bat.Matches, ['10', '12', '14', '0'], 'A matches');
 const sumRows = (rows) => rows.reduce((s, r) => s + (r.R || 0), 0);
 const sumTest2 = P_TEST.reduce((s, r) => { const m = r.note ? r.note.match(/2nd inn:\s*(\d+)/i) : null; return s + (m ? +m[1] : 0); }, 0);

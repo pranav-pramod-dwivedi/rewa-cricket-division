@@ -1,25 +1,53 @@
-seq,date,match,format,R,B,4s,6s,dismissal,O,M,RW,W,note,counts_in_career
-1,2023-10-05,MP A v MP B,Test,52,68,7,3,c Hooda b Patel,22.0,4,42,3,,True
-2,2023-10-12,MP A v MP B,Test,62,80,8,4,lbw b Rakesh,18.0,3,38,3,,True
-3,2023-10-19,MP A v MP B,Test,50,65,6,3,b Nitin,20.0,4,35,4,,True
-4,2023-10-26,MP A v MP B,Test,51,66,5,3,b Vivek,15.0,2,30,2,,True
-5,2023-11-02,MP A v MP B,Test,1,6,1,1,c Deepak b Nitin,21.0,5,45,4,,True
-6,2022-09-04,MP A v MP B,ODI,69,62,11,2,c Mantri b Khan,10.0,1,42,4,,True
-7,2022-09-07,MP A v MP B,ODI,15,14,3,0,b Vora,9.0,0,38,4,,True
-8,2022-09-10,MP A v MP B,ODI,12,12,2,0,b Avesh,10.0,1,40,4,,True
-9,2022-09-14,MP A v MP B,ODI,0,0,0,0,not out,10.0,1,45,4,,True
-10,2022-09-18,MP A v MP B,ODI,DNB,0,0,0,DNB,8.0,0,35,3,,True
-11,2021-01-20,RJ A v RJ B,T20,58,23,2,5,c S Iyer b Tomar,4.0,0,22,3,,True
-12,2021-02-12,RJ A v RJ B,T20,52,21,2,4,b Rohera,4.0,0,24,2,,True
-13,2021-03-14,RJ A v RJ B,T20,76,30,3,6,b Vora,4.0,0,20,3,,True
-14,2022-01-18,RJ A v RJ B,T20,49,19,1,4,c Mahajan b Rohera,4.0,0,26,2,,True
-15,2021-08-01,DE v DES,T20,60,24,2,5,c Akhil b Sahni,4.0,0,21,3,,True
-16,2021-08-04,DE v DES,T20,52,21,2,4,c Kosta b Maurya,4.0,0,25,2,,True
-17,2021-08-07,DE v DES,T20,55,22,2,4,b Gupta,4.0,0,22,3,,True
-18,2021-08-11,DE v DES,T20,18,8,1,1,c Baghel b Sen,4.0,0,28,1,,True
-19,2021-08-15,DE v DES,T20,83,33,3,6,b Shubham,4.0,0,18,3,,True
-20,2021-08-20,DE v DES,T20,52,20,2,4,c Lakhera b Bansal,4.0,0,24,2,,True
-21,2021-08-28,DE v DES,T20,72,28,2,6,c Gul b Maurya,4.0,0,20,3,,True
-22,2022-08-10,DE v DES,T20,14,6,1,1,c Sharma b Tiwari,4.0,0,30,1,,True
-23,2024-11-02,RCB A v RCB B,T20,65,26,2,5,run out Padikkal,4.0,0,22,2,,True
-24,2024-11-06,RCB A v RCB B,T20,92,35,4,6,not out,4.0,0,18,1,,True
+seq,date,match,format,R,B,4s,6s,dismissal,O,M,RW,W,note
+1,2023-10-05,MP A v MP B,Test,74,112,9,1,c Shekhar b Vivek,21,5,55,2,2nd inn: 41* (38)
+2,2023-10-12,MP A v MP B,Test,32,51,4,0,lbw b Rakesh,12,2,49,1,2nd inn: 12 (20)
+3,2023-10-19,MP A v MP B,Test,61,94,6,1,c Aman b Nitin,22,6,48,2,2nd inn: 88* (119)
+4,2023-10-26,MP A v MP B,Test,21,39,2,0,b Vivek,18,4,88,0,2nd inn: 0 (2)
+5,2023-11-02,MP A v MP B,Test,52,78,5,1,c Deepak b Nitin,20,6,66,3,2nd inn: 47* (71)
+6,2024-10-03,MP A v MP B,Test,18,30,2,0,b Nitin,14,2,52,1,2nd inn: 33 (49)
+7,2024-10-10,MP A v MP B,Test,65,97,8,1,c Aman b Vivek,24,7,61,4,2nd inn: 45* (66)
+8,2024-10-17,MP A v MP B,Test,30,48,3,1,lbw b Rakesh,18,4,59,3,2nd inn: 58* (83)
+9,2024-10-24,MP A v MP B,Test,26,41,3,0,b Vivek,16,3,45,1,2nd inn: 44 (63)
+10,2024-10-31,MP A v MP B,Test,71,105,8,1,c Aman b Nitin,22,6,67,4,2nd inn: 39* (58)
+11,2022-09-04,MP A v MP B,ODI,51,62,9,1,c Dewi b Arshad,6,0,34,1,
+12,2022-09-07,MP A v MP B,ODI,62,71,10,1,not out,5,0,30,1,
+13,2022-09-10,MP A v MP B,ODI,24,31,4,0,b Kuldeep,4,0,22,0,
+14,2022-09-14,MP A v MP B,ODI,88,90,15,1,c Kartikeya b Khejroliya,8,1,42,2,
+15,2022-09-18,MP A v MP B,ODI,33,40,6,1,c Mantri b Khan,4,0,25,1,
+16,2023-09-05,MP A v MP B,ODI,40,47,7,1,lbw b Avesh,4,0,22,0,
+17,2023-09-08,MP A v MP B,ODI,72,78,12,0,c Iyer b Kartikeya,8,1,38,1,
+18,2023-09-12,MP A v MP B,ODI,19,27,3,0,c Patidar b Senapati,2,0,15,0,
+19,2023-09-16,MP A v MP B,ODI,45,53,8,1,run out Mantri,3,0,21,0,
+20,2023-09-20,MP A v MP B,ODI,58,64,10,1,c Dubey b Khejroliya,6,1,30,2,
+21,2024-09-05,MP A v MP B,ODI,39,45,7,1,c Agarwal b Avesh,4,0,20,0,
+22,2024-09-08,MP A v MP B,ODI,66,70,11,0,c Khejroliya b Kartikeya,8,1,35,1,
+23,2024-09-12,MP A v MP B,ODI,28,33,5,1,b Senapati,3,0,18,0,
+24,2024-09-16,MP A v MP B,ODI,84,88,14,0,c Batham b Arshad,9,3,40,2,
+25,2024-09-20,MP A v MP B,ODI,52,60,9,1,not out,5,0,27,1,
+26,2021-01-20,RJ A v RJ B,T20,49,32,7,5,c S Iyer b Tomar,3,0,24,1,
+27,2021-02-12,RJ A v RJ B,T20,28,24,4,3,b Rohera,2,0,18,0,
+28,2021-03-14,RJ A v RJ B,T20,64,40,9,7,not out,3,0,26,1,
+29,2022-01-18,RJ A v RJ B,T20,32,27,5,4,c Mahajan b Rohera,3,0,22,0,
+30,2022-02-20,RJ A v RJ B,T20,51,36,7,6,c Solanki b Rajawat,3,0,25,1,
+31,2022-03-10,RJ A v RJ B,T20,22,19,3,2,lbw b Chouhan,2,0,16,0,
+32,2023-01-22,RJ A v RJ B,T20,39,30,6,4,c Kushwaha b Surana,3,0,20,1,
+33,2023-02-18,RJ A v RJ B,T20,18,16,3,2,b Shukla,2,0,14,0,
+34,2023-03-12,RJ A v RJ B,T20,70,42,10,8,c Gurjar b Arshad,4,0,28,1,
+35,2024-01-25,RJ A v RJ B,T20,44,33,6,5,c D Shukla b Kangale,4,0,24,1,
+36,2024-02-22,RJ A v RJ B,T20,61,39,9,7,not out,3,0,25,1,
+37,2024-03-14,RJ A v RJ B,T20,26,22,4,3,c Kushwaha b Khan,2,0,18,0,
+38,2021-08-01,DE v DES,T20,34,28,5,4,c Akhil b Sahni,3,0,24,1,
+39,2021-08-04,DE v DES,T20,55,36,8,6,c Kosta b Maurya,4,0,26,1,
+40,2021-08-07,DE v DES,T20,21,19,3,2,b Gupta,2,0,16,0,
+41,2021-08-11,DE v DES,T20,38,30,5,4,c Baghel b Sen,3,0,22,0,
+42,2021-08-15,DE v DES,T20,27,23,4,3,b Shubham,2,0,19,0,
+43,2021-08-20,DE v DES,T20,66,38,9,7,c Lakhera b Bansal,5,0,27,2,
+44,2021-08-28,DE v DES,T20,45,32,6,5,c Gul b Maurya,4,0,25,1,
+45,2022-08-10,DE v DES,T20,44,30,6,5,c Sharma b Tiwari,3,0,20,1,
+46,2022-08-12,DE v DES,T20,58,36,8,6,not out,3,0,23,1,
+47,2022-11-05,LSG A v LSG B,T20,44,29,6,5,c Rahul b Avesh,2,0,18,0,
+48,2022-11-07,LSG A v LSG B,T20,59,37,8,7,c de Kock b Chameera,3,0,22,1,
+49,2024-11-02,RCB A v RCB B,T20,45,31,6,5,run out Padikkal,2,0,20,1,
+50,2024-11-06,RCB A v RCB B,T20,49,38,7,5,c Bethell b Rasikh,3,1,24,0,
+51,2024-11-08,RCB A v RCB B,T20,62,40,9,7,not out,2,0,24,0,
+52,2025-05-17,RCB v KKR,IPL,DNB,0,0,0,DNB (Rain),-,-,-,-,IPL M58 abandoned, no ball bowled
