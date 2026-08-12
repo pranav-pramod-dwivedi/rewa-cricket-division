@@ -1,0 +1,6 @@
+{
+  "name": "Rewa Cricket Division Archive",
+  "description": "Official archive and records of the Rewa Cricket Division",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
