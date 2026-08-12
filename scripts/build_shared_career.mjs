@@ -561,6 +561,7 @@ plA.stats = {
   }
 };
 plA.profileStats = { matches: 14, runs: 1110, wickets: 82 };
+plA.teams = ['t-rewa-jaguars', 't-destroyers', 't-madhya-pradesh', 't-mumbai-indians'];
 
 plP.stats = {
   batting: {
@@ -590,6 +591,7 @@ plP.stats = {
   }
 };
 plP.profileStats = { matches: 51, runs: 2981, wickets: 124 };
+plP.teams = ['t-rewa-jaguars', 't-destroyers', 't-madhya-pradesh', 't-royal-challengers-bengaluru'];
 
 console.log('AKHIL stats updated:', JSON.stringify(plA.stats));
 console.log('PRANAV stats updated:', JSON.stringify(plP.stats));

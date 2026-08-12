@@ -22647,7 +22647,13 @@
         "matches": 51,
         "runs": 2981,
         "wickets": 124
-      }
+      },
+      "teams": [
+        "t-rewa-jaguars",
+        "t-destroyers",
+        "t-madhya-pradesh",
+        "t-royal-challengers-bengaluru"
+      ]
     },
     {
       "id": "p-akhil-mishra",
@@ -22770,7 +22776,13 @@
         "matches": 14,
         "runs": 1110,
         "wickets": 82
-      }
+      },
+      "teams": [
+        "t-rewa-jaguars",
+        "t-destroyers",
+        "t-madhya-pradesh",
+        "t-mumbai-indians"
+      ]
     },
     {
       "id": "p-aditya-shrivastava",

@@ -1144,7 +1144,7 @@ const isFictionalMatch = (m) => FICTIONAL_TOURS.has(m && m.tournamentId);
 const UNLINKABLE_TEAMS = new Set([
   't-mumbai-indians', 't-royal-challengers-bengaluru',
   't-mp-a', 't-mp-b', 't-rj-a', 't-rj-b', 't-mi-a', 't-mi-b', 't-de', 't-des',
-  't-rcb-a', 't-rcb-b', 't-destroyers', 't-daredevils', 't-kkr',
+  't-rcb-a', 't-rcb-b', 't-daredevils', 't-kkr',
 ]);
 
 function renderMatch(m) {
