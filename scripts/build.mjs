@@ -721,7 +721,7 @@ function renderPlayer(p) {
 
   // ---- career stats: official (cricbuzz) if available, else computed from match data ----
   const statsSection = (() => {
-    const fmtLabel = (f) => ({ 'Test': 'Test', 'ODI': 'ODI', 'T20': 'T20', 'IPL': 'IPL', 'FC': 'First-class', 'List A': 'List A' }[f] || f);
+    const fmtLabel = (f) => ({ 'Test': 'Test', 'ODI': 'ODI', 'T20': 'T20', 'IPL': 'IPL', 'FC': 'Test', 'List A': 'ODI', 'First-class': 'Test' }[f] || f);
     const rows = [];
     let sourceNote = '';
     if (p.stats && (p.stats.batting || p.stats.bowling) && Object.keys(p.stats.batting || {}).length) {
@@ -747,8 +747,8 @@ function renderPlayer(p) {
       const fmtOf = (tid) => {
         const t = tourneysById.get(tid);
         if (!t) return 'Other';
-        if (/first-class|multi-day/i.test(t.format)) return 'First-class';
-        if (/list a|odi/i.test(t.format)) return 'List A';
+        if (/first-class|multi-day/i.test(t.format)) return 'Test';
+        if (/list a|odi/i.test(t.format)) return 'ODI';
         if (/t20|twenty/i.test(t.format)) return 'T20';
         return t.format || 'Other';
       };
@@ -769,7 +769,8 @@ function renderPlayer(p) {
         if (m) s.matches.add(m.id);
         if ((w.wickets || 0) > s.bbiW || ((w.wickets || 0) === s.bbiW && (w.runs || 0) < s.bbiR)) { s.bbiW = w.wickets || 0; s.bbiR = w.runs || 0; }
       }
-      const fmts = [...perFmt.keys()].sort((a, b) => (a === 'First-class' ? -1 : b === 'First-class' ? 1 : a.localeCompare(b)));
+      const order = { 'Test': 1, 'ODI': 2, 'T20': 3, 'IPL': 4 };
+      const fmts = [...perFmt.keys()].sort((a, b) => (order[a] || 99) - (order[b] || 99));
       if (fmts.length) {
         const th = `<tr><th></th>${fmts.map((f) => `<th>${esc(f)}</th>`).join('')}</tr>`;
         const cell = (f, fn) => `<td class="num">${fn(perFmt.get(f))}</td>`;
