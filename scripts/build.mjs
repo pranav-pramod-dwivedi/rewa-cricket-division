@@ -264,7 +264,7 @@ const matchCard = (m) => {
   return `<article class="card match-card">
     <div class="match-top">
       <span class="competition">${esc(tourn?.name ?? 'Match')}</span>
-      ${scopeBadge(tourn)}${statusBadge(m.status)}
+      ${scopeBadge(tourn)}${statusBadge(m.status)}${m.stage ? `<span class="badge" title="Final match of the tournament">${esc(m.stage)}</span>` : ''}
     </div>
     <div class="match-teams">
       <span class="team-name"><a href="/teams/${esc(teamA?.slug ?? '')}/">${esc(teamA?.name ?? 'Team A')}</a></span>
@@ -560,7 +560,7 @@ function renderTeam(t) {
   const squad = db.players
     .filter((p) => !hiddenFromSquad(p) && (p.teamId === t.id || inTeams(p, t.id)))
     .sort((a, b) => a.name.localeCompare(b.name));
-  const teamMatches = db.matches.filter((m) => m.teamAId === t.id || m.teamBId === t.id);
+  const teamMatches = db.matches.filter((m) => m.teamAId === t.id || m.teamBId === t.id).sort(dateSort);
   const teamDesc = t.description && t.description.trim()
     ? t.description
     : `${t.name} — team profile, squad, matches and results from the Rewa Cricket Division archive.`;
@@ -991,7 +991,7 @@ function renderTournaments() {
 
 function renderTournament(t) {
   const season = seasonsById.get(t.seasonId);
-  const tMatches = db.matches.filter((m) => m.tournamentId === t.id);
+  const tMatches = db.matches.filter((m) => m.tournamentId === t.id).sort(dateSort);
   const champ = t.championTeamId ? teamsById.get(t.championTeamId) : null;
   let html = layout({
     bodyClass: 'search-pinned',
@@ -1075,7 +1075,7 @@ function renderMatch(m) {
   });
 
   html += `<div class="card" style="margin-bottom:2rem">
-    <p class="eyebrow">${esc(tourn?.name ?? 'Match')}${season ? ` · ${season.year} Season` : ''}</p>
+    <p class="eyebrow">${esc(tourn?.name ?? 'Match')}${season ? ` · ${season.year} Season` : ''}${m.stage ? ` · ${esc(m.stage)}` : ''}</p>
     <h1 style="margin-top:.25rem">${esc(title)}</h1>
     <p class="card-meta">${esc(dateTxt(m))}${m.startTime ? ' at ' + esc(m.startTime) : ''}${venue ? ` · ${esc(venue.name)}` : ''}${venue?.city ? `, ${esc(venue.city)}` : ''}</p>
     ${scopeBadge(tourn) ? `<p style="margin-top:.75rem">${scopeBadge(tourn)}${scopeOf(tourn) !== 'division' ? ` <span class="card-meta">External match — archived because a Rewa player featured in it.</span>` : ''}</p>` : ''}
@@ -1168,7 +1168,7 @@ function renderVenues() {
 }
 
 function renderVenue(v) {
-  const vMatches = db.matches.filter((m) => m.venueId === v.id);
+  const vMatches = db.matches.filter((m) => m.venueId === v.id).sort(dateSort);
   let html = layout({
     title: v.name,
     description: `${v.name} — a cricket venue of the Rewa Cricket Division${v.city ? ` in ${v.city}` : ''}.`,
@@ -1609,7 +1609,7 @@ renderStatic({
 // season detail pages
 for (const s of db.seasons) {
   const sTournaments = db.tournaments.filter((t) => t.seasonId === s.id);
-  const sMatches = db.matches.filter((m) => m.seasonId === s.id);
+  const sMatches = db.matches.filter((m) => m.seasonId === s.id).sort(dateSort);
   renderAggregate({
     file: `seasons/${s.year}`,
     title: `${s.year} Season`,

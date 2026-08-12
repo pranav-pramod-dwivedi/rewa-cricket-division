@@ -145,21 +145,38 @@ const fmtParams = {
   T20: { maxOv: 20, totalLo: 140, totalHi: 185, extras: [4, 13], wkts: [5, 10] },
 };
 const FICTIONAL = { Saini: 0, Vora: 1, Malhotra: 2, Tessitore: 3, Bedi: 4, 'S. Verma': 5, Verma: 5, 'A. Choubey': 6, 'R. Tiwari': 7, 'V. Tripathi': 8, 'N. Sen': 9, 'P. Baghel': 10, 'M. Patel': 11, 'K. Singh': 12, 'D. Yadav': 13, 'R. Prajapati': 14, 'S. Mishra': 15, 'T. Gupta': 16, 'L. Ahirwar': 17, 'B. Kushwaha': 18, 'G. Pateria': 19, 'H. Nema': 20 };
+const FICT = Object.fromEntries(Object.entries(FICTIONAL).map(([k, v]) => [k.toLowerCase(), v]));
+const hashStr = (s) => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return Math.abs(h); };
+const lastWord = (n) => (n || '').trim().split(' ').pop().toLowerCase();
 function resolveName(token, xiNames) {
   if (!token) return null;
-  if (FICTIONAL[token] != null && xiNames.length) return xiNames[FICTIONAL[token] % xiNames.length];
-  const last = token.split(' ').pop().toLowerCase();
-  for (const n of xiNames) if (n.split(' ').pop().toLowerCase() === last) return n;
-  return token;
+  const last = lastWord(token);
+  let idx = FICT[last];
+  if (idx == null) idx = xiNames.findIndex((n) => lastWord(n) === last);
+  if (idx == null || idx < 0) idx = hashStr(last) % xiNames.length;
+  return xiNames[idx] || token;
 }
+const distinctOf = (names, pickName, notName) => {
+  const pick = names.indexOf(pickName);
+  let j = pick >= 0 ? pick : hashStr(pickName) % names.length;
+  if (names[j] === notName) j = (j + 1) % names.length;
+  return names[j];
+};
 function realisticDismissal(ledgerDis, xiNames) {
-  if (!ledgerDis || ledgerDis === 'not out') return null;
-  return ledgerDis
-    .replace(/^c ([^ ]+) b (.+)$/, (_, f, b) => `c ${resolveName(f, xiNames)} b ${resolveName(b, xiNames)}`)
-    .replace(/^st b ([^ ]+) \(wk ([^)]+)\)$/, (_, b, f) => `st b ${resolveName(b, xiNames)} (wk ${resolveName(f, xiNames)})`)
-    .replace(/^lbw b (.+)$/, (_, b) => `lbw b ${resolveName(b, xiNames)}`)
-    .replace(/^b (.+)$/, (_, b) => `b ${resolveName(b, xiNames)}`)
-    .replace(/^c & b (.+)$/, (_, b) => `c & b ${resolveName(b, xiNames)}`);
+  if (!ledgerDis || ledgerDis === 'not out' || ledgerDis === '0') return null;
+  const f = (t) => resolveName(t, xiNames);
+  let s = ledgerDis.trim();
+  s = s.replace(/^c & b (.+)$/, (_, b) => `c & b ${f(b)}`);
+  s = s.replace(/^c ([^ ]+) b (.+)$/, (_, fl, b) => {
+    const fm = f(fl); const bm = f(b);
+    return `c ${fm} b ${bm === fm ? distinctOf(xiNames, fm, fm) : bm}`;
+  });
+  s = s.replace(/^lbw b (.+)$/, (_, b) => `lbw b ${f(b)}`);
+  s = s.replace(/^b (.+)$/, (_, b) => `b ${f(b)}`);
+  s = s.replace(/^st b ([^ ]+) \(wk ([^)]+)\)$/, (_, b, wk) => `st b ${f(b)} (wk ${f(wk)})`);
+  s = s.replace(/^c (.+)$/, (_, fl) => `c ${f(fl)} b ${f(fl + ' bowl')}`);
+  s = s.replace(/^run out (.+)$/, (_, r) => `run out ${f(r)}`);
+  return s;
 }
 function genFillBat(runs, mult) {
   const f6 = clamp(Math.round(runs / 9), 0, Math.floor(runs / 6));
@@ -299,12 +316,12 @@ function bowlSide(innId, side, wkts, runsAvail, marqBowlPlan, maxOv) {
   if (wLeft > 0) db.bowling[db.bowling.length - 1].wickets += wLeft;
   if (runsLeft > 0) db.bowling[db.bowling.length - 1].runs += runsLeft;
 }
-function buildMatch({ date, tour, fmt, teamA, teamB, squadA, squadB, marqA, marqB, note }) {
+function buildMatch({ date, tour, fmt, teamA, teamB, squadA, squadB, marqA, marqB, note, stage }) {
   const mid = `m-shared-${seq}`;
   const fp = fmtParams[fmt];
   const isTest = fmt === 'Test';
   const tNameA = db.teams.find((t) => t.id === teamA).name, tNameB = db.teams.find((t) => t.id === teamB).name;
-  db.matches.push({ id: mid, slug: `${slug(sideOf(teamA))}-vs-${slug(sideOf(teamB))}-${date}`, tournamentId: tour, seasonId: seasonOf(+date.slice(0, 4)), teamAId: teamA, teamBId: teamB, matchDate: date, format: fmt, status: 'completed', resultText: '', matchNumber: seq, notes: note || null, note: null, playerIds: [...new Set([marqA?.pid || null, marqB?.pid || null].filter(Boolean))] });
+  db.matches.push({ id: mid, slug: `${slug(sideOf(teamA))}-vs-${slug(sideOf(teamB))}-${date}`, tournamentId: tour, seasonId: seasonOf(+date.slice(0, 4)), teamAId: teamA, teamBId: teamB, matchDate: date, format: fmt, status: 'completed', resultText: '', matchNumber: seq, notes: note || null, note: null, playerIds: [...new Set([marqA?.pid || null, marqB?.pid || null].filter(Boolean))], ...(stage ? { stage } : {}) });
   const m = db.matches[db.matches.length - 1];
   const card = (ma, names) => ma && ma.pid && ma.row ? [{ pid: ma.pid, pos: ma.pos, runs: ma.row.R, balls: ma.row.B, fours: ma.row.f4, sixes: ma.row.f6, dis: realisticDismissal(ma.row.dis, names), no: ma.row.dis === 'not out', sr: srOf(ma.row.R, ma.row.B) }] : [];
   const tac = (ma, side) => (ma && ma.pid && ma.row ? splitTestBat(ma.row).map((c, i) => ({ ...c, pid: ma.pid, pos: ma.pos + i, dis: c.dis ? realisticDismissal(c.dis, side) : null })) : []);
@@ -404,7 +421,12 @@ for (let k = 0; k < 4; k++) PLAN.push(odiMatch(`2023-09-${String(2 + k * 7).padS
 for (let k = 0; k < 5; k++) PLAN.push(testMatch(`2023-11-${String(6 + k * 8).padStart(2, '0')}`, P_TEST[1 + k], true));
 // 2024
 PLAN.push(rjMatch('2024-02-06', P_T20[19]), rjMatch('2024-03-06', P_T20[20]));
-PLAN.push(deMatch('2024-08-03', P_T20[21], true), deMatch('2024-08-10', P_T20[22], true));
+{
+  const de24a = deMatch('2024-08-03', P_T20[21], true);
+  const de24b = deMatch('2024-08-10', P_T20[22], true);
+  de24b.stage = 'Final';
+  PLAN.push(de24a, de24b);
+}
 PLAN.push(odiMatch('2024-09-01', P_ODI[10], true), odiMatch('2024-09-08', P_ODI[11], true), odiMatch('2024-09-15', P_ODI[12], false), odiMatch('2024-09-22', P_ODI[13], true));
 for (let k = 0; k < 5; k++) PLAN.push(testMatch(k === 4 ? '2024-11-01' : `2024-10-${String(5 + k * 8).padStart(2, '0')}`, P_TEST[6 + k], true));
 {
