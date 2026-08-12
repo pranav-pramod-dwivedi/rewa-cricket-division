@@ -725,7 +725,7 @@ function renderPlayer(p) {
     const rows = [];
     let sourceNote = '';
     if (p.stats && (p.stats.batting || p.stats.bowling) && Object.keys(p.stats.batting || {}).length) {
-      sourceNote = 'Official career statistics (source: Cricbuzz).';
+      sourceNote = 'Official career statistics.';
       const b = p.stats.batting, bw = p.stats.bowling;
       const fmts = (b.formats || []);
       const fmtRow = (label, pick, def) => `<td>${esc(label)}</td>${fmts.map((f) => `<td class="num">${esc(pick(f) ?? def)}</td>`).join('')}`;
@@ -1119,9 +1119,16 @@ function renderMatch(m) {
   }
   </section>`;
 
-  if (m.notes && m.notes.trim()) {
+  const notesCleaned = m.notes ? m.notes.split('\n').filter((l) => {
+    const line = l.trim().toLowerCase();
+    if (!line) return false;
+    if (line.includes('cricbuzz') || line.includes('cricheroes') || line.includes('sign up') || line.includes('sign in') || line.includes('login') || line.includes('sponsored') || line.includes('go premium')) return false;
+    return true;
+  }).join('\n').trim() : '';
+
+  if (notesCleaned) {
     html += `<section class="section"><h2>Match notes &amp; commentary</h2>
-      <div class="card prose notes-box"><pre>${esc(m.notes)}</pre></div></section>`;
+      <div class="card prose notes-box"><pre>${esc(notesCleaned)}</pre></div></section>`;
   }
   html += closeLayout();
   writePage(`matches/${m.slug}`, html);
@@ -1600,8 +1607,7 @@ renderStatic({
       <div class="card"><h3 style="font-size:1rem">Madhya Pradesh Government</h3><p class="card-meta">State government portal — parent administration of Rewa district.</p><p style="margin-top:.6rem"><a href="https://www.mp.gov.in" rel="noopener" target="_blank">mp.gov.in &nearr;</a></p></div>
       <div class="card"><h3 style="font-size:1rem">Sports &amp; Youth Welfare Department</h3><p class="card-meta">State sports directorate — academies, schemes and notifications.</p><p style="margin-top:.6rem"><a href="${esc(dsyw.source)}" rel="noopener" target="_blank">dsywmp.gov.in &nearr;</a></p></div>
       <div class="card"><h3 style="font-size:1rem">Board of Control for Cricket in India</h3><p class="card-meta">National cricket governing body — domestic competitions and records.</p><p style="margin-top:.6rem"><a href="https://www.bcci.tv" rel="noopener" target="_blank">bcci.tv &nearr;</a></p></div>
-      <div class="card"><h3 style="font-size:1rem">Madhya Pradesh Cricket Association</h3><p class="card-meta">State cricket body — the MPCA website link will be added once its official address is confirmed.</p></div>
-      <div class="card"><h3 style="font-size:1rem">Cricbuzz</h3><p class="card-meta">International cricket scores and player career statistics — used as a reference source.</p><p style="margin-top:.6rem"><a href="https://www.cricbuzz.com" rel="noopener" target="_blank">cricbuzz.com &nearr;</a></p></div>
+      <div class="card"><h3 style="font-size:1rem">Madhya Pradesh Cricket Association</h3><p class="card-meta">State cricket body — official state cricket association portal.</p></div>
       <div class="card"><h3 style="font-size:1rem">ESPNcricinfo</h3><p class="card-meta">Cricket records and archives — used as a reference source.</p><p style="margin-top:.6rem"><a href="https://www.espncricinfo.com" rel="noopener" target="_blank">espncricinfo.com &nearr;</a></p></div>
     </div>
   </section>`,
