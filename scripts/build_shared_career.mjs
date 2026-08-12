@@ -45,8 +45,8 @@ function addPlayer(name, role, teamId) {
   db.players.push(np); byName.set(name.toLowerCase(), np);
   return id;
 }
-addPlayer('Pranav Dwivedi', 'All-rounder', 't-rewa-jaguars');
-addPlayer('Akhil Mishra', 'All-rounder', 't-rewa-jaguars');
+addPlayer('Pranav Dwivedi', 'All-rounder', null);
+addPlayer('Akhil Mishra', 'All-rounder', null);
 const MP_POOL = [
   'Rajat Patidar', 'Yash Dubey', 'Himanshu Mantri', 'Harsh Gawli', 'Aditya Shrivastava', 'Subhranshu Senapati',
   'Venkatesh Iyer', 'Saransh Jain', 'Shubham Sharma', 'Anubhav Agarwal', 'Avesh Khan', 'Kuldeep Sen',
@@ -526,6 +526,8 @@ const statsP = recompute(P);
 const statsA = recompute(A);
 const plP = db.players.find((p) => p.id === P);
 const plA = db.players.find((p) => p.id === A);
+if (plP) delete plP.teamId;
+if (plA) delete plA.teamId;
 // Official Pranav career statistics (Cricbuzz) — displayed as authoritative; generated matches
 // below are the Rewa archive record and are still fully consistent (asserted separately).
 // Display recomputed stats (validated against the CSV ledger). Economy is shown from the
