@@ -569,10 +569,10 @@ plP.stats = {
     rows: {
       Matches: ['10', '15', '26'],
       Innings: ['10', '15', '26'],
-      Runs: ['739', '883', '1359'],
+      Runs: ['739', '883', '1517'],
       Highest: ['122', '102', '83'],
-      Average: ['82.11', '73.58', '52.27'],
-      SR: ['64.43', '84.82', '67.98'],
+      Average: ['82.11', '73.58', '58.35'],
+      SR: ['64.43', '94.84', '230.75'],
       Fours: ['—', '—', '—'],
       Sixes: ['—', '—', '—'],
       '50s': ['—', '—', '—'],
@@ -584,13 +584,13 @@ plP.stats = {
     rows: {
       Matches: ['10', '15', '26'],
       Wickets: ['29', '47', '48'],
-      Avg: ['14.03', '9.51', '6.63'],
-      Eco: ['2.11', '4.15', '3.24'],
-      BBI: ['3/19', '8/39', '5/23'],
+      Avg: ['24.03', '19.51', '11.63'],
+      Eco: ['2.11', '5.15', '6.24'],
+      BBI: ['3/19', '8/39', '5/13'],
     }
   }
 };
-plP.profileStats = { matches: 51, runs: 2981, wickets: 124 };
+plP.profileStats = { matches: 51, runs: 3139, wickets: 124 };
 plP.teams = ['t-rewa-jaguars', 't-destroyers', 't-madhya-pradesh', 't-royal-challengers-bengaluru'];
 
 console.log('AKHIL stats updated:', JSON.stringify(plA.stats));
