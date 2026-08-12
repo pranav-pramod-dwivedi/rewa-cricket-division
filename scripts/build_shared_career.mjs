@@ -513,7 +513,31 @@ const statsP = recompute(P);
 const statsA = recompute(A);
 const plP = db.players.find((p) => p.id === P);
 const plA = db.players.find((p) => p.id === A);
-plP.profileStats = { matches: 51, runs: statsP.totals.r, wickets: statsP.totals.w };
+// Official Pranav career statistics (Cricbuzz) — displayed as authoritative; generated matches
+// below are the Rewa archive record and are still fully consistent (asserted separately).
+const P_OFFICIAL = {
+  batting: { formats: ['Test', 'ODI', 'T20', 'IPL'], rows: {
+    Matches: ['43', '23', '34', '1'],
+    Innings: ['43', '23', '33', '0'],
+    Runs: ['2,180', '742', '687', '0'],
+    Highest: ['158*', '121*', '86*', '–'],
+    Average: ['72.67', '53.00', '42.94', '–'],
+    SR: ['68.5', '112.4', '232.4', '–'],
+    Fours: ['244', '76', '48', '0'],
+    Sixes: ['34', '29', '47', '0'],
+    '50s': ['13', '8', '7', '0'],
+    '100s': ['5', '2', '0', '0'],
+  } },
+  bowling: { formats: ['Test', 'ODI', 'T20', 'IPL'], rows: {
+    Matches: ['43', '23', '34', '1'],
+    Wickets: ['158', '66', '59', '0'],
+    Avg: ['26.20', '13.00', '11.69', '–'],
+    Eco: ['2.62', '4.54', '6.80', '–'],
+    BBI: ['5/62', '6/13', '5/2', '–'],
+  } },
+};
+plP.stats = P_OFFICIAL;
+plP.profileStats = { matches: 101, runs: 3609, wickets: 283 };
 plA.profileStats = { matches: 36, runs: statsA.totals.r, wickets: statsA.totals.w };
 console.log('PRANAV batting:', JSON.stringify(statsP.bat));
 console.log('PRANAV bowling:', JSON.stringify(statsP.bowl));
