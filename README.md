@@ -1,22 +1,4 @@
-# Rewa Cricket Division — Official Archive
 
-Plain **HTML5 + CSS3 + vanilla JS**. No frontend framework. Data lives in JSON and a
-plain-Node script generates real static `.html` files (SEO content is baked into the HTML).
-
-## Structure
-```
-data/organization.json   → org identity (only what's authorized)
-data/records.json        → seasons, tournaments, teams, players, venues,
-                           officials, announcements, matches, innings, batting, bowling
-scripts/build.mjs        → generates static HTML into dist/ (vanilla Node, no deps)
-scripts/serve.mjs        → zero-dep production server (dynamic sitemap/robots, security headers)
-src/css/styles.css       → plain CSS3, mobile-first
-src/js/main.js           → tiny vanilla JS (nav toggle, contact form, year)
-public/favicon.svg
-dist/                    → generated output (deploy this)
-```
-
-## Build & run
 ```bash
 npm run build    # generate dist/ (no npm install needed — zero dependencies)
 npm start        # production server on :8080 (dynamic sitemap + robots, gzip, security headers)
