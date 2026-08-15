@@ -379,6 +379,13 @@ function bowlSide(innId, side, wkts, runsAvail, marqBowlPlan, maxOv, excludeIds 
     db.bowling.push({ id: `w-${innId}-${k}`, inningsId: innId, playerId: bowlers[k], overs: canonOvers(ov), maidens: ov >= 2 && rnd() < (ov >= 8 ? 0.55 : 0.25) ? Math.min(Math.floor(ov / 2), Math.round(ov / 3) + 1) : 0, runs, wickets: w, economy: ov ? +(runs / ov).toFixed(2) : 0 });
     ovLeft -= ov; runsLeft -= runs; wLeft -= w;
   }
+  if (ovLeft > 0) {
+    const lastBw = db.bowling[db.bowling.length - 1];
+    const currentOv = typeof lastBw.overs === 'number' ? lastBw.overs : canonOvers(lastBw.overs);
+    const newOv = Math.min(perBowlerMax, currentOv + ovLeft);
+    lastBw.overs = canonOvers(newOv);
+    lastBw.economy = newOv ? +(lastBw.runs / newOv).toFixed(2) : 0;
+  }
   if (wLeft > 0) db.bowling[db.bowling.length - 1].wickets += wLeft;
   if (runsLeft > 0) db.bowling[db.bowling.length - 1].runs += runsLeft;
 }
@@ -778,7 +785,10 @@ function reconcileScorecards(db) {
         } else if (b.dismissal && b.dismissal.includes('c & b')) {
           b.dismissal = `c & b ${bName}`;
         } else if (b.dismissal && b.dismissal.startsWith('st ')) {
-          b.dismissal = `st b ${bName}`;
+          const parts = b.dismissal.split(' b ');
+          const keeperPart = parts[0].replace('st', '').trim();
+          const keeper = keeperPart.length > 0 && keeperPart.toLowerCase() !== 'b' ? keeperPart : 'Chanchal Rathore';
+          b.dismissal = `st ${keeper} b ${bName}`;
         } else if (b.dismissal && b.dismissal.startsWith('lbw ')) {
           b.dismissal = `lbw b ${bName}`;
         } else if (b.dismissal && b.dismissal.startsWith('c ')) {
