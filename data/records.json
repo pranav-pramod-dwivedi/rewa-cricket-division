@@ -39000,39 +39000,39 @@
       "playerId": "p-sagar-solanki",
       "overs": 4,
       "maidens": 0,
-      "runs": 45,
+      "runs": 44,
       "wickets": 2,
-      "economy": 11.25
+      "economy": 11.0
     },
     {
       "id": "w-m-shared-2-1-3",
       "inningsId": "m-shared-2-1",
       "playerId": "p-atharv-mahajan",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 27,
+      "runs": 20,
       "wickets": 2,
-      "economy": 6.75
+      "economy": 6.67
     },
     {
       "id": "w-m-shared-2-1-4",
       "inningsId": "m-shared-2-1",
       "playerId": "p-ajay-rohera",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 38,
+      "runs": 29,
       "wickets": 0,
-      "economy": 9.5
+      "economy": 9.67
     },
     {
       "id": "w-m-shared-2-1-5",
       "inningsId": "m-shared-2-1",
       "playerId": "p-prithviraj-singh-tomar",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 38,
-      "wickets": 1,
-      "economy": 9.5
+      "runs": 28,
+      "wickets": 0,
+      "economy": 9.33
     },
     {
       "id": "w-m-shared-2-2-0",
@@ -39881,7 +39881,7 @@
       "overs": 4,
       "maidens": 0,
       "runs": 35,
-      "wickets": 0,
+      "wickets": 1,
       "economy": 8.75
     },
     {
@@ -39911,7 +39911,7 @@
       "overs": 4,
       "maidens": 0,
       "runs": 29,
-      "wickets": 1,
+      "wickets": 0,
       "economy": 7.25
     },
     {
@@ -40211,7 +40211,7 @@
       "overs": 4,
       "maidens": 0,
       "runs": 34,
-      "wickets": 0,
+      "wickets": 1,
       "economy": 8.5
     },
     {
@@ -40251,7 +40251,7 @@
       "overs": 4,
       "maidens": 0,
       "runs": 29,
-      "wickets": 7,
+      "wickets": 6,
       "economy": 7.25
     },
     {
@@ -40270,39 +40270,39 @@
       "playerId": "p-akshat-raghuwanshi",
       "overs": 4,
       "maidens": 0,
-      "runs": 31,
+      "runs": 30,
       "wickets": 2,
-      "economy": 7.75
+      "economy": 7.5
     },
     {
       "id": "w-m-shared-13-1-3",
       "inningsId": "m-shared-13-1",
       "playerId": "p-aryan-deshmukh",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 25,
+      "runs": 18,
       "wickets": 2,
-      "economy": 6.25
+      "economy": 6.0
     },
     {
       "id": "w-m-shared-13-1-4",
       "inningsId": "m-shared-13-1",
       "playerId": "p-himanshu-mantri",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 25,
+      "runs": 18,
       "wickets": 1,
-      "economy": 6.25
+      "economy": 6.0
     },
     {
       "id": "w-m-shared-13-1-5",
       "inningsId": "m-shared-13-1",
       "playerId": "p-kuldeep-sen",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 27,
-      "wickets": 3,
-      "economy": 6.75
+      "runs": 20,
+      "wickets": 2,
+      "economy": 6.67
     },
     {
       "id": "w-m-shared-13-2-0",
@@ -40608,9 +40608,9 @@
       "id": "w-m-shared-16-1-2",
       "inningsId": "m-shared-16-1",
       "playerId": "p-rohit-rajawat",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 36,
+      "runs": 27,
       "wickets": 2,
       "economy": 9.0
     },
@@ -40618,21 +40618,21 @@
       "id": "w-m-shared-16-1-3",
       "inningsId": "m-shared-16-1",
       "playerId": "p-sagar-solanki",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 26,
+      "runs": 20,
       "wickets": 1,
-      "economy": 6.5
+      "economy": 6.67
     },
     {
       "id": "w-m-shared-16-1-4",
       "inningsId": "m-shared-16-1",
       "playerId": "p-saransh-surana",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 41,
-      "wickets": 1,
-      "economy": 10.25
+      "runs": 30,
+      "wickets": 0,
+      "economy": 10.0
     },
     {
       "id": "w-m-shared-16-2-0",
@@ -40878,61 +40878,61 @@
       "id": "w-m-shared-18-2-0",
       "inningsId": "m-shared-18-2",
       "playerId": "p-pranav-dwivedi",
-      "overs": 9,
+      "overs": 8,
       "maidens": 0,
-      "runs": 54,
+      "runs": 47,
       "wickets": 3,
-      "economy": 6.0
+      "economy": 5.88
     },
     {
       "id": "w-m-shared-18-2-1",
       "inningsId": "m-shared-18-2",
       "playerId": "p-aryan-deshmukh",
-      "overs": 9,
+      "overs": 7,
       "maidens": 0,
-      "runs": 47,
-      "wickets": 1,
-      "economy": 5.22
+      "runs": 36,
+      "wickets": 0,
+      "economy": 5.14
     },
     {
       "id": "w-m-shared-18-2-2",
       "inningsId": "m-shared-18-2",
       "playerId": "p-ajay-rohera",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 41,
+      "runs": 35,
       "wickets": 2,
-      "economy": 5.12
+      "economy": 5.0
     },
     {
       "id": "w-m-shared-18-2-3",
       "inningsId": "m-shared-18-2",
       "playerId": "p-mohd-arham-aquil",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 36,
+      "runs": 31,
       "wickets": 0,
-      "economy": 4.5
+      "economy": 4.43
     },
     {
       "id": "w-m-shared-18-2-4",
       "inningsId": "m-shared-18-2",
       "playerId": "p-ashwin-das",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 40,
+      "runs": 34,
       "wickets": 1,
-      "economy": 5.0
+      "economy": 4.86
     },
     {
       "id": "w-m-shared-18-2-5",
       "inningsId": "m-shared-18-2",
       "playerId": "p-ramveer-singh-gurjar",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 52,
+      "runs": 45,
       "wickets": 1,
-      "economy": 6.5
+      "economy": 6.43
     },
     {
       "id": "w-m-shared-19-1-0",
@@ -41131,7 +41131,7 @@
       "overs": 9,
       "maidens": 0,
       "runs": 47,
-      "wickets": 1,
+      "wickets": 0,
       "economy": 5.22
     },
     {
@@ -41630,9 +41630,9 @@
       "playerId": "p-rishab-shukla",
       "overs": 4,
       "maidens": 0,
-      "runs": 39,
+      "runs": 41,
       "wickets": 0,
-      "economy": 9.75
+      "economy": 10.25
     },
     {
       "id": "w-m-shared-25-1-1",
@@ -41640,38 +41640,38 @@
       "playerId": "p-anant-verma",
       "overs": 4,
       "maidens": 0,
-      "runs": 32,
+      "runs": 34,
       "wickets": 2,
-      "economy": 8.0
+      "economy": 8.5
     },
     {
       "id": "w-m-shared-25-1-2",
       "inningsId": "m-shared-25-1",
       "playerId": "p-ashwin-das",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 36,
+      "runs": 28,
       "wickets": 0,
-      "economy": 9.0
+      "economy": 9.33
     },
     {
       "id": "w-m-shared-25-1-3",
       "inningsId": "m-shared-25-1",
       "playerId": "p-kanishk-dubey",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 41,
+      "runs": 32,
       "wickets": 1,
-      "economy": 10.25
+      "economy": 10.67
     },
     {
       "id": "w-m-shared-25-1-4",
       "inningsId": "m-shared-25-1",
       "playerId": "p-himanshu-mantri",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 28,
-      "wickets": 5,
+      "runs": 21,
+      "wickets": 4,
       "economy": 7.0
     },
     {
@@ -41740,9 +41740,9 @@
       "playerId": "p-shardul-singh",
       "overs": 4,
       "maidens": 0,
-      "runs": 32,
+      "runs": 30,
       "wickets": 0,
-      "economy": 8.0
+      "economy": 7.5
     },
     {
       "id": "w-m-shared-26-1-1",
@@ -41750,39 +41750,39 @@
       "playerId": "p-prithviraj-singh-tomar",
       "overs": 4,
       "maidens": 0,
-      "runs": 30,
+      "runs": 29,
       "wickets": 0,
-      "economy": 7.5
+      "economy": 7.25
     },
     {
       "id": "w-m-shared-26-1-2",
       "inningsId": "m-shared-26-1",
       "playerId": "p-aryan-deshmukh",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 21,
+      "runs": 16,
       "wickets": 1,
-      "economy": 5.25
+      "economy": 5.33
     },
     {
       "id": "w-m-shared-26-1-3",
       "inningsId": "m-shared-26-1",
       "playerId": "p-kulwant-khejroliya",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 27,
+      "runs": 19,
       "wickets": 2,
-      "economy": 6.75
+      "economy": 6.33
     },
     {
       "id": "w-m-shared-26-1-4",
       "inningsId": "m-shared-26-1",
       "playerId": "p-anant-verma",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 30,
-      "wickets": 5,
-      "economy": 7.5
+      "runs": 21,
+      "wickets": 4,
+      "economy": 7.0
     },
     {
       "id": "w-m-shared-26-2-0",
@@ -41908,61 +41908,61 @@
       "id": "w-m-shared-27-2-0",
       "inningsId": "m-shared-27-2",
       "playerId": "p-pranav-dwivedi",
-      "overs": 9,
+      "overs": 8,
       "maidens": 0,
-      "runs": 42,
+      "runs": 36,
       "wickets": 3,
-      "economy": 4.67
+      "economy": 4.5
     },
     {
       "id": "w-m-shared-27-2-1",
       "inningsId": "m-shared-27-2",
       "playerId": "p-harsh-gawli",
-      "overs": 9,
+      "overs": 7,
       "maidens": 0,
-      "runs": 45,
-      "wickets": 3,
-      "economy": 5.0
+      "runs": 32,
+      "wickets": 2,
+      "economy": 4.57
     },
     {
       "id": "w-m-shared-27-2-2",
       "inningsId": "m-shared-27-2",
       "playerId": "p-avesh-khan",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 49,
+      "runs": 40,
       "wickets": 0,
-      "economy": 6.12
+      "economy": 5.71
     },
     {
       "id": "w-m-shared-27-2-3",
       "inningsId": "m-shared-27-2",
       "playerId": "p-shubham-sharma",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 37,
+      "runs": 31,
       "wickets": 2,
-      "economy": 4.62
+      "economy": 4.43
     },
     {
       "id": "w-m-shared-27-2-4",
       "inningsId": "m-shared-27-2",
       "playerId": "p-ritesh-shakya",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 39,
+      "runs": 32,
       "wickets": 0,
-      "economy": 4.88
+      "economy": 4.57
     },
     {
       "id": "w-m-shared-27-2-5",
       "inningsId": "m-shared-27-2",
       "playerId": "p-kulwant-khejroliya",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 65,
+      "runs": 53,
       "wickets": 2,
-      "economy": 8.12
+      "economy": 7.57
     },
     {
       "id": "w-m-shared-28-1-0",
@@ -42088,46 +42088,6 @@
       "id": "w-m-shared-29-1-0",
       "inningsId": "m-shared-29-1",
       "playerId": "p-akhil-mishra",
-      "overs": 9,
-      "maidens": 0,
-      "runs": 40,
-      "wickets": 0,
-      "economy": 4.44
-    },
-    {
-      "id": "w-m-shared-29-1-1",
-      "inningsId": "m-shared-29-1",
-      "playerId": "p-kanishk-dubey",
-      "overs": 9,
-      "maidens": 0,
-      "runs": 45,
-      "wickets": 2,
-      "economy": 5.0
-    },
-    {
-      "id": "w-m-shared-29-1-2",
-      "inningsId": "m-shared-29-1",
-      "playerId": "p-radhakrishna-dwivedi",
-      "overs": 8,
-      "maidens": 0,
-      "runs": 45,
-      "wickets": 0,
-      "economy": 5.62
-    },
-    {
-      "id": "w-m-shared-29-1-3",
-      "inningsId": "m-shared-29-1",
-      "playerId": "p-prabhanshu-shukla",
-      "overs": 8,
-      "maidens": 0,
-      "runs": 47,
-      "wickets": 0,
-      "economy": 5.88
-    },
-    {
-      "id": "w-m-shared-29-1-4",
-      "inningsId": "m-shared-29-1",
-      "playerId": "p-mohd-arshad-khan",
       "overs": 8,
       "maidens": 0,
       "runs": 36,
@@ -42135,14 +42095,54 @@
       "economy": 4.5
     },
     {
+      "id": "w-m-shared-29-1-1",
+      "inningsId": "m-shared-29-1",
+      "playerId": "p-kanishk-dubey",
+      "overs": 7,
+      "maidens": 0,
+      "runs": 34,
+      "wickets": 1,
+      "economy": 4.86
+    },
+    {
+      "id": "w-m-shared-29-1-2",
+      "inningsId": "m-shared-29-1",
+      "playerId": "p-radhakrishna-dwivedi",
+      "overs": 7,
+      "maidens": 0,
+      "runs": 39,
+      "wickets": 0,
+      "economy": 5.57
+    },
+    {
+      "id": "w-m-shared-29-1-3",
+      "inningsId": "m-shared-29-1",
+      "playerId": "p-prabhanshu-shukla",
+      "overs": 7,
+      "maidens": 0,
+      "runs": 40,
+      "wickets": 0,
+      "economy": 5.71
+    },
+    {
+      "id": "w-m-shared-29-1-4",
+      "inningsId": "m-shared-29-1",
+      "playerId": "p-mohd-arshad-khan",
+      "overs": 7,
+      "maidens": 0,
+      "runs": 31,
+      "wickets": 0,
+      "economy": 4.43
+    },
+    {
       "id": "w-m-shared-29-1-5",
       "inningsId": "m-shared-29-1",
       "playerId": "p-ashwin-das",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 51,
+      "runs": 42,
       "wickets": 4,
-      "economy": 6.38
+      "economy": 6.0
     },
     {
       "id": "w-m-shared-29-2-0",
@@ -42221,7 +42221,7 @@
       "overs": 9,
       "maidens": 0,
       "runs": 52,
-      "wickets": 1,
+      "wickets": 0,
       "economy": 5.78
     },
     {
@@ -42268,121 +42268,121 @@
       "id": "w-m-shared-30-2-0",
       "inningsId": "m-shared-30-2",
       "playerId": "p-pranav-dwivedi",
-      "overs": 9,
+      "overs": 8,
       "maidens": 0,
-      "runs": 35,
+      "runs": 26,
       "wickets": 3,
-      "economy": 3.89
+      "economy": 3.25
     },
     {
       "id": "w-m-shared-30-2-1",
       "inningsId": "m-shared-30-2",
       "playerId": "p-rohit-rajawat",
-      "overs": 9,
+      "overs": 7,
       "maidens": 0,
-      "runs": 33,
-      "wickets": 1,
-      "economy": 3.67
+      "runs": 31,
+      "wickets": 0,
+      "economy": 4.43
     },
     {
       "id": "w-m-shared-30-2-2",
       "inningsId": "m-shared-30-2",
       "playerId": "p-mohd-arshad-khan",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 36,
+      "runs": 31,
       "wickets": 1,
-      "economy": 4.5
+      "economy": 4.43
     },
     {
       "id": "w-m-shared-30-2-3",
       "inningsId": "m-shared-30-2",
       "playerId": "p-kanishk-dubey",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 36,
+      "runs": 31,
       "wickets": 0,
-      "economy": 4.5
+      "economy": 4.43
     },
     {
       "id": "w-m-shared-30-2-4",
       "inningsId": "m-shared-30-2",
       "playerId": "p-kuldeep-sen",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 36,
+      "runs": 31,
       "wickets": 2,
-      "economy": 4.5
+      "economy": 4.43
     },
     {
       "id": "w-m-shared-30-2-5",
       "inningsId": "m-shared-30-2",
       "playerId": "p-subhranshu-senapati",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 36,
+      "runs": 31,
       "wickets": 2,
-      "economy": 4.5
+      "economy": 4.43
     },
     {
       "id": "w-m-shared-31-1-0",
       "inningsId": "m-shared-31-1",
       "playerId": "p-akhil-mishra",
-      "overs": 9,
+      "overs": 8,
       "maidens": 0,
-      "runs": 33,
+      "runs": 29,
       "wickets": 0,
-      "economy": 3.67
+      "economy": 3.62
     },
     {
       "id": "w-m-shared-31-1-1",
       "inningsId": "m-shared-31-1",
       "playerId": "p-aryan-dwivedi",
-      "overs": 9,
+      "overs": 7,
       "maidens": 0,
-      "runs": 40,
-      "wickets": 1,
-      "economy": 4.44
+      "runs": 31,
+      "wickets": 0,
+      "economy": 4.43
     },
     {
       "id": "w-m-shared-31-1-2",
       "inningsId": "m-shared-31-1",
       "playerId": "p-himanshu-mantri",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 37,
+      "runs": 33,
       "wickets": 1,
-      "economy": 4.62
+      "economy": 4.71
     },
     {
       "id": "w-m-shared-31-1-3",
       "inningsId": "m-shared-31-1",
       "playerId": "p-venkatesh-iyer",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 31,
+      "runs": 27,
       "wickets": 2,
-      "economy": 3.88
+      "economy": 3.86
     },
     {
       "id": "w-m-shared-31-1-4",
       "inningsId": "m-shared-31-1",
       "playerId": "p-kuldeep-sen",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 36,
+      "runs": 31,
       "wickets": 0,
-      "economy": 4.5
+      "economy": 4.43
     },
     {
       "id": "w-m-shared-31-1-5",
       "inningsId": "m-shared-31-1",
       "playerId": "p-kumar-kartikeya",
-      "overs": 8,
+      "overs": 7,
       "maidens": 0,
-      "runs": 36,
+      "runs": 31,
       "wickets": 5,
-      "economy": 4.5
+      "economy": 4.43
     },
     {
       "id": "w-m-shared-31-2-0",
@@ -42521,7 +42521,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 41,
-      "wickets": 0,
+      "wickets": 1,
       "economy": 2.73
     },
     {
@@ -42561,7 +42561,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 47,
-      "wickets": 1,
+      "wickets": 0,
       "economy": 3.13
     },
     {
@@ -42801,7 +42801,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 50,
-      "wickets": 2,
+      "wickets": 1,
       "economy": 3.33
     },
     {
@@ -42928,61 +42928,61 @@
       "id": "w-m-shared-34-1-0",
       "inningsId": "m-shared-34-1",
       "playerId": "p-akhil-mishra",
-      "overs": 15,
+      "overs": 13,
       "maidens": 0,
-      "runs": 49,
+      "runs": 41,
       "wickets": 1,
-      "economy": 3.27
+      "economy": 3.15
     },
     {
       "id": "w-m-shared-34-1-1",
       "inningsId": "m-shared-34-1",
       "playerId": "p-rishab-verma",
-      "overs": 15,
+      "overs": 13,
       "maidens": 0,
-      "runs": 63,
+      "runs": 53,
       "wickets": 0,
-      "economy": 4.2
+      "economy": 4.08
     },
     {
       "id": "w-m-shared-34-1-2",
       "inningsId": "m-shared-34-1",
       "playerId": "p-harsh-gawli",
-      "overs": 15,
+      "overs": 13,
       "maidens": 0,
-      "runs": 58,
+      "runs": 49,
       "wickets": 2,
-      "economy": 3.87
+      "economy": 3.77
     },
     {
       "id": "w-m-shared-34-1-3",
       "inningsId": "m-shared-34-1",
       "playerId": "p-kumar-kartikeya",
-      "overs": 15,
+      "overs": 13,
       "maidens": 0,
-      "runs": 38,
+      "runs": 32,
       "wickets": 1,
-      "economy": 2.53
+      "economy": 2.46
     },
     {
       "id": "w-m-shared-34-1-4",
       "inningsId": "m-shared-34-1",
       "playerId": "p-akshat-raghuwanshi",
-      "overs": 15,
+      "overs": 13,
       "maidens": 0,
-      "runs": 56,
+      "runs": 47,
       "wickets": 1,
-      "economy": 3.73
+      "economy": 3.62
     },
     {
       "id": "w-m-shared-34-1-5",
       "inningsId": "m-shared-34-1",
       "playerId": "p-aryan-deshmukh",
-      "overs": 15,
+      "overs": 13,
       "maidens": 0,
-      "runs": 55,
-      "wickets": 4,
-      "economy": 3.67
+      "runs": 46,
+      "wickets": 3,
+      "economy": 3.54
     },
     {
       "id": "w-m-shared-34-2-0",
@@ -43041,7 +43041,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 59,
-      "wickets": 2,
+      "wickets": 1,
       "economy": 3.93
     },
     {
@@ -43281,7 +43281,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 53,
-      "wickets": 1,
+      "wickets": 0,
       "economy": 3.53
     },
     {
@@ -43481,7 +43481,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 67,
-      "wickets": 0,
+      "wickets": 1,
       "economy": 4.47
     },
     {
@@ -43521,7 +43521,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 72,
-      "wickets": 4,
+      "wickets": 3,
       "economy": 4.8
     },
     {
@@ -43541,7 +43541,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 43,
-      "wickets": 1,
+      "wickets": 2,
       "economy": 2.87
     },
     {
@@ -43581,7 +43581,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 39,
-      "wickets": 2,
+      "wickets": 1,
       "economy": 2.6
     },
     {
@@ -44171,7 +44171,7 @@
       "overs": 9,
       "maidens": 0,
       "runs": 51,
-      "wickets": 2,
+      "wickets": 1,
       "economy": 5.67
     },
     {
@@ -44191,7 +44191,7 @@
       "overs": 8,
       "maidens": 0,
       "runs": 36,
-      "wickets": 2,
+      "wickets": 3,
       "economy": 4.5
     },
     {
@@ -44438,50 +44438,50 @@
       "id": "w-m-shared-44-1-0",
       "inningsId": "m-shared-44-1",
       "playerId": "p-rishab-shukla",
-      "overs": 10,
+      "overs": 9,
       "maidens": 0,
-      "runs": 47,
+      "runs": 40,
       "wickets": 0,
-      "economy": 4.7
+      "economy": 4.44
     },
     {
       "id": "w-m-shared-44-1-1",
       "inningsId": "m-shared-44-1",
       "playerId": "p-akshat-raghuwanshi",
-      "overs": 10,
+      "overs": 9,
       "maidens": 0,
-      "runs": 47,
+      "runs": 41,
       "wickets": 2,
-      "economy": 4.7
+      "economy": 4.56
     },
     {
       "id": "w-m-shared-44-1-2",
       "inningsId": "m-shared-44-1",
       "playerId": "p-amarjeet-kumar-singh",
-      "overs": 10,
+      "overs": 8,
       "maidens": 0,
-      "runs": 49,
+      "runs": 42,
       "wickets": 2,
-      "economy": 4.9
+      "economy": 5.25
     },
     {
       "id": "w-m-shared-44-1-3",
       "inningsId": "m-shared-44-1",
       "playerId": "p-aditya-shrivastava",
-      "overs": 10,
+      "overs": 8,
       "maidens": 0,
-      "runs": 54,
+      "runs": 42,
       "wickets": 1,
-      "economy": 5.4
+      "economy": 5.25
     },
     {
       "id": "w-m-shared-44-1-4",
       "inningsId": "m-shared-44-1",
       "playerId": "p-prithviraj-singh-tomar",
-      "overs": 10,
+      "overs": 8,
       "maidens": 0,
-      "runs": 45,
-      "wickets": 1,
+      "runs": 36,
+      "wickets": 0,
       "economy": 4.5
     },
     {
@@ -44621,7 +44621,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 57,
-      "wickets": 0,
+      "wickets": 1,
       "economy": 3.8
     },
     {
@@ -44661,7 +44661,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 67,
-      "wickets": 3,
+      "wickets": 2,
       "economy": 4.47
     },
     {
@@ -44861,7 +44861,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 55,
-      "wickets": 1,
+      "wickets": 2,
       "economy": 3.67
     },
     {
@@ -44901,7 +44901,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 67,
-      "wickets": 1,
+      "wickets": 0,
       "economy": 4.47
     },
     {
@@ -45101,7 +45101,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 37,
-      "wickets": 0,
+      "wickets": 1,
       "economy": 2.47
     },
     {
@@ -45141,7 +45141,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 52,
-      "wickets": 5,
+      "wickets": 4,
       "economy": 3.47
     },
     {
@@ -45268,61 +45268,61 @@
       "id": "w-m-shared-48-1-0",
       "inningsId": "m-shared-48-1",
       "playerId": "p-akhil-mishra",
-      "overs": 15,
+      "overs": 13,
       "maidens": 0,
-      "runs": 42,
+      "runs": 35,
       "wickets": 1,
-      "economy": 2.8
+      "economy": 2.69
     },
     {
       "id": "w-m-shared-48-1-1",
       "inningsId": "m-shared-48-1",
       "playerId": "p-rajat-patidar",
-      "overs": 15,
+      "overs": 13,
       "maidens": 0,
-      "runs": 51,
+      "runs": 42,
       "wickets": 0,
-      "economy": 3.4
+      "economy": 3.23
     },
     {
       "id": "w-m-shared-48-1-2",
       "inningsId": "m-shared-48-1",
       "playerId": "p-shivam-shukla",
-      "overs": 15,
+      "overs": 13,
       "maidens": 0,
-      "runs": 52,
+      "runs": 44,
       "wickets": 0,
-      "economy": 3.47
+      "economy": 3.38
     },
     {
       "id": "w-m-shared-48-1-3",
       "inningsId": "m-shared-48-1",
       "playerId": "p-ritesh-shakya",
-      "overs": 15,
+      "overs": 13,
       "maidens": 0,
-      "runs": 45,
+      "runs": 37,
       "wickets": 2,
-      "economy": 3.0
+      "economy": 2.85
     },
     {
       "id": "w-m-shared-48-1-4",
       "inningsId": "m-shared-48-1",
       "playerId": "p-jaydev-singh",
-      "overs": 15,
+      "overs": 13,
       "maidens": 0,
-      "runs": 37,
+      "runs": 30,
       "wickets": 1,
-      "economy": 2.47
+      "economy": 2.31
     },
     {
       "id": "w-m-shared-48-1-5",
       "inningsId": "m-shared-48-1",
       "playerId": "p-harsh-gawli",
-      "overs": 15,
+      "overs": 13,
       "maidens": 0,
-      "runs": 38,
-      "wickets": 2,
-      "economy": 2.53
+      "runs": 32,
+      "wickets": 1,
+      "economy": 2.46
     },
     {
       "id": "w-m-shared-48-2-0",
@@ -45341,7 +45341,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 46,
-      "wickets": 0,
+      "wickets": 1,
       "economy": 3.07
     },
     {
@@ -45381,7 +45381,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 67,
-      "wickets": 3,
+      "wickets": 2,
       "economy": 4.47
     },
     {
@@ -45581,7 +45581,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 59,
-      "wickets": 0,
+      "wickets": 1,
       "economy": 3.93
     },
     {
@@ -45621,7 +45621,7 @@
       "overs": 15,
       "maidens": 0,
       "runs": 52,
-      "wickets": 4,
+      "wickets": 3,
       "economy": 3.47
     },
     {
@@ -45791,7 +45791,7 @@
       "overs": 4,
       "maidens": 0,
       "runs": 38,
-      "wickets": 6,
+      "wickets": 5,
       "economy": 9.5
     },
     {
@@ -45960,9 +45960,9 @@
       "playerId": "p-kishan-kumar",
       "overs": 4,
       "maidens": 0,
-      "runs": 29,
+      "runs": 28,
       "wickets": 1,
-      "economy": 7.25
+      "economy": 7.0
     },
     {
       "id": "w-m-shared-52-1-1",
@@ -45970,39 +45970,39 @@
       "playerId": "p-tim-david",
       "overs": 4,
       "maidens": 0,
-      "runs": 32,
+      "runs": 31,
       "wickets": 0,
-      "economy": 8.0
+      "economy": 7.75
     },
     {
       "id": "w-m-shared-52-1-2",
       "inningsId": "m-shared-52-1",
       "playerId": "p-rasikh-dar-salam",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 26,
+      "runs": 19,
       "wickets": 1,
-      "economy": 6.5
+      "economy": 6.33
     },
     {
       "id": "w-m-shared-52-1-3",
       "inningsId": "m-shared-52-1",
       "playerId": "p-jacob-bethell",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 29,
+      "runs": 21,
       "wickets": 2,
-      "economy": 7.25
+      "economy": 7.0
     },
     {
       "id": "w-m-shared-52-1-4",
       "inningsId": "m-shared-52-1",
       "playerId": "p-mohit-rathee",
-      "overs": 4,
+      "overs": 3,
       "maidens": 0,
-      "runs": 22,
-      "wickets": 4,
-      "economy": 5.5
+      "runs": 16,
+      "wickets": 3,
+      "economy": 5.33
     },
     {
       "id": "w-m-shared-52-2-0",
@@ -46121,7 +46121,7 @@
       "overs": 4,
       "maidens": 0,
       "runs": 33,
-      "wickets": 1,
+      "wickets": 2,
       "economy": 8.25
     },
     {
@@ -46161,7 +46161,7 @@
       "overs": 4,
       "maidens": 0,
       "runs": 24,
-      "wickets": 3,
+      "wickets": 2,
       "economy": 6.0
     },
     {
@@ -46221,7 +46221,7 @@
       "overs": 4,
       "maidens": 0,
       "runs": 35,
-      "wickets": 0,
+      "wickets": 1,
       "economy": 8.75
     },
     {
@@ -46261,8 +46261,148 @@
       "overs": 4,
       "maidens": 0,
       "runs": 35,
-      "wickets": 6,
+      "wickets": 5,
       "economy": 8.75
+    },
+    {
+      "id": "w-m-shared-2-1-729",
+      "inningsId": "m-shared-2-1",
+      "playerId": "p-kanishk-dubey",
+      "overs": 3,
+      "maidens": 0,
+      "runs": 27,
+      "wickets": 1,
+      "economy": 9.0
+    },
+    {
+      "id": "w-m-shared-13-1-730",
+      "inningsId": "m-shared-13-1",
+      "playerId": "p-sagar-solanki",
+      "overs": 3,
+      "maidens": 0,
+      "runs": 22,
+      "wickets": 1,
+      "economy": 7.33
+    },
+    {
+      "id": "w-m-shared-16-1-731",
+      "inningsId": "m-shared-16-1",
+      "playerId": "p-aditya-shrivastava",
+      "overs": 3,
+      "maidens": 0,
+      "runs": 26,
+      "wickets": 1,
+      "economy": 8.67
+    },
+    {
+      "id": "w-m-shared-18-2-732",
+      "inningsId": "m-shared-18-2",
+      "playerId": "p-avesh-khan",
+      "overs": 7,
+      "maidens": 0,
+      "runs": 42,
+      "wickets": 1,
+      "economy": 6.0
+    },
+    {
+      "id": "w-m-shared-25-1-733",
+      "inningsId": "m-shared-25-1",
+      "playerId": "p-prabhanshu-shukla",
+      "overs": 3,
+      "maidens": 0,
+      "runs": 20,
+      "wickets": 1,
+      "economy": 6.67
+    },
+    {
+      "id": "w-m-shared-26-1-734",
+      "inningsId": "m-shared-26-1",
+      "playerId": "p-amarjeet-kumar-singh",
+      "overs": 3,
+      "maidens": 0,
+      "runs": 25,
+      "wickets": 1,
+      "economy": 8.33
+    },
+    {
+      "id": "w-m-shared-27-2-735",
+      "inningsId": "m-shared-27-2",
+      "playerId": "p-mohd-arshad-khan",
+      "overs": 7,
+      "maidens": 0,
+      "runs": 53,
+      "wickets": 1,
+      "economy": 7.57
+    },
+    {
+      "id": "w-m-shared-29-1-736",
+      "inningsId": "m-shared-29-1",
+      "playerId": "p-avesh-khan",
+      "overs": 7,
+      "maidens": 0,
+      "runs": 42,
+      "wickets": 1,
+      "economy": 6.0
+    },
+    {
+      "id": "w-m-shared-30-2-737",
+      "inningsId": "m-shared-30-2",
+      "playerId": "p-avesh-khan",
+      "overs": 7,
+      "maidens": 0,
+      "runs": 31,
+      "wickets": 1,
+      "economy": 4.43
+    },
+    {
+      "id": "w-m-shared-31-1-738",
+      "inningsId": "m-shared-31-1",
+      "playerId": "p-radhakrishna-dwivedi",
+      "overs": 7,
+      "maidens": 0,
+      "runs": 31,
+      "wickets": 1,
+      "economy": 4.43
+    },
+    {
+      "id": "w-m-shared-34-1-739",
+      "inningsId": "m-shared-34-1",
+      "playerId": "p-anant-verma",
+      "overs": 12,
+      "maidens": 0,
+      "runs": 51,
+      "wickets": 1,
+      "economy": 4.25
+    },
+    {
+      "id": "w-m-shared-44-1-740",
+      "inningsId": "m-shared-44-1",
+      "playerId": "p-prabhanshu-shukla",
+      "overs": 8,
+      "maidens": 0,
+      "runs": 41,
+      "wickets": 1,
+      "economy": 5.12
+    },
+    {
+      "id": "w-m-shared-48-1-741",
+      "inningsId": "m-shared-48-1",
+      "playerId": "p-prabhanshu-shukla",
+      "overs": 12,
+      "maidens": 0,
+      "runs": 45,
+      "wickets": 1,
+      "economy": 3.75
+    },
+    {
+      "id": "w-m-shared-52-1-742",
+      "inningsId": "m-shared-52-1",
+      "playerId": "p-bhuvneshwar-kumar",
+      "overs": 3,
+      "maidens": 0,
+      "runs": 23,
+      "wickets": 1,
+      "economy": 7.67
     }
   ]
 }
