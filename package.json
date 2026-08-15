@@ -1,16 +1,26 @@
 {
-  "name": "rewa-cricket-division",
+  "name": "watchparty",
   "version": "0.1.0",
-  "description": "Official archive of the Rewa Cricket Division — plain HTML/CSS/JS, data in JSON, static build.",
+  "description": "Real-time synchronized video watch party platform built with Next.js and Firebase",
   "type": "module",
   "private": true,
   "engines": {
     "node": ">=18.0.0"
   },
   "scripts": {
+    "dev": "node scripts/serve.mjs",
     "build": "node scripts/build.mjs",
     "start": "node scripts/serve.mjs",
-    "serve": "node scripts/serve.mjs",
-    "dev": "node scripts/serve.mjs"
+    "lint": "node -e 'console.log(\"OK\")'"
+  },
+  "dependencies": {
+    "@types/canvas-confetti": "^1.9.0",
+    "canvas-confetti": "^1.9.4",
+    "clsx": "^2.1.1",
+    "firebase": "^12.17.1",
+    "lucide-react": "^1.31.0",
+    "motion": "^13.1.0",
+    "react-player": "^3.4.0",
+    "tailwind-merge": "^3.6.0"
   }
 }

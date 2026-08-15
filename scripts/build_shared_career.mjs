@@ -180,20 +180,48 @@ const distinctOf = (names, pickName, notName) => {
   if (names[j] === notName) j = (j + 1) % names.length;
   return names[j];
 };
+function extractPlayersFromDis(disStr) {
+  if (!disStr || disStr === 'not out' || disStr === '0' || disStr.startsWith('DNB')) return { bowler: null, fielder: null, wk: null };
+  let s = disStr.trim();
+  let bowler = null, fielder = null, wk = null;
+  const mSt = s.match(/st\s+b\s+(.+?)\s+\(wk\s+(.+?)\)/i);
+  if (mSt) {
+    bowler = mSt[1].trim();
+    wk = mSt[2].trim();
+    return { bowler, fielder: null, wk };
+  }
+  const mCB = s.match(/^c\s*&\s*b\s+(.+)$/i);
+  if (mCB) {
+    bowler = mCB[1].trim();
+    return { bowler, fielder: bowler, wk: null };
+  }
+  const mC = s.match(/^c\s+(.+?)\s+b\s+(.+)$/i);
+  if (mC) {
+    fielder = mC[1].trim();
+    bowler = mC[2].trim();
+    return { bowler, fielder, wk: null };
+  }
+  const mLBW = s.match(/^lbw\s+b\s+(.+)$/i);
+  if (mLBW) {
+    bowler = mLBW[1].trim();
+    return { bowler, fielder: null, wk: null };
+  }
+  const mB = s.match(/^b\s+(.+)$/i);
+  if (mB) {
+    bowler = mB[1].trim();
+    return { bowler, fielder: null, wk: null };
+  }
+  const mRO = s.match(/^run out\s+(.+)$/i);
+  if (mRO) {
+    fielder = mRO[1].trim();
+    return { bowler: null, fielder, wk: null };
+  }
+  return { bowler: null, fielder: null, wk: null };
+}
+
 function realisticDismissal(ledgerDis, xiNames) {
-  if (!ledgerDis || ledgerDis === 'not out' || ledgerDis === '0') return null;
-  const f = (t) => resolveName(t, xiNames);
+  if (!ledgerDis || ledgerDis === 'not out' || ledgerDis === '0' || ledgerDis.startsWith('DNB')) return null;
   let s = ledgerDis.trim();
-  s = s.replace(/^c & b (.+)$/, (_, b) => `c & b ${f(b)}`);
-  s = s.replace(/^c ([^ ]+) b (.+)$/, (_, fl, b) => {
-    const fm = f(fl); const bm = f(b);
-    return `c ${fm} b ${bm === fm ? distinctOf(xiNames, fm, fm) : bm}`;
-  });
-  s = s.replace(/^lbw b (.+)$/, (_, b) => `lbw b ${f(b)}`);
-  s = s.replace(/^b (.+)$/, (_, b) => `b ${f(b)}`);
-  s = s.replace(/^st b ([^ ]+) \(wk ([^)]+)\)$/, (_, b, wk) => `st b ${f(b)} (wk ${f(wk)})`);
-  s = s.replace(/^c (.+)$/, (_, fl) => `c ${f(fl)} b ${f(fl + ' bowl')}`);
-  s = s.replace(/^run out (.+)$/, (_, r) => `run out ${f(r)}`);
   return s;
 }
 function genFillBat(runs, mult) {
@@ -227,15 +255,15 @@ const disTypes = (fn, bn) => { const r = rnd(); if (r < 0.45) return `c ${fn} b 
 const srOf = (r, b) => (b ? +((r / b) * 100).toFixed(2) : 0);
 const parse2ndInn = (note, names, pos) => {
   if (!note) return null;
-  const m = note.match(/2nd inn:\s*(\d+)(\*)?\s*\((\d+)\)/i);
+  const m = note.match(/2nd inn:\s*(\d+)(\*)?\s*\((\d+)\)(?:\s+(.+))?/i);
   if (!m) return null;
   const runs = +m[1];
   const notOut = !!m[2];
   const balls = +m[3];
   const fours = Math.floor(runs / 5);
   const sixes = Math.floor(runs / 25);
-  const dis = notOut ? 'not out' : disTypes(names[Math.floor(rnd() * names.length)], names[Math.floor(rnd() * names.length)]);
-  return { pid: P, pos: pos || 3, runs, balls, fours, sixes, dis, no: notOut, sr: srOf(runs, balls) };
+  let dis = notOut ? null : (m[4] ? m[4].trim() : disTypes(names[Math.floor(rnd() * names.length)], names[Math.floor(rnd() * names.length)]));
+  return { pid: P, pos: pos || 3, runs, balls, fours, sixes, dismissal: dis, dis, no: notOut, sr: srOf(runs, balls), notOut };
 };
 
 // ---------- innings builder ----------
@@ -285,7 +313,7 @@ function makeInnings(match, fmt, innId, battingSide, fieldingSide, marqueeCards,
     total, W, extras,
     cards: slotsArr.map((c) => c.g
       ? { pid: c.pid, runs: c.g.runs, balls: c.g.balls, fours: c.g.fours, sixes: c.g.sixes, dismissal: c.dis, notOut: c.no, strikeRate: srOf(c.g.runs, c.g.balls), position: c.pos }
-      : { pid: c.pid, runs: c.runs, balls: c.balls, fours: c.fours, sixes: c.sixes, dismissal: c.dis, notOut: c.no, strikeRate: c.sr, position: c.pos }),
+      : { pid: c.pid, runs: c.runs, balls: c.balls, fours: c.fours, sixes: c.sixes, dismissal: (c.notOut ?? c.no) ? null : (c.dismissal || c.dis), notOut: c.notOut ?? c.no, strikeRate: c.sr, position: c.pos, isMarquee: true }),
   };
 }
 
@@ -308,19 +336,30 @@ function splitTestBowl(row) {
 let seq = 1;
 const seasonOf = (y) => ({ 2020: 's2020', 2021: 's2021', 2022: 's2022', 2023: 's-2023', 2024: 's-2024', 2025: 's2025' }[y] || 's-2024');
 const sideOf = (teamId) => ({ 't-mp-a': 'MP A', 't-mp-b': 'MP B', 't-rj-a': 'RJ A', 't-rj-b': 'RJ B', 't-de': 'DE', 't-des': 'DES', 't-destroyers': 'Destroyers', 't-lsg-a': 'LSG A', 't-lsg-b': 'LSG B', 't-mi-a': 'MI A', 't-mi-b': 'MI B', 't-rcb-a': 'RCB A', 't-rcb-b': 'RCB B', 't-loc-a': 'Local A', 't-loc-b': 'Local B' }[teamId]);
-const mkSquads = (pool, aMarqId, bMarqId) => {
-  const rest = shuffle(pool).filter((id) => id !== aMarqId && id !== bMarqId);
+const mkSquads = (pool, aMarqId, bMarqId, reqAIds = [], reqBIds = []) => {
+  const reqA = [...new Set([aMarqId, ...reqAIds].filter(Boolean))];
+  const reqB = [...new Set([bMarqId, ...reqBIds].filter(Boolean))];
+  const rest = shuffle(pool).filter((id) => !reqA.includes(id) && !reqB.includes(id));
+  const needA = Math.max(0, 11 - reqA.length);
+  const fillA = rest.slice(0, needA);
+  const restAfterA = rest.slice(needA);
+  const needB = Math.max(0, 11 - reqB.length);
+  const fillB = restAfterA.slice(0, needB);
   return {
-    A: [aMarqId, ...rest.slice(0, 10)],
-    B: bMarqId ? [bMarqId, ...rest.slice(10, 21)] : rest.slice(10, 21),
+    A: [...reqA, ...fillA],
+    B: [...reqB, ...fillB],
   };
 };
-function bowlSide(innId, side, wkts, runsAvail, marqBowlPlan, maxOv, excludeIds = []) {
+function bowlSide(innId, side, wkts, runsAvail, marqBowlPlan, maxOv, excludeIds = [], forcedBowlerIds = []) {
   const isT20 = maxOv <= 20;
   const isODI = maxOv > 20 && maxOv <= 50;
   const perBowlerMax = isT20 ? 4 : isODI ? 10 : 35;
-  const xi = shuffle(side.filter((id) => id !== marqBowlPlan?.pid && !excludeIds.includes(id))).slice(0, 5);
-  const bowlers = marqBowlPlan ? [marqBowlPlan.pid, ...xi] : xi;
+  const forced = forcedBowlerIds.filter((id) => id && id !== marqBowlPlan?.pid && !excludeIds.includes(id) && side.includes(id));
+  const poolForXi = side.filter((id) => id !== marqBowlPlan?.pid && !excludeIds.includes(id) && !forced.includes(id));
+  const needOthers = Math.max(0, 5 - forced.length);
+  const xiOthers = shuffle(poolForXi).slice(0, needOthers);
+  const nonMarqBowlers = [...forced, ...xiOthers];
+  const bowlers = marqBowlPlan ? [marqBowlPlan.pid, ...nonMarqBowlers] : nonMarqBowlers;
   let wLeft = wkts, runsLeft = Math.max(0, runsAvail), ovLeft = maxOv;
   for (let k = 0; k < bowlers.length; k++) {
     const last = k === bowlers.length - 1;
@@ -330,9 +369,10 @@ function bowlSide(innId, side, wkts, runsAvail, marqBowlPlan, maxOv, excludeIds 
       runs = marqBowlPlan.runs;
       w = Math.min(marqBowlPlan.wickets, wkts);
     } else {
+      const isForced = forced.includes(bowlers[k]);
       const maxPossible = Math.min(perBowlerMax, ovLeft);
       ov = last ? maxPossible : clamp(Math.round(ovLeft / (bowlers.length - k)) + ri(-1, 1), 1, maxPossible);
-      w = last ? Math.max(0, wLeft) : Math.min(ri(0, 2), wLeft);
+      w = isForced && wLeft > 0 ? Math.min(Math.max(1, ri(1, 2)), wLeft) : (last ? Math.max(0, wLeft) : Math.min(ri(0, 2), wLeft));
       runs = last ? Math.max(0, runsLeft) : clamp(ri(0, 45), 0, Math.max(0, runsLeft - (bowlers.length - k - 1)));
     }
     ov = Math.min(perBowlerMax, ov);
@@ -349,7 +389,7 @@ function buildMatch({ date, tour, fmt, teamA, teamB, squadA, squadB, marqA, marq
   const tNameA = db.teams.find((t) => t.id === teamA).name, tNameB = db.teams.find((t) => t.id === teamB).name;
   db.matches.push({ id: mid, slug: `${slug(sideOf(teamA))}-vs-${slug(sideOf(teamB))}-${date}`, tournamentId: tour, seasonId: seasonOf(+date.slice(0, 4)), teamAId: teamA, teamBId: teamB, matchDate: date, format: fmt, status: 'completed', resultText: '', matchNumber: seq, notes: note || null, note: null, playerIds: [...new Set([marqA?.pid || null, marqB?.pid || null].filter(Boolean))], ...(stage ? { stage } : {}) });
   const m = db.matches[db.matches.length - 1];
-  const card = (ma, names) => ma && ma.pid && ma.row ? [{ pid: ma.pid, pos: ma.pos, runs: ma.row.R, balls: ma.row.B, fours: ma.row.f4, sixes: ma.row.f6, dis: realisticDismissal(ma.row.dis, names), no: ma.row.dis === 'not out', sr: srOf(ma.row.R, ma.row.B) }] : [];
+  const card = (ma, names) => ma && ma.pid && ma.row ? [{ pid: ma.pid, pos: ma.pos, runs: ma.row.R, balls: ma.row.B, fours: ma.row.f4, sixes: ma.row.f6, dismissal: ma.row.dis === 'not out' ? null : ma.row.dis, dis: ma.row.dis, no: ma.row.dis === 'not out', sr: srOf(ma.row.R, ma.row.B), notOut: ma.row.dis === 'not out', isMarquee: true }] : [];
   const card2 = (ma, names) => {
     if (ma && ma.pid === P && ma.row && ma.row.note) {
       const p2 = parse2ndInn(ma.row.note, names, ma.pos);
@@ -397,17 +437,30 @@ function buildMatch({ date, tour, fmt, teamA, teamB, squadA, squadB, marqA, marq
     A, // Akhil is a non-bowler (opener) in career matches
   ].filter(Boolean);
   const exB = [...exA];
+
+  const getForcedB = (disStr) => {
+    const ep = extractPlayersFromDis(disStr);
+    if (!ep.bowler) return null;
+    const p = db.players.find((pl) => pl.name.toLowerCase() === ep.bowler.toLowerCase() || lastWord(pl.name) === lastWord(ep.bowler));
+    return p ? p.id : null;
+  };
+
+  const forcedB_A1 = getForcedB(marqA?.row?.dis);
+  const forcedB_B1 = getForcedB(marqB?.row?.dis);
+  const card2A = card2(marqA, squadB.map(playerName));
+  const forcedB_A2 = card2A.length ? getForcedB(card2A[0].dismissal) : null;
+
   if (isTest) {
     const ab = marqA && marqA.pid ? splitTestBowl(marqA.row) : [null, null];
     const bb = marqB && marqB.pid ? splitTestBowl(marqB.row) : [null, null];
-    const bw = (innId, side, w, runs, plan, ex) => bowlSide(innId, side, w, runs, plan, fp.maxOv, ex);
-    bw(`${mid}-1`, squadB, a1.W, a1.total - a1.extras, bb[0] ? { ...bb[0], pid: marqB.pid } : null, exB);
-    bw(`${mid}-2`, squadA, b1.W, b1.total - b1.extras, ab[0] ? { ...ab[0], pid: marqA.pid } : null, exA);
-    if (innA2) bw(`${mid}-3`, squadB, a2.W, a2.total - a2.extras, bb[1] ? { ...bb[1], pid: marqB.pid } : null, exB);
-    if (innB2) bw(`${mid}-4`, squadA, b2.W, b2.total - b2.extras, ab[1] ? { ...ab[1], pid: marqA.pid } : null, exA);
+    const bw = (innId, side, w, runs, plan, ex, forced) => bowlSide(innId, side, w, runs, plan, fp.maxOv, ex, forced ? [forced] : []);
+    bw(`${mid}-1`, squadB, a1.W, a1.total - a1.extras, bb[0] ? { ...bb[0], pid: marqB.pid } : null, exB, forcedB_A1);
+    bw(`${mid}-2`, squadA, b1.W, b1.total - b1.extras, ab[0] ? { ...ab[0], pid: marqA.pid } : null, exA, forcedB_B1);
+    if (innA2) bw(`${mid}-3`, squadB, a2.W, a2.total - a2.extras, bb[1] ? { ...bb[1], pid: marqB.pid } : null, exB, forcedB_A2);
+    if (innB2) bw(`${mid}-4`, squadA, b2.W, b2.total - b2.extras, ab[1] ? { ...ab[1], pid: marqA.pid } : null, exA, null);
   } else {
-    bowlSide(`${mid}-1`, squadB, a1.W, a1.total - a1.extras, marqBowl(marqB), fp.maxOv, exB);
-    bowlSide(`${mid}-2`, squadA, b1.W, b1.total - b1.extras, marqBowl(marqA), fp.maxOv, exA);
+    bowlSide(`${mid}-1`, squadB, a1.W, a1.total - a1.extras, marqBowl(marqB), fp.maxOv, exB, forcedB_A1 ? [forcedB_A1] : []);
+    bowlSide(`${mid}-2`, squadA, b1.W, b1.total - b1.extras, marqBowl(marqA), fp.maxOv, exA, forcedB_B1 ? [forcedB_B1] : []);
   }
   seq++;
 }
@@ -423,7 +476,24 @@ const d0 = (row, fallback) => (row && row.date && /^\d{4}-\d{2}-\d{2}$/.test(row
 const lk = (rows, name) => rows.filter((r) => r.match === name);
 
 const mk = (date, row, tour, fmt, teamA, teamB, pool, withAkhil, stage) => {
-  const sq = mkSquads(pool, P, withAkhil ? A : null);
+  const reqNames = [];
+  if (row) {
+    const ep1 = extractPlayersFromDis(row.dis);
+    if (ep1.bowler) reqNames.push(ep1.bowler);
+    if (ep1.fielder) reqNames.push(ep1.fielder);
+    if (ep1.wk) reqNames.push(ep1.wk);
+    if (row.note) {
+      const p2 = parse2ndInn(row.note, [], 3);
+      if (p2 && p2.dismissal) {
+        const ep2 = extractPlayersFromDis(p2.dismissal);
+        if (ep2.bowler) reqNames.push(ep2.bowler);
+        if (ep2.fielder) reqNames.push(ep2.fielder);
+        if (ep2.wk) reqNames.push(ep2.wk);
+      }
+    }
+  }
+  const reqBIds = reqNames.map((n) => pid(n)).filter(Boolean);
+  const sq = mkSquads(pool, P, withAkhil ? A : null, [], reqBIds);
   return { date, tour, fmt, teamA, teamB, squadA: sq.A, squadB: sq.B, marqA: { ...pranav(), row: row.R == null ? null : row }, marqB: withAkhil ? akhil() : none(), note: row.note, ...(stage ? { stage } : {}) };
 };
 const spreadDates = (n, y0, y1, salt) => Array.from({ length: n }, (_, k) => {
@@ -595,6 +665,141 @@ plP.teams = ['t-rewa-jaguars', 't-destroyers', 't-madhya-pradesh', 't-royal-chal
 
 console.log('AKHIL stats updated:', JSON.stringify(plA.stats));
 console.log('PRANAV stats updated:', JSON.stringify(plP.stats));
+
+// ---------- reconcile scorecards (ensure 100% bowler/dismissal agreement) ----------
+function reconcileScorecards(db) {
+  // Purge any previously injected fake bowling entries
+  db.bowling = db.bowling.filter(
+    (bw) => !(bw.id && bw.id.startsWith('w-m-shared-') && bw.overs === 3.0 && bw.runs === 20 && bw.economy === 6.67)
+  );
+
+  function getBowlerFromDismissal(disStr) {
+    if (!disStr || disStr === 'not out' || disStr === '0' || disStr.startsWith('DNB')) return null;
+    const s = disStr.trim();
+    if (s.startsWith('run out')) return null;
+    if (s.startsWith('c & b ')) {
+      return s.replace('c & b ', '').trim();
+    }
+    const m = s.match(/b\s+([^(]+?)(?:\s*\(wk.*?\))?$/i);
+    if (m) return m[1].trim();
+    return null;
+  }
+
+  const lastWord = (n) => (n || '').trim().split(' ').pop().toLowerCase();
+
+  function matchBowler(rawName, bowlers) {
+    if (!rawName) return null;
+    const target = rawName.toLowerCase().trim();
+    let found = bowlers.find((b) => b.name.toLowerCase() === target);
+    if (found) return found;
+    const lw = lastWord(target);
+    found = bowlers.find((b) => lastWord(b.name) === lw);
+    if (found) return found;
+    return null;
+  }
+
+  for (const inn of db.innings) {
+    const bat = db.batting.filter((b) => b.inningsId === inn.id);
+    const bowl = db.bowling.filter((b) => b.inningsId === inn.id);
+    if (!bat.length || !bowl.length) continue;
+
+    const dismissedBatters = bat.filter((b) => !b.notOut);
+
+    const bowlers = bowl.map((bw) => {
+      const p = db.players.find((x) => x.id === bw.playerId);
+      return {
+        record: bw,
+        playerId: bw.playerId,
+        name: p ? p.name : 'Unknown Bowler',
+        claimedBatters: [],
+        target: bw.wickets || 0,
+      };
+    });
+
+    // First pass: Handle marquee batters (P and A). Their dismissal is sacred and never altered!
+    const marqueeDismissed = dismissedBatters.filter((b) => b.playerId === P || b.playerId === A || b.isMarquee);
+    const nonMarqueeDismissed = dismissedBatters.filter((b) => !(b.playerId === P || b.playerId === A || b.isMarquee));
+
+    for (const b of marqueeDismissed) {
+      const rawBName = getBowlerFromDismissal(b.dismissal);
+      if (rawBName) {
+        let assignedBw = matchBowler(rawBName, bowlers);
+        if (!assignedBw) {
+          const pObj = db.players.find((x) => x.name.toLowerCase() === rawBName.toLowerCase() || lastWord(x.name) === lastWord(rawBName));
+          if (pObj) {
+            const availableBw = bowlers.find((bw) => bw.claimedBatters.length === 0 && bw.playerId !== P && bw.playerId !== A);
+            if (availableBw) {
+              availableBw.playerId = pObj.id;
+              availableBw.record.playerId = pObj.id;
+              availableBw.name = pObj.name;
+              assignedBw = availableBw;
+            }
+          }
+        }
+        if (assignedBw) {
+          assignedBw.claimedBatters.push(b);
+          assignedBw.target = Math.max(assignedBw.target, assignedBw.claimedBatters.length);
+        }
+      }
+    }
+
+    // Balance targets for remaining dismissals
+    let currentTotalTarget = bowlers.reduce((s, b) => s + b.target, 0);
+    if (currentTotalTarget !== dismissedBatters.length) {
+      let diff = dismissedBatters.length - currentTotalTarget;
+      if (diff > 0) {
+        bowlers.sort((a, b) => (b.record.overs || 0) - (a.record.overs || 0));
+        for (let i = 0; i < diff; i++) {
+          bowlers[i % bowlers.length].target += 1;
+        }
+      } else if (diff < 0) {
+        for (let i = bowlers.length - 1; i >= 0 && diff < 0; i--) {
+          const canReduce = bowlers[i].target - bowlers[i].claimedBatters.length;
+          if (canReduce > 0) {
+            const reduce = Math.min(canReduce, -diff);
+            bowlers[i].target -= reduce;
+            diff += reduce;
+          }
+        }
+      }
+    }
+
+    // Second pass: Assign non-marquee batters to bowlers needing wickets
+    for (const b of nonMarqueeDismissed) {
+      let assignedBw = bowlers.find((bw) => bw.claimedBatters.length < bw.target);
+      if (!assignedBw) {
+        assignedBw = bowlers[0];
+      }
+      if (assignedBw) {
+        assignedBw.claimedBatters.push(b);
+        const bName = assignedBw.name;
+        if (b.dismissal && b.dismissal.startsWith('run out')) {
+          // keep run out
+        } else if (b.dismissal && b.dismissal.includes('c & b')) {
+          b.dismissal = `c & b ${bName}`;
+        } else if (b.dismissal && b.dismissal.startsWith('st ')) {
+          b.dismissal = `st b ${bName}`;
+        } else if (b.dismissal && b.dismissal.startsWith('lbw ')) {
+          b.dismissal = `lbw b ${bName}`;
+        } else if (b.dismissal && b.dismissal.startsWith('c ')) {
+          const mC = b.dismissal.match(/^c\s+(.+?)\s+b\s+/i);
+          const fielder = mC ? mC[1].trim() : 'Fielder';
+          b.dismissal = fielder.toLowerCase() === bName.toLowerCase() ? `c & b ${bName}` : `c ${fielder} b ${bName}`;
+        } else {
+          b.dismissal = `b ${bName}`;
+        }
+      }
+    }
+
+    for (const bw of bowlers) {
+      bw.record.wickets = bw.claimedBatters.length;
+    }
+
+    inn.wickets = dismissedBatters.length;
+  }
+}
+
+reconcileScorecards(db);
 
 // ---------- rules checker (career matches only) ----------
 {

@@ -1,0 +1,133 @@
+export interface SampleMovie {
+  id: string;
+  title: string;
+  category: 'Full Movie' | 'Trailer' | 'Sci-Fi' | 'Nature / Space' | 'Animation';
+  type: 'youtube' | 'video' | 'hls';
+  url: string;
+  duration: string;
+  year: string;
+  rating: string;
+  description: string;
+  thumbnail: string;
+  backdrop: string;
+}
+
+export const SAMPLE_MOVIES: SampleMovie[] = [
+  {
+    id: 'sintel-open-movie',
+    title: 'Sintel (4K Open Movie)',
+    category: 'Animation',
+    type: 'video',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
+    duration: '14 min',
+    year: '2010',
+    rating: 'PG-13',
+    description: 'A lonely young woman, Sintel, rescues a baby dragon she names Scales. When Scales is abducted by an adult dragon, Sintel embarks on a dangerous quest across the realm.',
+    thumbnail: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600&auto=format&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1200&auto=format&fit=crop',
+  },
+  {
+    id: 'big-buck-bunny',
+    title: 'Big Buck Bunny (Full HD)',
+    category: 'Animation',
+    type: 'video',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    duration: '10 min',
+    year: '2008',
+    rating: 'G',
+    description: 'A large and lovable rabbit named Big Buck Bunny deals with three bullying rodents led by Frank the flying squirrel in a hilarious forest showdown.',
+    thumbnail: 'https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=600&auto=format&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop',
+  },
+  {
+    id: 'tears-of-steel',
+    title: 'Tears of Steel (Sci-Fi 4K)',
+    category: 'Sci-Fi',
+    type: 'video',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4',
+    duration: '12 min',
+    year: '2012',
+    rating: 'PG-13',
+    description: 'Set in a dystopian future in Amsterdam, a group of warriors and scientists gather at the Oude Kerk to stage a crucial historical reenactment in a bid to save the world from robots.',
+    thumbnail: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600&auto=format&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1200&auto=format&fit=crop',
+  },
+  {
+    id: 'elephants-dream',
+    title: 'Elephants Dream',
+    category: 'Full Movie',
+    type: 'video',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+    duration: '11 min',
+    year: '2006',
+    rating: 'PG',
+    description: 'Two strange companions explore a bizarre surreal machine world where Proog guides young Emo through emotional machinery.',
+    thumbnail: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600&auto=format&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?q=80&w=1200&auto=format&fit=crop',
+  },
+  {
+    id: 'for-bigger-blazes',
+    title: 'For Bigger Blazes (Chromecast)',
+    category: 'Nature / Space',
+    type: 'video',
+    url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    duration: '15 min',
+    year: '2023',
+    rating: 'G',
+    description: 'Breathtaking high-definition footage of natural wonders, fire performances, and cinematic landscape photography.',
+    thumbnail: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=600&auto=format&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop',
+  },
+  {
+    id: 'yt-interstellar-trailer',
+    title: 'Interstellar — Official Trailer',
+    category: 'Trailer',
+    type: 'youtube',
+    url: 'https://www.youtube.com/watch?v=zSWdZVtXT7E',
+    duration: '2 min 30 sec',
+    year: '2014',
+    rating: 'PG-13',
+    description: 'When Earth becomes uninhabitable, a team of exoplanet explorers travels through a wormhole in space in an attempt to ensure humanity survival.',
+    thumbnail: 'https://img.youtube.com/vi/zSWdZVtXT7E/hqdefault.jpg',
+    backdrop: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=1200&auto=format&fit=crop',
+  },
+  {
+    id: 'yt-avatar-2-trailer',
+    title: 'Avatar: The Way of Water — Trailer',
+    category: 'Trailer',
+    type: 'youtube',
+    url: 'https://www.youtube.com/watch?v=d9MyW72ELq0',
+    duration: '2 min 20 sec',
+    year: '2022',
+    rating: 'PG-13',
+    description: 'Jake Sully lives with his newfound family formed on the extrasolar moon Pandora. Once a familiar threat returns to finish what was previously started, Jake must work with Neytiri.',
+    thumbnail: 'https://img.youtube.com/vi/d9MyW72ELq0/hqdefault.jpg',
+    backdrop: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1200&auto=format&fit=crop',
+  },
+  {
+    id: 'yt-spider-verse-trailer',
+    title: 'Spider-Man: Across the Spider-Verse',
+    category: 'Trailer',
+    type: 'youtube',
+    url: 'https://www.youtube.com/watch?v=cqGjhVJWtEg',
+    duration: '2 min 40 sec',
+    year: '2023',
+    rating: 'PG',
+    description: 'Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence.',
+    thumbnail: 'https://img.youtube.com/vi/cqGjhVJWtEg/hqdefault.jpg',
+    backdrop: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=1200&auto=format&fit=crop',
+  },
+  {
+    id: 'hls-demo-stream',
+    title: 'Live HLS Stream (Tears of Steel HLS)',
+    category: 'Sci-Fi',
+    type: 'hls',
+    url: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8',
+    duration: 'Live Stream',
+    year: '2024',
+    rating: 'PG-13',
+    description: 'Demonstration HTTP Live Streaming (.m3u8) adaptive bitrate video stream, synced live for watch parties.',
+    thumbnail: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=600&auto=format&fit=crop',
+    backdrop: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop',
+  },
+];

@@ -1,0 +1,87 @@
+{
+  "entities": {
+    "rooms": {
+      "title": "WatchParty Rooms",
+      "description": "Virtual rooms where users gather to watch synchronized videos and chat",
+      "properties": {
+        "name": { "type": "string", "description": "Room name" },
+        "description": { "type": "string", "description": "Room topic or description" },
+        "hostId": { "type": "string", "description": "UID of room host" },
+        "hostName": { "type": "string", "description": "Display name of host" },
+        "currentMedia": {
+          "type": "object", "description": "Currently active playing video",
+          "properties": {
+            "url": { "type": "string" },
+            "title": { "type": "string" },
+            "type": { "type": "string" },
+            "duration": { "type": "number" },
+            "thumbnail": { "type": "string" }
+          }
+        },
+        "playback": {
+          "type": "object", "description": "Real-time playback state",
+          "properties": {
+            "isPlaying": { "type": "boolean" },
+            "currentTime": { "type": "number" },
+            "updatedAt": { "type": "string" },
+            "updatedBy": { "type": "string" },
+            "speed": { "type": "number" }
+          }
+        },
+        "isLocked": { "type": "boolean" },
+        "isPermanent": { "type": "boolean" },
+        "passcode": { "type": "string" },
+        "createdAt": { "type": "string" }
+      }
+    },
+    "rooms/{roomId}/messages": {
+      "title": "Room Chat Messages",
+      "description": "Real-time chat messages and system events in a watch party room",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userAvatar": { "type": "string" },
+        "text": { "type": "string" },
+        "type": { "type": "string" },
+        "timestamp": { "type": "string" }
+      }
+    },
+    "rooms/{roomId}/participants": {
+      "title": "Room Participants",
+      "description": "Active participants in the room",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userAvatar": { "type": "string" },
+        "role": { "type": "string" },
+        "isOnline": { "type": "boolean" },
+        "lastActive": { "type": "string" },
+        "currentTime": { "type": "number" },
+        "isBuffering": { "type": "boolean" }
+      }
+    },
+    "rooms/{roomId}/queue": {
+      "title": "Playlist Queue",
+      "description": "Queued videos in the room playlist",
+      "properties": {
+        "url": { "type": "string" },
+        "title": { "type": "string" },
+        "type": { "type": "string" },
+        "addedBy": { "type": "string" },
+        "addedAt": { "type": "string" },
+        "thumbnail": { "type": "string" }
+      }
+    },
+    "users": {
+      "title": "User Profiles",
+      "description": "Registered WatchParty user profiles",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string" }
+      }
+    }
+  }
+}

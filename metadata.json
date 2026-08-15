@@ -1,6 +1,6 @@
 {
-  "name": "Rewa Cricket Division Archive",
-  "description": "Official archive and records of the Rewa Cricket Division",
-  "requestFramePermissions": [],
+  "name": "WatchParty",
+  "description": "Synchronized real-time video watch party with chat, movie library, playlist queue, and Firebase sync",
+  "requestFramePermissions": ["camera", "microphone"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

@@ -1,0 +1,16 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Default match for all documents - allow read and write for authenticated users (including anonymous)
+    // or allow open access for watch party room participation
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

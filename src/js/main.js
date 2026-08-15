@@ -144,6 +144,104 @@
     }
   }
 
+  // ---- Players page: interactive sorting & filtering ----
+  var grid = document.getElementById('players-list-grid');
+  if (grid) {
+    var cards = Array.prototype.slice.call(grid.querySelectorAll('.player-card-item'));
+    var searchInput = document.getElementById('player-search-input');
+    var roleSelect = document.getElementById('player-role-select');
+    var teamSelect = document.getElementById('player-team-select');
+    var statusSelect = document.getElementById('player-status-select');
+    var sortSelect = document.getElementById('player-sort-select');
+    var resetBtn = document.getElementById('player-filter-reset');
+    var emptyResetBtn = document.getElementById('empty-reset-btn');
+    var countDisplay = document.getElementById('player-count-display');
+    var noMatchEl = document.getElementById('no-players-match');
+
+    var updatePlayers = function () {
+      var q = (searchInput ? searchInput.value : '').toLowerCase().trim();
+      var role = roleSelect ? roleSelect.value : '';
+      var teamId = teamSelect ? teamSelect.value : '';
+      var status = statusSelect ? statusSelect.value : '';
+      var sortBy = sortSelect ? sortSelect.value : 'name-asc';
+
+      var visible = [];
+
+      cards.forEach(function (card) {
+        var name = card.getAttribute('data-name') || '';
+        var cardRole = card.getAttribute('data-role') || '';
+        var cardTeamId = card.getAttribute('data-team-id') || '';
+        var isOfficial = card.getAttribute('data-official') === 'true';
+
+        var matchesQuery = !q || name.indexOf(q) !== -1 || cardRole.toLowerCase().indexOf(q) !== -1;
+        var matchesRole = !role || cardRole.toLowerCase().indexOf(role.toLowerCase()) !== -1;
+        var matchesTeam = !teamId || cardTeamId === teamId;
+        var matchesStatus = !status || (status === 'official' && isOfficial);
+
+        if (matchesQuery && matchesRole && matchesTeam && matchesStatus) {
+          card.style.display = '';
+          visible.push(card);
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Sort visible cards
+      visible.sort(function (a, b) {
+        var nameA = a.getAttribute('data-name') || '';
+        var nameB = b.getAttribute('data-name') || '';
+        var runsA = parseInt(a.getAttribute('data-runs') || '0', 10);
+        var runsB = parseInt(b.getAttribute('data-runs') || '0', 10);
+        var wktsA = parseInt(a.getAttribute('data-wickets') || '0', 10);
+        var wktsB = parseInt(b.getAttribute('data-wickets') || '0', 10);
+        var matA = parseInt(a.getAttribute('data-matches') || '0', 10);
+        var matB = parseInt(b.getAttribute('data-matches') || '0', 10);
+
+        if (sortBy === 'name-asc') return nameA.localeCompare(nameB);
+        if (sortBy === 'name-desc') return nameB.localeCompare(nameA);
+        if (sortBy === 'runs-desc') return runsB - runsA || nameA.localeCompare(nameB);
+        if (sortBy === 'wickets-desc') return wktsB - wktsA || nameA.localeCompare(nameB);
+        if (sortBy === 'matches-desc') return matB - matA || nameA.localeCompare(nameB);
+        return nameA.localeCompare(nameB);
+      });
+
+      // Re-append sorted visible elements to container
+      visible.forEach(function (card) {
+        grid.appendChild(card);
+      });
+
+      // Update count display
+      if (countDisplay) {
+        countDisplay.innerHTML = 'Showing <strong>' + visible.length + '</strong> of ' + cards.length + ' players';
+      }
+
+      if (noMatchEl) {
+        if (visible.length === 0) {
+          noMatchEl.classList.remove('hidden');
+        } else {
+          noMatchEl.classList.add('hidden');
+        }
+      }
+    };
+
+    var resetFilters = function () {
+      if (searchInput) searchInput.value = '';
+      if (roleSelect) roleSelect.value = '';
+      if (teamSelect) teamSelect.value = '';
+      if (statusSelect) statusSelect.value = '';
+      if (sortSelect) sortSelect.value = 'name-asc';
+      updatePlayers();
+    };
+
+    if (searchInput) searchInput.addEventListener('input', updatePlayers);
+    if (roleSelect) roleSelect.addEventListener('change', updatePlayers);
+    if (teamSelect) teamSelect.addEventListener('change', updatePlayers);
+    if (statusSelect) statusSelect.addEventListener('change', updatePlayers);
+    if (sortSelect) sortSelect.addEventListener('change', updatePlayers);
+    if (resetBtn) resetBtn.addEventListener('click', resetFilters);
+    if (emptyResetBtn) emptyResetBtn.addEventListener('click', resetFilters);
+  }
+
   // Footer year
   var year = document.querySelector('[data-year]');
   if (year) year.textContent = String(new Date().getFullYear());
