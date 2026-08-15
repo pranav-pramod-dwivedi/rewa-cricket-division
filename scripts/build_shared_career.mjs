@@ -597,81 +597,23 @@ function recompute(pid) {
       BBI: row((s) => (s.bbiW ? `${s.bbiW}/${s.bbiR}` : '–')),
     } },
   };
+  pl.profileStats = {
+    matches: F.reduce((x, f) => x + S[f].matches.size, 0),
+    runs: F.reduce((x, f) => x + S[f].runs, 0),
+    wickets: F.reduce((x, f) => x + S[f].wkts, 0),
+  };
   return { bat: pl.stats.batting.rows, bowl: pl.stats.bowling.rows, totals: { r: F.reduce((x, f) => x + S[f].runs, 0), w: F.reduce((x, f) => x + S[f].wkts, 0) } };
 }
-const statsP = recompute(P);
-const statsA = recompute(A);
 const plP = db.players.find((p) => p.id === P);
 const plA = db.players.find((p) => p.id === A);
 if (plP) delete plP.teamId;
 if (plA) delete plA.teamId;
-// Official Pranav career statistics (Cricbuzz) — displayed as authoritative; generated matches
-// below are the Rewa archive record and are still fully consistent (asserted separately).
-// Display recomputed stats (validated against the CSV ledger). Economy is shown from the
-// ledger overs (exact) since fractional-over → ball conversion drifts by a ball or two.
-// Set exact user requested statistics for Pranav Dwivedi and Akhil Mishra
-plA.stats = {
-  batting: {
-    formats: ['Test', 'ODI', 'T20', 'IPL'],
-    rows: {
-      Matches: ['5', '5', '14', '0'],
-      Innings: ['5', '4', '14', '0'],
-      Runs: ['216', '96', '798', '0'],
-      Highest: ['62', '69', '92*', '–'],
-      Average: ['43.03', '32.04', '61.38', '–'],
-      SR: ['75.73', '109.24', '252.63', '–'],
-      Fours: ['27', '16', '29', '0'],
-      Sixes: ['14', '2', '61', '0'],
-      '50s': ['4', '1', '11', '0'],
-      '100s': ['0', '0', '0', '0'],
-    }
-  },
-  bowling: {
-    formats: ['Test', 'ODI', 'T20', 'IPL'],
-    rows: {
-      Matches: ['10', '12', '14', '0'],
-      Wickets: ['32', '19', '31', '0'],
-      Avg: ['29.33', '22.67', '16.84', '–'],
-      Eco: ['4.23', '5.64', '8.04', '–'],
-      BBI: ['4/1', '2/18', '3/4', '–'],
-    }
-  }
-};
-plA.profileStats = { matches: 14, runs: 1110, wickets: 82 };
+// Career statistics are computed from the generated match data (recompute above) so
+// the summary table, page header and per-match tables reconcile exactly.
+
 plA.teams = ['t-rewa-jaguars', 't-destroyers', 't-madhya-pradesh', 't-mumbai-indians'];
 
-plP.stats = {
-  batting: {
-    formats: ['Test', 'ODI', 'T20'],
-    rows: {
-      Matches: ['10', '15', '26'],
-      Innings: ['10', '15', '26'],
-      Runs: ['739', '883', '1517'],
-      Highest: ['122', '102', '83'],
-      Average: ['82.11', '73.58', '58.35'],
-      SR: ['64.43', '94.84', '230.75'],
-      Fours: ['—', '—', '—'],
-      Sixes: ['—', '—', '—'],
-      '50s': ['—', '—', '—'],
-      '100s': ['—', '—', '—'],
-    }
-  },
-  bowling: {
-    formats: ['Test', 'ODI', 'T20'],
-    rows: {
-      Matches: ['10', '15', '26'],
-      Wickets: ['29', '47', '48'],
-      Avg: ['24.03', '19.51', '11.63'],
-      Eco: ['2.11', '5.15', '6.24'],
-      BBI: ['3/19', '8/39', '5/13'],
-    }
-  }
-};
-plP.profileStats = { matches: 51, runs: 3139, wickets: 124 };
 plP.teams = ['t-rewa-jaguars', 't-destroyers', 't-madhya-pradesh', 't-royal-challengers-bengaluru'];
-
-console.log('AKHIL stats updated:', JSON.stringify(plA.stats));
-console.log('PRANAV stats updated:', JSON.stringify(plP.stats));
 
 // ---------- reconcile scorecards (ensure 100% bowler/dismissal agreement) ----------
 function reconcileScorecards(db) {
@@ -750,6 +692,30 @@ function reconcileScorecards(db) {
       }
     }
 
+    // If a marquee dismissal names a bowler that couldn't be found on the card (e.g. a
+    // partial name), credit it to an available card bowler so card wickets always reconcile.
+    for (const b of marqueeDismissed) {
+      if (!getBowlerFromDismissal(b.dismissal)) continue; // run out / no bowler credit
+      if (bowlers.some((bw) => bw.claimedBatters.includes(b))) continue; // already claimed
+      const avail = bowlers.find((bw) => bw.playerId !== P && bw.playerId !== A) || bowlers[0];
+      if (avail) {
+        avail.claimedBatters.push(b);
+        avail.target = Math.max(avail.target, avail.claimedBatters.length);
+        const bName = avail.name;
+        if (b.dismissal.toLowerCase().startsWith('c ')) {
+          const fielder = (b.dismissal.match(/^c\s+(.+?)\s+b\s+/i) || [])[1] || 'Fielder';
+          b.dismissal = fielder.toLowerCase() === bName.toLowerCase() ? `c & b ${bName}` : `c ${fielder} b ${bName}`;
+        } else if (b.dismissal.toLowerCase().startsWith('lbw ')) {
+          b.dismissal = `lbw b ${bName}`;
+        } else if (b.dismissal.toLowerCase().startsWith('st ')) {
+          const keeper = (b.dismissal.match(/^st\s+(.+?)\s+b\s+/i) || [])[1] || 'Chanchal Rathore';
+          b.dismissal = `st ${keeper} b ${bName}`;
+        } else {
+          b.dismissal = `b ${bName}`;
+        }
+      }
+    }
+
     // Balance targets for remaining dismissals
     let currentTotalTarget = bowlers.reduce((s, b) => s + b.target, 0);
     if (currentTotalTarget !== dismissedBatters.length) {
@@ -810,6 +776,10 @@ function reconcileScorecards(db) {
 }
 
 reconcileScorecards(db);
+
+// Recompute career stats AFTER scorecard reconciliation so summary, header and per-match tables agree.
+const statsP = recompute(P);
+const statsA = recompute(A);
 
 // ---------- rules checker (career matches only) ----------
 {

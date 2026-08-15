@@ -50,11 +50,20 @@ const legalOversOf = (ov) => {
   const f = Math.floor(o);
   return f + Math.round((o - f) * 10) / 6;
 };
+const ovToBalls = (ov) => {
+  const o = Number(ov) || 0;
+  const f = Math.floor(o);
+  return f * 6 + Math.round((o - f) * 10);
+};
+const ballsToOvers = (balls) => {
+  const b = Math.round(balls || 0);
+  return Math.floor(b / 6) + (b % 6 ? (b % 6) / 10 : 0);
+};
 
 // team-name disambiguation for player page titles (common names collide)
 const teamOf = (p) => (p.teamId ? teamsById.get(p.teamId) : null);
 
-function head({ title, description, path, jsonLd = [], ogType = 'website' }) {
+function head({ title, description, keywords, path, jsonLd = [], ogType = 'website' }) {
   const blocks = Array.isArray(jsonLd) ? jsonLd : [jsonLd];
   return `<!doctype html>
 <html lang="en">
@@ -63,6 +72,7 @@ function head({ title, description, path, jsonLd = [], ogType = 'website' }) {
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>${esc(titleFor(title))}</title>
 <meta name="description" content="${esc(description)}" />
+${keywords ? `<meta name="keywords" content="${esc(keywords)}" />` : ''}
 <link rel="canonical" href="${absUrl(path)}" />
 <meta property="og:site_name" content="${esc(org.name)}" />
 <meta property="og:title" content="${esc(titleFor(title))}" />
@@ -174,9 +184,9 @@ function footer() {
 </html>`;
 }
 
-function layout({ title, description, path, jsonLd = [], ogType, breadcrumbs = [], bodyClass = '' }) {
+function layout({ title, description, keywords, path, jsonLd = [], ogType, breadcrumbs = [], bodyClass = '' }) {
   const crumbItems = [{ name: 'Home', path: '/' }, ...breadcrumbs];
-  return `${head({ title, description, path, jsonLd, ogType })}
+  return `${head({ title, description, keywords, path, jsonLd, ogType })}
 <body class="${bodyClass}">
 ${header(bodyClass.includes('search-pinned'))}
 ${breadcrumbs.length ? crumbs(crumbItems) : ''}
@@ -781,9 +791,17 @@ function renderPlayer(p) {
     return age;
   };
   const age = ageOf(p.dateOfBirth);
+  const seoTeam = team?.name;
+  const seoKw = [
+    p.name, 'cricketer', `${p.name} cricketer`, `${p.name} Rewa`,
+    'Rewa cricketer', 'Rewa Cricket Division', 'RDCA', 'Madhya Pradesh cricket',
+    p.role, seoTeam, 'cricket statistics', 'cricket scorecard',
+  ].filter(Boolean).join(', ');
+  const seoDesc = `${p.name} is a ${p.role}${seoTeam ? ` for ${seoTeam}` : ''} at Rewa Cricket Division (RDCA), Madhya Pradesh. ${p.battingStyle ? p.battingStyle + ' batsman; ' : ''}Browse ${p.name}'s career statistics, batting, bowling and match scorecards — Rewa district cricket.`;
   let html = layout({
-    title: team ? `${p.name} — ${team.name}` : p.name,
-    description: `${p.name} — ${p.role}${team ? ` for ${team.name}` : ''}, Rewa Cricket Division${p.battingStyle ? `, ${p.battingStyle}` : ''}.`,
+    title: team ? `${p.name} — Cricketer — ${team.name}` : `${p.name} — Cricketer — Rewa`,
+    description: seoDesc,
+    keywords: seoKw,
     path: `/players/${p.slug}/`,
     bodyClass: 'profile search-pinned',
     breadcrumbs: [{ name: 'Players', path: '/players/' }, { name: p.name, path: `/players/${p.slug}/` }],
@@ -792,8 +810,12 @@ function renderPlayer(p) {
       '@type': 'Person',
       name: p.name,
       url: absUrl(`/players/${p.slug}/`),
+      ...(p.role ? { jobTitle: p.role, additionalType: 'https://schema.org/Person' } : {}),
+      ...(seoTeam ? { affiliation: { '@type': 'SportsTeam', name: seoTeam } } : {}),
+      ...(p.birthPlace ? { birthPlace: { '@type': 'Place', name: p.birthPlace } } : {}),
       ...(p.dateOfBirth ? { birthDate: p.dateOfBirth } : {}),
-      ...(p.bio ? { description: p.bio } : {}),
+      ...(p.bio ? { description: p.bio } : { description: seoDesc }),
+      knowsAbout: ['cricket', 'Rewa Cricket Division', seoTeam, p.role].filter(Boolean),
     },
   });
   html += `<div class="page-head"><h1>${esc(p.name)} ${isOfficialPlayer(p.id) ? verifiedTick() : ''}</h1><p>${esc(p.role)}${team ? ` · <a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : ''}</p></div>`;
@@ -897,14 +919,36 @@ function renderPlayer(p) {
   const matchLabel = (m) => {
     const a = teamsById.get(m?.teamAId);
     const b = teamsById.get(m?.teamBId);
-    return `${a?.shortCode ?? 'A'} v ${b?.shortCode ?? 'B'} · ${m?.matchDate ?? ''}`;
+    const fmt = m?.format ? `${m.format} · ` : '';
+    return `${fmt}${a?.shortCode ?? 'A'} v ${b?.shortCode ?? 'B'} · ${m?.matchDate ?? ''}`;
   };
   const batRows = batInns.length
     ? `<table><thead><tr><th>Match</th><th class="num">R</th><th class="num">B</th><th class="num">4s</th><th class="num">6s</th><th class="num">SR</th><th>Dismissal</th></tr></thead><tbody>${batInns.map((b) => { const m = matchOf(innOf(b.inningsId)); return `<tr><td>${m ? `<a href="/matches/${esc(m.slug)}/">${esc(matchLabel(m))}</a>` : '—'}</td><td class="num">${b.runs}</td><td class="num">${b.balls ? b.balls : '—'}</td><td class="num">${b.fours ?? 0}</td><td class="num">${b.sixes ?? 0}</td><td class="num">${b.strikeRate?.toFixed(2) ?? '—'}</td><td>${esc(b.dismissal || 'not out')}</td></tr>`; }).join('\n')}</tbody></table>`
     : '';
 
-  const bowlRows = bowlOvers.length
-    ? `<table><thead><tr><th>Match</th><th class="num">O</th><th class="num">M</th><th class="num">R</th><th class="num">W</th><th class="num">Econ</th></tr></thead><tbody>${bowlOvers.map((b) => { const m = matchOf(innOf(b.inningsId)); return `<tr><td>${m ? `<a href="/matches/${esc(m.slug)}/">${esc(matchLabel(m))}</a>` : '—'}</td><td class="num">${b.overs}</td><td class="num">${b.maidens}</td><td class="num">${b.runs}</td><td class="num">${b.wickets}</td><td class="num">${b.economy?.toFixed(2) ?? '—'}</td></tr>`; }).join('\n')}</tbody></table>`
+  const mergedBowlList = [];
+  const mergedBowl = (() => {
+    const byMatch = new Map();
+    for (const w of bowlOvers) {
+      const m = matchOf(innOf(w.inningsId));
+      const key = m ? m.id : w.inningsId;
+      let rec = byMatch.get(key);
+      if (!rec) {
+        rec = { m, balls: 0, maidens: 0, runs: 0, wickets: 0 };
+        byMatch.set(key, rec);
+        mergedBowlList.push(rec);
+      }
+      rec.balls += ovToBalls(w.overs || 0);
+      rec.maidens += w.maidens || 0;
+      rec.runs += w.runs || 0;
+      rec.wickets += w.wickets || 0;
+    }
+    for (const rec of mergedBowlList) rec.overs = ballsToOvers(rec.balls);
+    return mergedBowlList;
+  })();
+
+  const bowlRows = mergedBowl.length
+    ? `<table><thead><tr><th>Match</th><th class="num">O</th><th class="num">M</th><th class="num">R</th><th class="num">W</th><th class="num">Econ</th></tr></thead><tbody>${mergedBowl.map((b) => `<tr><td>${b.m ? `<a href="/matches/${esc(b.m.slug)}/">${esc(matchLabel(b.m))}</a>` : '—'}</td><td class="num">${b.overs}</td><td class="num">${b.maidens}</td><td class="num">${b.runs}</td><td class="num">${b.wickets}</td><td class="num">${b.balls ? (b.runs / (b.balls / 6)).toFixed(2) : '—'}</td></tr>`).join('\n')}</tbody></table>`
     : '';
 
   if (batRows || bowlRows) {
