@@ -11,7 +11,8 @@
     "dev": "node scripts/serve.mjs",
     "build": "node scripts/build.mjs",
     "start": "node scripts/serve.mjs",
-    "lint": "node -e 'console.log(\"OK\")'"
+    "lint": "node -e 'console.log(\"OK\")'",
+    "test": "node scripts/test.mjs"
   },
   "dependencies": {
     "@types/canvas-confetti": "^1.9.0",

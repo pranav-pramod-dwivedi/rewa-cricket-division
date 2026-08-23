@@ -75,3 +75,16 @@ URL structure — swap the data source in the new framework without rebuilding t
 ## Integrity rule
 No match, scorecard, statistic, player, team, tournament, date or result is ever invented.
 Pages render clean empty states until official data is confirmed.
+
+## Agent / machine surfaces (agentic readiness)
+- **Markdown content negotiation** — any page URL returns `text/markdown` when a
+  client sends `Accept: text/markdown` (q-value aware); browsers always get HTML
+  from the same URL. All responses declare `Vary: Accept, Accept-Encoding`.
+- **`.md` convention** — appending `.md` to any page path (`/about.md`) returns the
+  pre-built Markdown variant directly.
+- **`/llms.txt`** — llmstxt.org guide: what the site covers, when agents should use
+  it, how to fetch content, and developer resources (sitemap, search index, JSON-LD).
+- **Agent-friendly 404s** — unknown paths return real HTTP 404; Markdown clients get
+  a short Markdown body linking home, `/llms.txt`, `/sitemap.xml` and section indexes.
+- Implementation: `lib/agentic.mjs` (negotiation + converter), `middleware.ts`
+  (edge negotiation on Vercel), `scripts/serve.mjs` (same behaviour locally).

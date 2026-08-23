@@ -11,6 +11,7 @@
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { htmlToMarkdown, pageTitleFromHtml } from '../lib/agentic.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -301,9 +302,20 @@ const orgLd = {
   url: org.website,
   description: org.description,
   ...(org.keywords?.length ? { keywords: org.keywords.join(', ') } : {}),
-  ...(org.headquarters
-    ? { address: { '@type': 'PostalAddress', addressLocality: org.headquarters } }
-    : {}),
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Rewa',
+    addressRegion: 'Madhya Pradesh',
+    postalCode: '486001',
+    addressCountry: 'IN',
+  },
+  areaServed: 'Rewa Division, Madhya Pradesh, India',
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'official correspondence',
+    email: dsyw.contact.email,
+    availableLanguage: ['English', 'Hindi'],
+  },
 };
 
 const websiteLd = {
@@ -329,6 +341,16 @@ function writePage(relPath, html) {
   const file = join(DIST, relPath, 'index.html');
   mkdirSync(dirname(file), { recursive: true });
   writeFileSync(file, html);
+  // Markdown variant at a predictable sibling URL (e.g. /players/x/ -> /players/x.md);
+  // middleware + dev server negotiate it for `Accept: text/markdown` requests.
+  const mdRel = relPath === '' ? 'index.md' : `${relPath}.md`;
+  writeFileSync(
+    join(DIST, mdRel),
+    htmlToMarkdown(html, {
+      title: pageTitleFromHtml(html),
+      url: absUrl(relPath === '' ? '/' : `/${relPath}/`),
+    }),
+  );
   pages.push(relPath === '' ? '/' : `/${relPath}/`);
   const t = html.match(/<title>(.*?)<\/title>/s)?.[1] ?? '';
   const d = html.match(/<meta name="description" content="(.*?)"/s)?.[1] ?? '';
@@ -1580,6 +1602,70 @@ Sitemap: ${absUrl('/sitemap.xml')}
   writeFileSync(join(DIST, 'robots.txt'), txt);
 }
 
+// llms.txt (https://llmstxt.org) — machine-readable guide for AI agents:
+// what this site is, when to use it, how to fetch content, and where the
+// developer/machine-readable resources live.
+function writeLlmsTxt() {
+  const u = (p) => absUrl(p);
+  const txt = `# ${org.name}
+
+> ${org.description}
+
+This is the official website and permanent archive of organised cricket in the Rewa region of Madhya Pradesh, India, operated with the permission of the division. Every fact is sourced from official records; computed figures are labelled as such.
+
+## When to use this site
+
+Use this site when a task needs authoritative information about cricket in Rewa, Madhya Pradesh:
+
+- **Player research** — career statistics, batting/bowling records and match-by-match scorecards for Rewa cricketers, including those who played for Madhya Pradesh (Ranji Trophy, Vijay Hazare Trophy, Syed Mushtaq Ali Trophy) or the Rewa Jaguars franchise in the Madhya Pradesh League.
+- **Match lookups** — fixtures, results, full scorecards and result summaries for RDCA divisional tournaments, local leagues and cups.
+- **Tournament history** — seasons, champions, formats and governing bodies for inter-district, age-group, inter-school and community tournaments under the division.
+- **Team & venue facts** — squads, team profiles and grounds used in Rewa cricket.
+- **Verifying the organisation** — official description, jurisdiction and contact details for the ${org.name} itself.
+
+Not suitable for: live ball-by-ball commentary, betting/odds data, player contact details, or cricket unrelated to the Rewa region (external matches are archived only because a Rewa player featured in them).
+
+## How to fetch content
+
+- Send \`Accept: text/markdown\` on any page URL to receive a Markdown version (\`Content-Type: text/markdown\`, served with \`Vary: Accept\`). Browsers keep receiving HTML from the same URL.
+- Or simply append \`.md\` to any page path — e.g. ${u('/about')} → ${u('/about.md')}.
+- Keep agents on \`.md\` variants to save context tokens; layout chrome is stripped and scorecards become pipe tables.
+
+## Site map (top-level sections)
+
+- [Home](${u('/')}): latest results, announcements and archive overview
+- [Archive](${u('/archive/')}): the full collection organised by competition category
+- [Matches](${u('/matches/')}): every recorded match with links to full scorecards
+- [Tournaments](${u('/tournaments/')}): official and local competitions by season
+- [Teams](${u('/teams/')}): team profiles and squads
+- [Players](${u('/players/')}): player profiles with career statistics
+- [Venues](${u('/venues/')}): grounds used in Rewa cricket
+- [Stats](${u('/stats/')}): leaderboards computed from verified match data
+- [Records](${u('/records/')}): archive totals and milestones
+- [News](${u('/news/')}): official announcements and MP Sports updates
+- [About](${u('/about/')}): what the division is and how the archive is organised
+- [Contact](${u('/contact/')}): official correspondence details
+
+## Developer resources
+
+- [XML sitemap](${u('/sitemap.xml')}): every public URL (${pages.length} pages)
+- [Robots](${u('/robots.txt')}): crawler policy
+- [Search index](${u('/search-index.json')}): JSON array of {path, title, description} for all pages — use it for offline/full-text lookup without crawling
+- [Structured data]: schema.org JSON-LD embedded in every page head (SportsOrganization, WebSite, SportsTeam, Person, SportsEvent, Place)
+- [Markdown convention]: any page path + \`.md\` returns the Markdown variant as plain text
+
+## Contact
+
+- Organization: ${org.name} (${org.alternateName ?? 'RDCA'})
+- Website: ${org.website}
+- Email: ${dsyw.contact.email}
+- Address: ${org.address || org.headquarters}
+- Correspondence is handled through the MP Directorate of Sports & Youth Welfare (${dsyw.source})
+`;
+  writeFileSync(join(DIST, 'llms.txt'), txt);
+  console.log(`llms.txt ok (${pages.length} pages indexed)`);
+}
+
 // ---------- build ----------
 rmSync(DIST, { recursive: true, force: true }); // clean stale pages first
 mkdirSync(DIST, { recursive: true });
@@ -1788,6 +1874,7 @@ for (const a of aggregates) renderAggregate(a);
 writeSearchIndex();
 writeSitemap();
 writeRobots();
+writeLlmsTxt();
 
 // copy static assets
 for (const [from, to] of [

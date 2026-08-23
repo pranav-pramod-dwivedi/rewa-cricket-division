@@ -13,6 +13,7 @@ import { join, extname, normalize, sep } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
+import { negotiateVariant, MD_VARY, notFoundMarkdown } from '../lib/agentic.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DIST = join(__dirname, '..', 'dist');
@@ -24,6 +25,7 @@ const MIME = {
   '.css': 'text/css; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json',
+  '.md': 'text/markdown; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.xml': 'application/xml; charset=utf-8',
   '.txt': 'text/plain; charset=utf-8',
@@ -41,8 +43,12 @@ const SECURITY_HEADERS = {
   'X-Frame-Options': 'SAMEORIGIN',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+  Vary: MD_VARY,
   'Content-Security-Policy': "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'",
 };
+
+// /players/x/ -> /players/x.md ; / -> /index.md
+const mdFileFor = (path) => join(DIST, path === '/' ? 'index.md' : path.replace(/\/+$/, '') + '.md');
 
 // ---- dynamic sitemap ----
 // Walks dist/ for every index.html and emits absolute URLs using the
@@ -100,6 +106,25 @@ createServer(async (req, res) => {
     if (path === '/robots.txt') {
       const txt = `User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${base}/sitemap.xml\n`;
       send(res, 200, txt, 'text/plain; charset=utf-8');
+      return;
+    }
+
+    // ---- markdown content negotiation (mirrors edge middleware) ----
+    const lastSeg = path.split('/').pop() || '';
+    if (!lastSeg.includes('.') && negotiateVariant(req.headers.accept) === 'markdown') {
+      try {
+        const md = await readFile(mdFileFor(path));
+        const acceptGzip = /gzip/.test(req.headers['accept-encoding'] || '');
+        res.writeHead(200, {
+          'Content-Type': 'text/markdown; charset=utf-8',
+          'Cache-Control': 'public, max-age=0, must-revalidate',
+          ...(acceptGzip ? { 'Content-Encoding': 'gzip' } : {}),
+          ...SECURITY_HEADERS,
+        });
+        res.end(acceptGzip ? gzipSync(md) : md);
+      } catch {
+        send(res, 404, notFoundMarkdown(path), 'text/markdown; charset=utf-8');
+      }
       return;
     }
 
