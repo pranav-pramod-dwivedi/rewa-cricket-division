@@ -573,7 +573,7 @@ function renderTeams() {
   });
   html += `<div class="page-head"><p class="eyebrow">Competition</p><h1>Teams</h1>
     <p>Official team profiles as confirmed by the division.</p></div>`;
-  const visibleTeams = db.teams.filter((t) => t.id !== 't-rcb-hinterland');
+  const visibleTeams = db.teams.filter((t) => t.id !== 't-rcb-hinterland' && t.id !== 't-destroyers');
   html += visibleTeams.length
     ? `<div class="grid grid-2 grid-3">${visibleTeams
         .map(
@@ -589,7 +589,7 @@ function renderTeams() {
 }
 
 function renderTeam(t) {
-  if (t.id === 't-rcb-hinterland') return; // Hinterland is unclickable / unlinked affiliation only
+  if (t.id === 't-rcb-hinterland' || t.id === 't-destroyers') return; // Hinterland & Destroyers are unclickable / unlinked affiliations only
   const inTeams = (p, tid) => Array.isArray(p.teams) && p.teams.includes(tid);
   // Pranav/Akhil stay on their own profiles but are not listed on the RCB/MI squad rosters
   const hiddenFromSquad = (p) =>
@@ -852,7 +852,7 @@ function renderPlayer(p) {
   </dl>`;
   if (p.bio) html += `<section class="section"><h2>About</h2><p class="prose" style="max-width:62ch;margin-top:.6rem">${esc(p.bio)}</p></section>`;
   if (playedTeams.length) {
-    html += `<section class="section"><h2>Teams</h2><div class="chip-row" style="margin-top:.6rem">${shownTeams.map((t) => (UNLINKABLE_TEAMS.has(t.id) || t.id === 't-rcb-hinterland' ? `<span class="chip chip-static chip-unclickable" aria-disabled="true" style="cursor:default;pointer-events:none">${esc(t.name)}</span>` : `<a class="chip" href="/teams/${esc(t.slug)}/">${esc(t.name)}</a>`)).join('')}</div></section>`;
+    html += `<section class="section"><h2>Teams</h2><div class="chip-row" style="margin-top:.6rem">${shownTeams.map((t) => (UNLINKABLE_TEAMS.has(t.id) || t.id === 't-rcb-hinterland' || t.id === 't-destroyers' ? `<span class="chip chip-static chip-unclickable" aria-disabled="true" style="cursor:default;pointer-events:none">${esc(t.name)}</span>` : `<a class="chip" href="/teams/${esc(t.slug)}/">${esc(t.name)}</a>`)).join('')}</div></section>`;
   }
 
   // Rewa archive classification: external matches (state/national) on a Rewa player's record
@@ -1214,7 +1214,7 @@ const FICTIONAL_TOURS = new Set([
 const isFictionalMatch = (m) => FICTIONAL_TOURS.has(m && m.tournamentId);
 // teams withheld from linking on player profiles (per request: RCB / MI + trial sides unclickable)
 const UNLINKABLE_TEAMS = new Set([
-  't-mumbai-indians', 't-royal-challengers-bengaluru', 't-rcb-hinterland',
+  't-mumbai-indians', 't-royal-challengers-bengaluru', 't-rcb-hinterland', 't-destroyers',
   't-mp-a', 't-mp-b', 't-rj-a', 't-rj-b', 't-mi-a', 't-mi-b', 't-de', 't-des',
   't-rcb-a', 't-rcb-b', 't-daredevils', 't-kkr',
 ]);
@@ -1592,7 +1592,7 @@ const aggregates = [
         ? db.tournaments.filter((t) => t.status === 'ongoing' || t.status === 'completed').map((t) =>
             `<section class="section"><h2>${esc(t.name)}</h2>
             <div class="table-wrap" style="margin-top:1rem"><table><thead><tr><th>Team</th><th class="num">P</th><th class="num">W</th><th class="num">L</th><th class="num">NR</th><th class="num">Pts</th></tr></thead><tbody>
-            ${db.teams.filter((tm) => tm.id !== 't-rcb-hinterland').map((tm, i) => `<tr><td><span style="color:var(--muted);margin-right:.5rem">${i + 1}</span><a href="/teams/${esc(tm.slug)}/">${esc(tm.name)}</a></td><td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr>`).join('\n')}
+            ${db.teams.filter((tm) => tm.id !== 't-rcb-hinterland' && tm.id !== 't-destroyers').map((tm, i) => `<tr><td><span style="color:var(--muted);margin-right:.5rem">${i + 1}</span><a href="/teams/${esc(tm.slug)}/">${esc(tm.name)}</a></td><td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr>`).join('\n')}
             </tbody></table></div></section>`).join('\n')
         : empty('No points tables yet', 'Points tables will be published here for ongoing and completed tournaments.')),
   },
