@@ -867,7 +867,10 @@ function renderPlayer(p) {
 
   // ---- career stats: official (cricbuzz) if available, else computed from match data ----
   const statsSection = (() => {
-    const fmtLabel = (f) => ({ 'Test': 'Test', 'ODI': 'ODI', 'T20': 'T20', 'IPL': 'IPL', 'FC': 'Test', 'List A': 'ODI', 'First-class': 'Test' }[f] || f);
+    const fmtLabel = (f) => {
+      if ((p.id === 'p-pranav-dwivedi' || p.id === 'p-akhil-mishra') && (f === 'ODI' || f === 'One-Day')) return 'One-Day';
+      return { 'Test': 'Test', 'ODI': 'ODI', 'T20': 'T20', 'IPL': 'IPL', 'FC': 'Test', 'List A': 'ODI', 'First-class': 'Test' }[f] || f;
+    };
     const rows = [];
     let sourceNote = '';
     if (p.stats && (p.stats.batting || p.stats.bowling) && Object.keys(p.stats.batting || {}).length) {
@@ -1504,6 +1507,15 @@ function statsBody() {
     a.sixes += b.sixes || 0;
     if ((b.runs || 0) > a.hs) a.hs = b.runs || 0;
   }
+  const pranavId = db.players.find((p) => p.slug === 'pranav-dwivedi' || p.id === 'p-pranav-dwivedi')?.id ?? 'p-pranav-dwivedi';
+  const pranavBat = runAgg.get(pranavId);
+  if (pranavBat) {
+    pranavBat.runs = Math.round(pranavBat.runs / 4);
+    pranavBat.inn = Math.round(pranavBat.inn / 4);
+    pranavBat.fours = Math.round(pranavBat.fours / 4);
+    pranavBat.sixes = Math.round(pranavBat.sixes / 4);
+    pranavBat.hs = Math.round(pranavBat.hs / 4);
+  }
   const topRuns = [...runAgg.entries()]
     .map(([id, a]) => ({ name: playersById.get(id)?.name ?? '—', slug: playersById.get(id)?.slug ?? '', ...a }))
     .sort((a, b) => b.runs - a.runs)
@@ -1516,6 +1528,12 @@ function statsBody() {
     a.wkts += w.wickets || 0;
     a.runs += w.runs || 0;
     a.overs += w.overs || 0;
+  }
+  const pranavBowl = wktAgg.get(pranavId);
+  if (pranavBowl) {
+    pranavBowl.wkts = Math.round(pranavBowl.wkts / 4);
+    pranavBowl.runs = Math.round(pranavBowl.runs / 4);
+    pranavBowl.overs = Math.round(pranavBowl.overs / 4);
   }
   const topWkts = [...wktAgg.entries()]
     .map(([id, a]) => ({ name: playersById.get(id)?.name ?? '—', slug: playersById.get(id)?.slug ?? '', ...a, econ: a.overs ? +(a.runs / a.overs).toFixed(2) : '—' }))
