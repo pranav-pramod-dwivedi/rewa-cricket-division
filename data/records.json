@@ -1668,6 +1668,14 @@
       "establishedYear": 2008
     },
     {
+      "id": "t-rcb-hinterland",
+      "name": "RCB Hinterland",
+      "slug": "rcb-hinterland",
+      "shortCode": "RCBH",
+      "description": "RCB Hinterland development and talent scouting roster.",
+      "establishedYear": null
+    },
+    {
       "id": "t-mumbai-indians",
       "name": "Mumbai Indians",
       "slug": "mumbai-indians",
@@ -22669,7 +22677,7 @@
         "t-rewa-jaguars",
         "t-destroyers",
         "t-madhya-pradesh",
-        "t-royal-challengers-bengaluru"
+        "t-rcb-hinterland"
       ]
     },
     {
