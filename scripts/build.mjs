@@ -780,7 +780,8 @@ function renderPlayers() {
 
 function renderPlayer(p) {
   const team = p.teamId ? teamsById.get(p.teamId) : null;
-  const pMatches = db.matches.filter((m) => m.teamAId === p.teamId || m.teamBId === p.teamId);  const batInns = db.batting.filter((b) => b.playerId === p.id);
+  const pMatches = db.matches.filter((m) => m.teamAId === p.teamId || m.teamBId === p.teamId);
+  const batInns = db.batting.filter((b) => b.playerId === p.id);
   const bowlOvers = db.bowling.filter((b) => b.playerId === p.id);
   const batRuns = batInns.reduce((s, b) => s + (b.runs || 0), 0);
   const bowlWkts = bowlOvers.reduce((s, b) => s + (b.wickets || 0), 0);
@@ -789,6 +790,10 @@ function renderPlayer(p) {
   // teams he played for, derived from match history (batting card -> innings team; bowling card -> opposing team)
   const innById = new Map(db.innings.map((i) => [i.id, i]));
   const matchByInn = new Map(db.innings.map((i) => [i.id, db.matches.find((m) => m.id === i.matchId)]));
+  const pMatchIds = new Set();
+  for (const b of batInns) { const inn = innById.get(b.inningsId); if (inn) pMatchIds.add(inn.matchId); }
+  for (const w of bowlOvers) { const inn = innById.get(w.inningsId); if (inn) pMatchIds.add(inn.matchId); }
+  const totalMatchesCount = pMatchIds.size || batInns.length || bowlOvers.length || null;
   const playedTeamIds = new Set();
   for (const b of batInns) { const inn = innById.get(b.inningsId); if (inn) playedTeamIds.add(inn.teamId); }
   for (const w of bowlOvers) {
@@ -845,7 +850,7 @@ function renderPlayer(p) {
   });
   html += `<div class="page-head"><h1>${esc(p.name)} ${isOfficialPlayer(p.id) ? verifiedTick() : ''}</h1><p>${esc(p.role)}${team ? ` · <a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : ''}</p></div>`;
   html += `<dl class="card dl-card" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:720px;margin-bottom:1.5rem">
-    ${[['Role', p.role], team ? ['Team', `<a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>`] : null, p.battingStyle ? ['Batting style', p.battingStyle] : null, p.bowlingStyle ? ['Bowling style', p.bowlingStyle] : null, p.dateOfBirth ? ['Born', `${p.dateOfBirth}${age !== null ? ` (${age} years)` : ''}`] : null, p.birthPlace ? ['Birth place', p.birthPlace] : null, ['Matches', statVal('matches') ?? (batInns.length || '—')], ['Runs', statVal('runs') ?? (batRuns || '—')], ['Wickets', statVal('wickets') ?? (bowlWkts || '—')]]
+    ${[['Role', p.role], team ? ['Team', `<a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>`] : null, p.battingStyle ? ['Batting style', p.battingStyle] : null, p.bowlingStyle ? ['Bowling style', p.bowlingStyle] : null, p.dateOfBirth ? ['Born', `${p.dateOfBirth}${age !== null ? ` (${age} years)` : ''}`] : null, p.birthPlace ? ['Birth place', p.birthPlace] : null, ['Matches', statVal('matches') ?? (totalMatchesCount || '—')], ['Runs', statVal('runs') ?? (batRuns || (batInns.length ? 0 : '—'))], ['Wickets', statVal('wickets') ?? (bowlWkts || (bowlOvers.length ? 0 : '—'))]]
       .filter(Boolean)
       .map(([k, v]) => `<div><dt style="font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">${esc(k)}</dt><dd style="font-weight:600;margin-top:.1rem">${v}</dd></div>`)
       .join('\n')}
@@ -1278,7 +1283,10 @@ function renderMatch(m) {
                 .join('\n')}</tbody></table>`;
             }
             if (bowl.length) {
-              out += `<h3 style="margin:.75rem 0 .5rem;font-size:.95rem">Bowling</h3><table><thead><tr><th>Bowler</th><th class="num">O</th><th class="num">M</th><th class="num">R</th><th class="num">W</th><th class="num">Econ</th></tr></thead><tbody>${bowl
+              const oppTeamId = m.teamAId === inn.teamId ? m.teamBId : m.teamAId;
+              const oppTeam = oppTeamId ? teamsById.get(oppTeamId) : null;
+              const bowlTitle = oppTeam ? `Bowling (${oppTeam.name})` : 'Bowling';
+              out += `<h3 style="margin:.75rem 0 .5rem;font-size:.95rem">${esc(bowlTitle)}</h3><table><thead><tr><th>Bowler</th><th class="num">O</th><th class="num">M</th><th class="num">R</th><th class="num">W</th><th class="num">Econ</th></tr></thead><tbody>${bowl
                 .map((b) => {
                   const p = playersById.get(b.playerId);
                   const clickable = p && p.slug && !isFictionalMatch(m);
