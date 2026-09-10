@@ -83,10 +83,10 @@ describe('htmlToMarkdown', () => {
 
   test('entities decoded incl. numeric and unknown-safe', () => {
     const md = htmlToMarkdown(
-      '<main id="main"><p>A &amp; B &nearr; &#127951; &notanentity; R&amp;D</p></main>',
+      '<main id="main"><p>A &amp; B &nearr; &#169; &notanentity; R&amp;D</p></main>',
       {},
     );
-    assert.ok(md.includes('A & B ↗ 🏏 &notanentity; R&D'));
+    assert.ok(md.includes('A & B ↗ © &notanentity; R&D'));
   });
 
   test('lists and strong/em', () => {

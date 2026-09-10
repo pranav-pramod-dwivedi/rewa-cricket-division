@@ -136,7 +136,7 @@ function header(pinned = true) {
         <small>Official Archive</small>
       </span>
     </a>
-    <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="nav" aria-label="Toggle menu">&#9776;</button>
+    <button class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="nav" aria-label="Toggle menu"><svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><rect y="3" width="20" height="2" rx="1"/><rect y="9" width="20" height="2" rx="1"/><rect y="15" width="20" height="2" rx="1"/></svg></button>
     <nav class="main-nav" data-nav id="nav" aria-label="Primary">
       <ul>
         ${NAV.map(([name, path]) => `<li><a href="${path}">${name}</a></li>`).join('\n')}
@@ -172,9 +172,9 @@ function footer() {
     <div>
       <h3>Franchise Clubs</h3>
       <ul>
-        <li><a href="https://destroyers-rewacricket.pages.dev" target="_blank" rel="noopener">Destroyers CC Portal 🏆</a></li>
-        <li><a href="https://dread-eleven-rewacricket.pages.dev" target="_blank" rel="noopener">Dread Eleven Digital Stadium ⚡</a></li>
-        <li><a href="https://abv-rewacricket.pages.dev" target="_blank" rel="noopener">ABV Memorial Tournament Official 🌐</a></li>
+        <li><a href="https://destroyers-rewacricket.pages.dev" target="_blank" rel="noopener">Destroyers CC Portal</a></li>
+        <li><a href="https://dread-eleven-rewacricket.pages.dev" target="_blank" rel="noopener">Dread Eleven Digital Stadium</a></li>
+        <li><a href="https://abv-rewacricket.pages.dev" target="_blank" rel="noopener">ABV Memorial Tournament Official</a></li>
         <li><a href="/tournaments/atal-bihari-vajpayee-memorial-tournament/">ABV Memorial Tournament (RDCA Hub)</a></li>
       </ul>
     </div>
@@ -232,7 +232,7 @@ function crumbs(items) {
 }
 
 const empty = (title, body) => `<div class="empty">
-  <div class="empty-icon">&#127951;</div>
+  <div class="empty-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
   <h3>${esc(title)}</h3>
   <p>${esc(body)}</p>
 </div>`;
@@ -660,7 +660,7 @@ function renderTeam(t) {
   const clubWebsite = t.website || (t.id === 't-destroyers' ? 'https://destroyers-rewacricket.pages.dev' : (t.id === 't-de' ? 'https://dread-eleven-rewacricket.pages.dev' : null));
   if (clubWebsite) {
     const clubLabel = t.id === 't-destroyers' ? 'Visit Destroyers CC Official Website & Match Centre' : 'Visit Dread Eleven Official Digital Stadium';
-    html += `<p style="margin-bottom:1.5rem"><a href="${esc(clubWebsite)}" target="_blank" rel="noopener" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.4rem;">🌐 ${esc(clubLabel)} &rarr;</a></p>`;
+    html += `<p style="margin-bottom:1.5rem"><a href="${esc(clubWebsite)}" target="_blank" rel="noopener" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.4rem;">${esc(clubLabel)} &rarr;</a></p>`;
   }
 
   html += `<div class="split">
@@ -901,9 +901,9 @@ function renderPlayer(p) {
   }
 
   if (p.id === 'p-pranav-dwivedi') {
-    html += `<p style="margin-top:1.25rem"><a href="https://destroyers-rewacricket.pages.dev/players/pranav-dwivedi" target="_blank" rel="noopener" class="btn btn-primary">🏆 View Pranav Dwivedi on Destroyers CC Portal &rarr;</a></p>`;
+    html += `<p style="margin-top:1.25rem"><a href="https://destroyers-rewacricket.pages.dev/players/pranav-dwivedi" target="_blank" rel="noopener" class="btn btn-primary">View Pranav Dwivedi on Destroyers CC Portal &rarr;</a></p>`;
   } else if (p.id === 'p-akhil-mishra') {
-    html += `<p style="margin-top:1.25rem"><a href="https://dread-eleven-rewacricket.pages.dev/players/akhil-mishra" target="_blank" rel="noopener" class="btn btn-primary">⚡ View Akhil Mishra on Dread Eleven Digital Stadium &rarr;</a></p>`;
+    html += `<p style="margin-top:1.25rem"><a href="https://dread-eleven-rewacricket.pages.dev/players/akhil-mishra" target="_blank" rel="noopener" class="btn btn-primary">View Akhil Mishra on Dread Eleven Digital Stadium &rarr;</a></p>`;
   }
 
   // Rewa archive classification: external matches (state/national) on a Rewa player's record
@@ -1229,9 +1229,9 @@ function renderTournament(t) {
     breadcrumbs: [{ name: 'Tournaments', path: '/tournaments/' }, { name: t.name, path: `/tournaments/${t.slug}/` }],
   });
   html += `<div class="page-head"><p class="eyebrow">${esc(t.format)}${season ? ` · ${season.year} Season` : ''}</p><h1>${esc(t.name)}</h1><p>Status: ${esc(t.status)}</p></div>`;
-  if (isOfficialTournament(t.id) && t.governingBody) html += `<p class="badge badge-official">&#10003; ${esc(t.governingBody)} sanctioned</p>`;
+  if (isOfficialTournament(t.id) && t.governingBody) html += `<p class="badge badge-official">${esc(t.governingBody)} Sanctioned</p>`;
   if (t.description) html += `<p class="prose" style="max-width:62ch;margin-bottom:1rem">${esc(t.description)}</p>`;
-  if (champ) html += `<p class="btn btn-primary" style="margin-bottom:1.5rem">&#127942; Current Champions: ${esc(champ.name)}</p>`;
+  if (champ) html += `<p class="btn btn-primary" style="margin-bottom:1.5rem">Current Champions: ${esc(champ.name)}</p>`;
   if (t.editions && t.editions.length) {
     html += `<section class="section"><div class="section-title"><h2>Tournament Roll of Honour (2021–2026)</h2></div>
       <div class="card table-wrap" style="margin-bottom:2rem">
@@ -1258,9 +1258,9 @@ function renderTournament(t) {
       <h3 style="margin-bottom:0.5rem">Official Franchise Digital Portals</h3>
       <p class="card-meta" style="margin-bottom:1rem">The two marquee franchise clubs competing for the Atal Bihari Vajpayee Memorial Trophy maintain independent official digital arenas:</p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap">
-        <a href="https://abv-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-primary">&#127942; ABV Memorial Tournament Official Portal ↗</a>
-        <a href="https://destroyers-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-secondary">&#127942; Destroyers CC Official Portal</a>
-        <a href="https://dread-eleven-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-secondary">&#9889; Dread Eleven Digital Stadium</a>
+        <a href="https://abv-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-primary">ABV Memorial Tournament Official Portal &rarr;</a>
+        <a href="https://destroyers-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-secondary">Destroyers CC Official Portal &rarr;</a>
+        <a href="https://dread-eleven-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-secondary">Dread Eleven Digital Stadium &rarr;</a>
       </div>
     </div>`;
   }
@@ -1430,8 +1430,8 @@ function renderMatch(m) {
           <h3 style="font-size:1.15rem;margin:0">Explore Full Detailed Ball-by-Ball Scorecards</h3>
         </div>
         <div style="display:flex;gap:1rem;flex-wrap:wrap">
-          <a href="https://destroyers-rewacricket.pages.dev/matches/${esc(m.slug)}" target="_blank" rel="noopener" class="btn btn-primary">&#127942; Destroyers Match Centre &rarr;</a>
-          <a href="https://dread-eleven-rewacricket.pages.dev/matches/${esc(m.slug)}" target="_blank" rel="noopener" class="btn btn-primary">&#9889; Dread Eleven Scorecard &rarr;</a>
+          <a href="https://destroyers-rewacricket.pages.dev/matches/${esc(m.slug)}" target="_blank" rel="noopener" class="btn btn-primary">Destroyers Match Centre &rarr;</a>
+          <a href="https://dread-eleven-rewacricket.pages.dev/matches/${esc(m.slug)}" target="_blank" rel="noopener" class="btn btn-primary">Dread Eleven Scorecard &rarr;</a>
         </div>
       </div>
     </section>`;
@@ -1621,7 +1621,7 @@ function renderLive() {
     path: '/live/',
   });
   html += `<div class="page-head"><p class="eyebrow">Scoreboard</p><h1>Live &amp; Recent Results</h1></div>
-  <section class="section"><div class="section-title"><h2>&#128308; Live Now</h2></div>
+  <section class="section"><div class="section-title"><h2><span class="live-dot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#dc2626;vertical-align:middle;margin-right:6px;"></span>Live Now</h2></div>
   ${live.length ? `<div class="grid grid-2">${live.map(matchCard).join('\n')}</div>` : `<p class="card-meta">No matches are currently live.</p>`}</section>
   <section class="section"><h2>Recent Results</h2>
   <div class="grid grid-2 grid-3" style="margin-top:1rem">${recent.length ? recent.map(matchCard).join('\n') : empty('No results published yet', 'Official results will appear here once confirmed by the Rewa Cricket Division.')}</div></section>`;
@@ -1862,16 +1862,16 @@ renderStatic({
   <div class="search-suggestions-wrap" style="margin: 1.25rem 0 2rem;">
     <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
       <span class="card-meta" style="font-weight:700; text-transform:uppercase; font-size:0.75rem; color:var(--brand, #b31b1b);">Suggestions:</span>
-      <button type="button" class="search-suggest-chip" data-search="Kuldeep Sen">⚡ Kuldeep Sen</button>
-      <button type="button" class="search-suggest-chip" data-search="Pranav Dwivedi">🔥 Pranav Dwivedi</button>
-      <button type="button" class="search-suggest-chip" data-search="Akhil Mishra">⚡ Akhil Mishra</button>
-      <button type="button" class="search-suggest-chip" data-search="Ranji Trophy">🏆 Ranji Trophy Champions</button>
-      <button type="button" class="search-suggest-chip" data-search="MPL">🏏 MP League (MPL)</button>
-      <button type="button" class="search-suggest-chip" data-search="Atal Bihari">🛡️ ABV Tournament</button>
-      <button type="button" class="search-suggest-chip" data-search="Awadhesh Pratap">🏟️ APSU Stadium</button>
+      <button type="button" class="search-suggest-chip" data-search="Kuldeep Sen">Kuldeep Sen</button>
+      <button type="button" class="search-suggest-chip" data-search="Pranav Dwivedi">Pranav Dwivedi</button>
+      <button type="button" class="search-suggest-chip" data-search="Akhil Mishra">Akhil Mishra</button>
+      <button type="button" class="search-suggest-chip" data-search="Ranji Trophy">Ranji Trophy Champions</button>
+      <button type="button" class="search-suggest-chip" data-search="MPL">MP League (MPL)</button>
+      <button type="button" class="search-suggest-chip" data-search="Atal Bihari">ABV Tournament</button>
+      <button type="button" class="search-suggest-chip" data-search="Awadhesh Pratap">APSU Stadium</button>
       <button type="button" class="search-suggest-chip" data-search="Yash Dubey">⭐ Yash Dubey</button>
-      <button type="button" class="search-suggest-chip" data-search="Rewa Jaguars">🏛️ Rewa Jaguars</button>
-      <button type="button" class="search-suggest-chip" data-search="Academy">🏏 Women's Academy</button>
+      <button type="button" class="search-suggest-chip" data-search="Rewa Jaguars">Rewa Jaguars</button>
+      <button type="button" class="search-suggest-chip" data-search="Academy">Women's Academy</button>
     </div>
   </div>
   <p class="search-count hidden" data-search-count></p>
@@ -2087,5 +2087,5 @@ function copyDir(src, dst) {
 }
 if (existsSync(imgSrc)) copyDir(imgSrc, join(DIST, 'img'));
 
-console.log(`✔ Built ${pages.length} pages → dist/`);
+console.log(` Built ${pages.length} pages → dist/`);
 console.log('  pages:', pages.length, '· teams:', db.teams.length, '· players:', db.players.length, '· matches:', db.matches.length);
