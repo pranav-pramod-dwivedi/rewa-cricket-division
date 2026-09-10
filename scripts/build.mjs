@@ -162,10 +162,19 @@ function footer() {
       <ul>
         <li><a href="/matches/">Matches &amp; Results</a></li>
         <li><a href="/tournaments/">Tournaments</a></li>
+        <li><a href="/teams/">Teams &amp; Squads</a></li>
         <li><a href="/records/">Records</a></li>
         <li><a href="/academy/">Women's Cricket Academy</a></li>
         <li><a href="${esc(dsyw.source)}" rel="noopener">MP Sports &amp; Youth Welfare</a></li>
         <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Franchise Clubs</h3>
+      <ul>
+        <li><a href="https://destroyers-rewacricket.pages.dev" target="_blank" rel="noopener">Destroyers CC Portal 🏆</a></li>
+        <li><a href="https://dread-eleven-rewacricket.pages.dev" target="_blank" rel="noopener">Dread Eleven Digital Stadium ⚡</a></li>
+        <li><a href="/tournaments/atal-bihari-vajpayee-memorial-tournament/">ABV Memorial Tournament</a></li>
       </ul>
     </div>
     <div>
@@ -573,7 +582,7 @@ function renderTeams() {
   });
   html += `<div class="page-head"><p class="eyebrow">Competition</p><h1>Teams</h1>
     <p>Official team profiles as confirmed by the division.</p></div>`;
-  const visibleTeams = db.teams.filter((t) => t.id !== 't-rcb-hinterland' && t.id !== 't-destroyers');
+  const visibleTeams = db.teams.filter((t) => t.id !== 't-rcb-hinterland' && t.id !== 't-des');
   html += visibleTeams.length
     ? `<div class="grid grid-2 grid-3">${visibleTeams
         .map(
@@ -589,7 +598,7 @@ function renderTeams() {
 }
 
 function renderTeam(t) {
-  if (t.id === 't-rcb-hinterland' || t.id === 't-destroyers') return; // Hinterland & Destroyers are unclickable / unlinked affiliations only
+  if (t.id === 't-rcb-hinterland' || t.id === 't-des') return; // Hinterland & duplicate aliases only
   const inTeams = (p, tid) => Array.isArray(p.teams) && p.teams.includes(tid);
   // Pranav/Akhil stay on their own profiles but are not listed on the RCB/MI squad rosters
   const hiddenFromSquad = (p) =>
@@ -622,6 +631,12 @@ function renderTeam(t) {
   });
   html += `<div class="page-head"><h1>${esc(t.name)}</h1>${t.establishedYear ? `<p>Established ${t.establishedYear}</p>` : ''}</div>`;
   if (t.description) html += `<p class="prose" style="max-width:62ch;margin-bottom:1.5rem">${esc(t.description)}</p>`;
+
+  const clubWebsite = t.website || (t.id === 't-destroyers' ? 'https://destroyers-rewacricket.pages.dev' : (t.id === 't-de' ? 'https://dread-eleven-rewacricket.pages.dev' : null));
+  if (clubWebsite) {
+    const clubLabel = t.id === 't-destroyers' ? 'Visit Destroyers CC Official Website & Match Centre' : 'Visit Dread Eleven Official Digital Stadium';
+    html += `<p style="margin-bottom:1.5rem"><a href="${esc(clubWebsite)}" target="_blank" rel="noopener" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:0.4rem;">🌐 ${esc(clubLabel)} &rarr;</a></p>`;
+  }
 
   html += `<div class="split">
     <section class="section" style="margin-top:0">
@@ -857,7 +872,13 @@ function renderPlayer(p) {
   </dl>`;
   if (p.bio) html += `<section class="section"><h2>About</h2><p class="prose" style="max-width:62ch;margin-top:.6rem">${esc(p.bio)}</p></section>`;
   if (playedTeams.length) {
-    html += `<section class="section"><h2>Teams</h2><div class="chip-row" style="margin-top:.6rem">${shownTeams.map((t) => (UNLINKABLE_TEAMS.has(t.id) || t.id === 't-rcb-hinterland' || t.id === 't-destroyers' ? `<span class="chip chip-static chip-unclickable" aria-disabled="true" style="cursor:default;pointer-events:none">${esc(t.name)}</span>` : `<a class="chip" href="/teams/${esc(t.slug)}/">${esc(t.name)}</a>`)).join('')}</div></section>`;
+    html += `<section class="section"><h2>Teams</h2><div class="chip-row" style="margin-top:.6rem">${shownTeams.map((t) => (UNLINKABLE_TEAMS.has(t.id) || t.id === 't-rcb-hinterland' ? `<span class="chip chip-static chip-unclickable" aria-disabled="true" style="cursor:default;pointer-events:none">${esc(t.name)}</span>` : `<a class="chip" href="/teams/${esc(t.slug)}/">${esc(t.name)}</a>`)).join('')}</div></section>`;
+  }
+
+  if (p.id === 'p-pranav-dwivedi') {
+    html += `<p style="margin-top:1.25rem"><a href="https://destroyers-rewacricket.pages.dev/players/pranav-dwivedi" target="_blank" rel="noopener" class="btn btn-primary">🏆 View Pranav Dwivedi on Destroyers CC Portal &rarr;</a></p>`;
+  } else if (p.id === 'p-akhil-mishra') {
+    html += `<p style="margin-top:1.25rem"><a href="https://dread-eleven-rewacricket.pages.dev/players/akhil-mishra" target="_blank" rel="noopener" class="btn btn-primary">⚡ View Akhil Mishra on Dread Eleven Digital Stadium &rarr;</a></p>`;
   }
 
   // Rewa archive classification: external matches (state/national) on a Rewa player's record
@@ -1207,6 +1228,16 @@ function renderTournament(t) {
       </div>
     </section>`;
   }
+  if (t.id === 't-atal-bihari-vajpayee-memorial') {
+    html += `<div class="card" style="margin-bottom:2rem;padding:1.5rem">
+      <h3 style="margin-bottom:0.5rem">Official Franchise Digital Portals</h3>
+      <p class="card-meta" style="margin-bottom:1rem">The two marquee franchise clubs competing for the Atal Bihari Vajpayee Memorial Trophy maintain independent official digital arenas:</p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap">
+        <a href="https://destroyers-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-primary">&#127942; Destroyers CC Official Portal</a>
+        <a href="https://dread-eleven-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-primary">&#9889; Dread Eleven Digital Stadium</a>
+      </div>
+    </div>`;
+  }
   html += `<section class="section"><div class="section-title"><h2>Matches</h2></div>
     <div class="grid grid-2">${tMatches.length ? tMatches.map(matchCard).join('\n') : empty('No matches yet', 'Match fixtures for this tournament will be published here when confirmed.')}</div></section>`;
   html += closeLayout();
@@ -1240,8 +1271,8 @@ const FICTIONAL_TOURS = new Set([
 const isFictionalMatch = (m) => FICTIONAL_TOURS.has(m && m.tournamentId);
 // teams withheld from linking on player profiles (per request: RCB / MI + trial sides unclickable)
 const UNLINKABLE_TEAMS = new Set([
-  't-mumbai-indians', 't-royal-challengers-bengaluru', 't-rcb-hinterland', 't-destroyers',
-  't-mp-a', 't-mp-b', 't-rj-a', 't-rj-b', 't-mi-a', 't-mi-b', 't-de', 't-des',
+  't-mumbai-indians', 't-royal-challengers-bengaluru', 't-rcb-hinterland',
+  't-mp-a', 't-mp-b', 't-rj-a', 't-rj-b', 't-mi-a', 't-mi-b',
   't-rcb-a', 't-rcb-b', 't-daredevils', 't-kkr',
 ]);
 
@@ -1257,7 +1288,7 @@ function getCaptainPlayerId(match, teamId) {
     });
     return played ? 'p-pranav-dwivedi' : 'p-aryan-deshmukh';
   }
-  if (teamId === 't-dread-eleven') {
+  if (teamId === 't-dread-eleven' || teamId === 't-de') {
     const played = db.batting.some((b) => {
       const inn = db.innings.find((i) => i.id === b.inningsId);
       return inn && inn.matchId === match.id && b.playerId === 'p-akhil-mishra';
@@ -1334,11 +1365,11 @@ function renderMatch(m) {
             if (bat.length) {
               out += `<table><thead><tr><th>Batter</th><th class="num">R</th><th class="num">B</th><th class="num">4s</th><th class="num">6s</th><th class="num">SR</th></tr></thead><tbody>${bat
                 .map((b) => {
-                  const p = playersById.get(b.playerId);
-                  const clickable = p && p.slug && !isFictionalMatch(m);
+                  const p = playersById.get(b.playerId) || db.players.find((x) => x.name.toLowerCase() === (b.playerName || '').toLowerCase());
+                  const clickable = Boolean(p && p.slug);
                   const isCapt = b.playerId === batCaptId;
                   const captBadge = isCapt ? ` <span class="badge" style="font-size:0.65rem;padding:0.1rem 0.35rem;font-weight:700;">(c)</span>` : '';
-                  const cell = clickable ? `<a href="/players/${esc(p.slug)}/">${esc(p.name)}</a>${captBadge}` : `${esc(p?.name ?? '—')}${captBadge}`;
+                  const cell = clickable ? `<a href="/players/${esc(p.slug)}/">${esc(p.name)}</a>${captBadge}` : `${esc(p?.name ?? b.playerName ?? '—')}${captBadge}`;
                   return `<tr><td>${cell}<div class="card-meta">${esc(b.dismissal || (b.notOut ? 'not out' : ''))}</div></td><td class="num">${b.runs}</td><td class="num">${b.balls ? b.balls : '—'}</td><td class="num">${b.fours ?? 0}</td><td class="num">${b.sixes ?? 0}</td><td class="num">${b.strikeRate?.toFixed(2) ?? '—'}</td></tr>`;
                 })
                 .join('\n')}</tbody></table>`;
@@ -1348,11 +1379,11 @@ function renderMatch(m) {
               const bowlTitle = oppTeam ? `Bowling (${oppTeam.name})` : 'Bowling';
               out += `<h3 style="margin:.75rem 0 .5rem;font-size:.95rem">${esc(bowlTitle)}</h3><table><thead><tr><th>Bowler</th><th class="num">O</th><th class="num">M</th><th class="num">R</th><th class="num">W</th><th class="num">Econ</th></tr></thead><tbody>${bowl
                 .map((b) => {
-                  const p = playersById.get(b.playerId);
-                  const clickable = p && p.slug && !isFictionalMatch(m);
+                  const p = playersById.get(b.playerId) || db.players.find((x) => x.name.toLowerCase() === (b.playerName || '').toLowerCase());
+                  const clickable = Boolean(p && p.slug);
                   const isCapt = b.playerId === bowlCaptId;
                   const captBadge = isCapt ? ` <span class="badge" style="font-size:0.65rem;padding:0.1rem 0.35rem;font-weight:700;">(c)</span>` : '';
-                  const cell = clickable ? `<a href="/players/${esc(p.slug)}/">${esc(p.name)}</a>${captBadge}` : `${esc(p?.name ?? '—')}${captBadge}`;
+                  const cell = clickable ? `<a href="/players/${esc(p.slug)}/">${esc(p.name)}</a>${captBadge}` : `${esc(p?.name ?? b.playerName ?? '—')}${captBadge}`;
                   return `<tr><td>${cell}</td><td class="num">${b.overs}</td><td class="num">${b.maidens}</td><td class="num">${b.runs}</td><td class="num">${b.wickets}</td><td class="num">${legalOversOf(b.overs) ? (b.runs / legalOversOf(b.overs)).toFixed(2) : '—'}</td></tr>`;
                 })
                 .join('\n')}</tbody></table>`;
@@ -1364,6 +1395,21 @@ function renderMatch(m) {
       : `<p class="card-meta" style="margin-top:1rem">The official scorecard for this match is not yet available.</p>`
   }
   </section>`;
+
+  if (m.tournamentId === 't-atal-bihari-vajpayee-memorial') {
+    html += `<section class="section" style="margin-top:2rem">
+      <div class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border-left:4px solid var(--c-accent,#e5a93c);padding:1.25rem 1.5rem">
+        <div>
+          <p class="eyebrow" style="margin-bottom:0.25rem">Official Franchise Digital Match Centres</p>
+          <h3 style="font-size:1.15rem;margin:0">Explore Full Detailed Ball-by-Ball Scorecards</h3>
+        </div>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap">
+          <a href="https://destroyers-rewacricket.pages.dev/matches/${esc(m.slug)}" target="_blank" rel="noopener" class="btn btn-primary">&#127942; Destroyers Match Centre &rarr;</a>
+          <a href="https://dread-eleven-rewacricket.pages.dev/matches/${esc(m.slug)}" target="_blank" rel="noopener" class="btn btn-primary">&#9889; Dread Eleven Scorecard &rarr;</a>
+        </div>
+      </div>
+    </section>`;
+  }
 
   const notesCleaned = m.notes ? m.notes.split('\n').filter((l) => {
     const line = l.trim().toLowerCase();
