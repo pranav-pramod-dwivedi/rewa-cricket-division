@@ -557,7 +557,47 @@
       "status": "completed",
       "category": "official",
       "governingBody": "RDCA",
-      "scope": "division"
+      "scope": "division",
+      "championTeamId": "t-destroyers",
+      "description": "Prestigious annual Rewa divisional derby tournament contested between Destroyers Cricket Club (DES) and Dread Eleven (DE). Overall series titles stand level at 3\u20133 (Dread Eleven: 2021, 2022, 2023; Destroyers: 2024, 2025, 2026). Current 2026 Champions: Destroyers Cricket Club (def. Dread Eleven 3\u20132).",
+      "editions": [
+        {
+          "year": 2021,
+          "winner": "Dread Eleven",
+          "result": "5\u20132",
+          "captain": "Akhil Mishra"
+        },
+        {
+          "year": 2022,
+          "winner": "Dread Eleven",
+          "result": "4\u20133",
+          "captain": "Akhil Mishra"
+        },
+        {
+          "year": 2023,
+          "winner": "Dread Eleven",
+          "result": "3\u20132",
+          "captain": "Akhil Mishra"
+        },
+        {
+          "year": 2024,
+          "winner": "Destroyers",
+          "result": "4\u20131",
+          "captain": "Pranav Dwivedi"
+        },
+        {
+          "year": 2025,
+          "winner": "Destroyers",
+          "result": "5\u20130",
+          "captain": "Pranav Dwivedi"
+        },
+        {
+          "year": 2026,
+          "winner": "Destroyers",
+          "result": "3\u20132",
+          "captain": "Pranav Dwivedi"
+        }
+      ]
     }
   ],
   "teams": [

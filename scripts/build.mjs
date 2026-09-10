@@ -1185,7 +1185,28 @@ function renderTournament(t) {
   html += `<div class="page-head"><p class="eyebrow">${esc(t.format)}${season ? ` · ${season.year} Season` : ''}</p><h1>${esc(t.name)}</h1><p>Status: ${esc(t.status)}</p></div>`;
   if (isOfficialTournament(t.id) && t.governingBody) html += `<p class="badge badge-official">&#10003; ${esc(t.governingBody)} sanctioned</p>`;
   if (t.description) html += `<p class="prose" style="max-width:62ch;margin-bottom:1rem">${esc(t.description)}</p>`;
-  if (champ) html += `<p class="btn btn-primary" style="margin-bottom:1.5rem">&#127942; Champions: ${esc(champ.name)}</p>`;
+  if (champ) html += `<p class="btn btn-primary" style="margin-bottom:1.5rem">&#127942; Current Champions: ${esc(champ.name)}</p>`;
+  if (t.editions && t.editions.length) {
+    html += `<section class="section"><div class="section-title"><h2>Tournament Roll of Honour (2021–2026)</h2></div>
+      <div class="card table-wrap" style="margin-bottom:2rem">
+        <table>
+          <thead>
+            <tr><th>Edition</th><th>Champion Franchise</th><th>Winning Captain</th><th class="num">Series Margin</th></tr>
+          </thead>
+          <tbody>
+            ${[...t.editions].reverse().map((e) => `
+              <tr>
+                <td><strong>${e.year} Edition</strong></td>
+                <td><strong>${esc(e.winner)}</strong></td>
+                <td>${esc(e.captain)} <span class="badge" style="font-size:0.65rem;padding:0.1rem 0.35rem;font-weight:700;">(c)</span></td>
+                <td class="num font-bold">${esc(e.result)}</td>
+              </tr>
+            `).join('\n')}
+          </tbody>
+        </table>
+      </div>
+    </section>`;
+  }
   html += `<section class="section"><div class="section-title"><h2>Matches</h2></div>
     <div class="grid grid-2">${tMatches.length ? tMatches.map(matchCard).join('\n') : empty('No matches yet', 'Match fixtures for this tournament will be published here when confirmed.')}</div></section>`;
   html += closeLayout();
@@ -1224,6 +1245,31 @@ const UNLINKABLE_TEAMS = new Set([
   't-rcb-a', 't-rcb-b', 't-daredevils', 't-kkr',
 ]);
 
+function getCaptainPlayerId(match, teamId) {
+  if (!match || !teamId) return null;
+  if (teamId === 't-destroyers') {
+    const played = db.batting.some((b) => {
+      const inn = db.innings.find((i) => i.id === b.inningsId);
+      return inn && inn.matchId === match.id && b.playerId === 'p-pranav-dwivedi';
+    }) || db.bowling.some((bo) => {
+      const inn = db.innings.find((i) => i.id === bo.inningsId);
+      return inn && inn.matchId === match.id && bo.playerId === 'p-pranav-dwivedi';
+    });
+    return played ? 'p-pranav-dwivedi' : 'p-aryan-deshmukh';
+  }
+  if (teamId === 't-dread-eleven') {
+    const played = db.batting.some((b) => {
+      const inn = db.innings.find((i) => i.id === b.inningsId);
+      return inn && inn.matchId === match.id && b.playerId === 'p-akhil-mishra';
+    }) || db.bowling.some((bo) => {
+      const inn = db.innings.find((i) => i.id === bo.inningsId);
+      return inn && inn.matchId === match.id && bo.playerId === 'p-akhil-mishra';
+    });
+    return played ? 'p-akhil-mishra' : 'p-yash-dubey';
+  }
+  return null;
+}
+
 function renderMatch(m) {
   const teamA = teamsById.get(m.teamAId);
   const teamB = teamsById.get(m.teamBId);
@@ -1232,6 +1278,14 @@ function renderMatch(m) {
   const season = seasonsById.get(m.seasonId);
   const innings = db.innings.filter((i) => i.matchId === m.id).sort((a, b) => a.battingOrder - b.battingOrder);
   const playersById = new Map(db.players.map((p) => [p.id, p]));
+
+  const captA = getCaptainPlayerId(m, m.teamAId);
+  const captB = getCaptainPlayerId(m, m.teamBId);
+  const pA = captA ? playersById.get(captA) : null;
+  const pB = captB ? playersById.get(captB) : null;
+  const captainsBanner = (pA && pB)
+    ? `<p class="card-meta" style="margin-top:0.65rem"><strong>Captains:</strong> ${esc(teamA?.name)}: ${esc(pA.name)} <span class="badge" style="font-size:0.65rem;padding:0.1rem 0.35rem;font-weight:700;">(c)</span> · ${esc(teamB?.name)}: ${esc(pB.name)} <span class="badge" style="font-size:0.65rem;padding:0.1rem 0.35rem;font-weight:700;">(c)</span></p>`
+    : '';
 
   const title = `${teamA?.name ?? 'Team A'} v ${teamB?.name ?? 'Team B'}`;
   const docTitle = tourn ? `${title} — ${tourn.name}` : title;
@@ -1260,6 +1314,7 @@ function renderMatch(m) {
     <p class="eyebrow">${esc(tourn?.name ?? 'Match')}${season ? ` · ${season.year} Season` : ''}${m.stage ? ` · ${esc(m.stage)}` : ''}</p>
     <h1 style="margin-top:.25rem">${esc(title)}</h1>
     <p class="card-meta">${esc(dateTxt(m))}${m.startTime ? ' at ' + esc(m.startTime) : ''}${venue ? ` · ${esc(venue.name)}` : ''}${venue?.city ? `, ${esc(venue.city)}` : ''}</p>
+    ${captainsBanner}
     ${scopeBadge(tourn) ? `<p style="margin-top:.75rem">${scopeBadge(tourn)}${scopeOf(tourn) !== 'division' ? ` <span class="card-meta">External match — archived because a Rewa player featured in it.</span>` : ''}</p>` : ''}
     ${m.resultText ? `<p class="btn btn-primary" style="margin-top:1rem;pointer-events:none">${esc(m.resultText)}</p>` : ''}
   </div>
@@ -1271,26 +1326,33 @@ function renderMatch(m) {
             const team = teamsById.get(inn.teamId);
             const bat = db.batting.filter((b) => b.inningsId === inn.id);
             const bowl = db.bowling.filter((b) => b.inningsId === inn.id);
+            const batCaptId = getCaptainPlayerId(m, inn.teamId);
+            const oppTeamId = m.teamAId === inn.teamId ? m.teamBId : m.teamAId;
+            const bowlCaptId = oppTeamId ? getCaptainPlayerId(m, oppTeamId) : null;
+
             let out = `<div class="card table-wrap"><h3 style="margin-bottom:.5rem">${esc(team?.name ?? 'Team')} ${inn.runs != null ? inn.runs + '/' + (inn.wickets ?? '') : ''}${inn.overs != null ? ` (${inn.overs} ov)` : ''}</h3>`;
             if (bat.length) {
               out += `<table><thead><tr><th>Batter</th><th class="num">R</th><th class="num">B</th><th class="num">4s</th><th class="num">6s</th><th class="num">SR</th></tr></thead><tbody>${bat
                 .map((b) => {
                   const p = playersById.get(b.playerId);
                   const clickable = p && p.slug && !isFictionalMatch(m);
-                  const cell = clickable ? `<a href="/players/${esc(p.slug)}/">${esc(p.name)}</a>` : esc(p?.name ?? '—');
+                  const isCapt = b.playerId === batCaptId;
+                  const captBadge = isCapt ? ` <span class="badge" style="font-size:0.65rem;padding:0.1rem 0.35rem;font-weight:700;">(c)</span>` : '';
+                  const cell = clickable ? `<a href="/players/${esc(p.slug)}/">${esc(p.name)}</a>${captBadge}` : `${esc(p?.name ?? '—')}${captBadge}`;
                   return `<tr><td>${cell}<div class="card-meta">${esc(b.dismissal || (b.notOut ? 'not out' : ''))}</div></td><td class="num">${b.runs}</td><td class="num">${b.balls ? b.balls : '—'}</td><td class="num">${b.fours ?? 0}</td><td class="num">${b.sixes ?? 0}</td><td class="num">${b.strikeRate?.toFixed(2) ?? '—'}</td></tr>`;
                 })
                 .join('\n')}</tbody></table>`;
             }
             if (bowl.length) {
-              const oppTeamId = m.teamAId === inn.teamId ? m.teamBId : m.teamAId;
               const oppTeam = oppTeamId ? teamsById.get(oppTeamId) : null;
               const bowlTitle = oppTeam ? `Bowling (${oppTeam.name})` : 'Bowling';
               out += `<h3 style="margin:.75rem 0 .5rem;font-size:.95rem">${esc(bowlTitle)}</h3><table><thead><tr><th>Bowler</th><th class="num">O</th><th class="num">M</th><th class="num">R</th><th class="num">W</th><th class="num">Econ</th></tr></thead><tbody>${bowl
                 .map((b) => {
                   const p = playersById.get(b.playerId);
                   const clickable = p && p.slug && !isFictionalMatch(m);
-                  const cell = clickable ? `<a href="/players/${esc(p.slug)}/">${esc(p.name)}</a>` : esc(p?.name ?? '—');
+                  const isCapt = b.playerId === bowlCaptId;
+                  const captBadge = isCapt ? ` <span class="badge" style="font-size:0.65rem;padding:0.1rem 0.35rem;font-weight:700;">(c)</span>` : '';
+                  const cell = clickable ? `<a href="/players/${esc(p.slug)}/">${esc(p.name)}</a>${captBadge}` : `${esc(p?.name ?? '—')}${captBadge}`;
                   return `<tr><td>${cell}</td><td class="num">${b.overs}</td><td class="num">${b.maidens}</td><td class="num">${b.runs}</td><td class="num">${b.wickets}</td><td class="num">${legalOversOf(b.overs) ? (b.runs / legalOversOf(b.overs)).toFixed(2) : '—'}</td></tr>`;
                 })
                 .join('\n')}</tbody></table>`;
