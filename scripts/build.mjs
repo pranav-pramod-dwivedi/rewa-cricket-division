@@ -1432,9 +1432,9 @@ function renderMatch(m) {
             const oppTeamId = m.teamAId === inn.teamId ? m.teamBId : m.teamAId;
             const bowlCaptId = oppTeamId ? getCaptainPlayerId(m, oppTeamId) : null;
 
-            let out = `<div class="card table-wrap"><h3 style="margin-bottom:.5rem">${esc(team?.name ?? 'Team')} ${inn.runs != null ? inn.runs + '/' + (inn.wickets ?? '') : ''}${inn.overs != null ? ` (${inn.overs} ov)` : ''}</h3>`;
+            let out = `<div class="card"><h3 style="margin-bottom:.75rem">${esc(team?.name ?? 'Team')} ${inn.runs != null ? inn.runs + '/' + (inn.wickets ?? '') : ''}${inn.overs != null ? ` (${inn.overs} ov)` : ''}</h3>`;
             if (bat.length) {
-              out += `<table><thead><tr><th>Batter</th><th class="num">R</th><th class="num">B</th><th class="num">4s</th><th class="num">6s</th><th class="num">SR</th></tr></thead><tbody>${bat
+              out += `<div class="table-wrap"><table><thead><tr><th>Batter</th><th class="num">R</th><th class="num">B</th><th class="num">4s</th><th class="num">6s</th><th class="num">SR</th></tr></thead><tbody>${bat
                 .map((b) => {
                   const p = playersById.get(b.playerId) || db.players.find((x) => x.name.toLowerCase() === (b.playerName || '').toLowerCase());
                   const clickable = Boolean(p && p.slug);
@@ -1443,12 +1443,12 @@ function renderMatch(m) {
                   const cell = clickable ? `<a href="/players/${esc(p.slug)}/">${esc(p.name)}</a>${captBadge}` : `${esc(p?.name ?? b.playerName ?? '—')}${captBadge}`;
                   return `<tr><td>${cell}<div class="card-meta">${esc(b.dismissal || (b.notOut ? 'not out' : ''))}</div></td><td class="num">${b.runs}</td><td class="num">${b.balls ? b.balls : '—'}</td><td class="num">${b.fours ?? 0}</td><td class="num">${b.sixes ?? 0}</td><td class="num">${b.strikeRate?.toFixed(2) ?? '—'}</td></tr>`;
                 })
-                .join('\n')}</tbody></table>`;
+                .join('\n')}</tbody></table></div>`;
             }
             if (bowl.length) {
               const oppTeam = oppTeamId ? teamsById.get(oppTeamId) : null;
               const bowlTitle = oppTeam ? `Bowling (${oppTeam.name})` : 'Bowling';
-              out += `<h3 style="margin:.75rem 0 .5rem;font-size:.95rem">${esc(bowlTitle)}</h3><table><thead><tr><th>Bowler</th><th class="num">O</th><th class="num">M</th><th class="num">R</th><th class="num">W</th><th class="num">Econ</th></tr></thead><tbody>${bowl
+              out += `<h3 style="margin:1rem 0 .5rem;font-size:.95rem">${esc(bowlTitle)}</h3><div class="table-wrap"><table><thead><tr><th>Bowler</th><th class="num">O</th><th class="num">M</th><th class="num">R</th><th class="num">W</th><th class="num">Econ</th></tr></thead><tbody>${bowl
                 .map((b) => {
                   const p = playersById.get(b.playerId) || db.players.find((x) => x.name.toLowerCase() === (b.playerName || '').toLowerCase());
                   const clickable = Boolean(p && p.slug);
@@ -1457,7 +1457,7 @@ function renderMatch(m) {
                   const cell = clickable ? `<a href="/players/${esc(p.slug)}/">${esc(p.name)}</a>${captBadge}` : `${esc(p?.name ?? b.playerName ?? '—')}${captBadge}`;
                   return `<tr><td>${cell}</td><td class="num">${b.overs}</td><td class="num">${b.maidens}</td><td class="num">${b.runs}</td><td class="num">${b.wickets}</td><td class="num">${legalOversOf(b.overs) ? (b.runs / legalOversOf(b.overs)).toFixed(2) : '—'}</td></tr>`;
                 })
-                .join('\n')}</tbody></table>`;
+                .join('\n')}</tbody></table></div>`;
             }
             if (!bat.length && !bowl.length) out += `<p class="card-meta">Full scorecard not yet available.</p>`;
             return out + `</div>`;
