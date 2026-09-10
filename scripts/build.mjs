@@ -363,7 +363,31 @@ function writePage(relPath, html) {
   pages.push(relPath === '' ? '/' : `/${relPath}/`);
   const t = html.match(/<title>(.*?)<\/title>/s)?.[1] ?? '';
   const d = html.match(/<meta name="description" content="(.*?)"/s)?.[1] ?? '';
-  pageMeta.push({ path: relPath === '' ? '/' : `/${relPath}/`, title: t.replace(/\s+\| Rewa Cricket Division$/, '').replace(/&amp;/g, '&'), description: d });
+
+  // Extract clean body text for full-text search indexing
+  const mainMatch = html.match(/<main[^>]*>(.*?)<\/main>/s);
+  const rawBody = mainMatch ? mainMatch[1] : html;
+  const cleanText = rawBody
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ' ')
+    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, ' ')
+    .replace(/<svg\b[^<]*(?:(?!<\/svg>)<[^<]*)*<\/svg>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 500);
+
+  pageMeta.push({
+    path: relPath === '' ? '/' : `/${relPath}/`,
+    title: t.replace(/\s+\| Rewa Cricket Division$/, '').replace(/&amp;/g, '&'),
+    description: d,
+    text: cleanText
+  });
 }
 
 function writeSearchIndex() {
@@ -1832,6 +1856,22 @@ renderStatic({
     <button class="btn btn-primary" type="submit">Search</button>
     <button class="btn btn-ghost" type="button" data-search-clear aria-label="Clear search">Clear</button>
   </form>
+  <!-- Search Suggestions Bar -->
+  <div class="search-suggestions-wrap" style="margin: 1.25rem 0 2rem;">
+    <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+      <span class="card-meta" style="font-weight:700; text-transform:uppercase; font-size:0.75rem; color:var(--brand, #b31b1b);">Suggestions:</span>
+      <button type="button" class="search-suggest-chip" data-search="Kuldeep Sen">⚡ Kuldeep Sen</button>
+      <button type="button" class="search-suggest-chip" data-search="Pranav Dwivedi">🔥 Pranav Dwivedi</button>
+      <button type="button" class="search-suggest-chip" data-search="Akhil Mishra">⚡ Akhil Mishra</button>
+      <button type="button" class="search-suggest-chip" data-search="Ranji Trophy">🏆 Ranji Trophy Champions</button>
+      <button type="button" class="search-suggest-chip" data-search="MPL">🏏 MP League (MPL)</button>
+      <button type="button" class="search-suggest-chip" data-search="Atal Bihari">🛡️ ABV Tournament</button>
+      <button type="button" class="search-suggest-chip" data-search="Awadhesh Pratap">🏟️ APSU Stadium</button>
+      <button type="button" class="search-suggest-chip" data-search="Yash Dubey">⭐ Yash Dubey</button>
+      <button type="button" class="search-suggest-chip" data-search="Rewa Jaguars">🏛️ Rewa Jaguars</button>
+      <button type="button" class="search-suggest-chip" data-search="Academy">🏏 Women's Academy</button>
+    </div>
+  </div>
   <p class="search-count hidden" data-search-count></p>
   <div class="search-results" data-search-results>
     <p class="card-meta">Type a query above and press Search, or use the search box in the header.</p>

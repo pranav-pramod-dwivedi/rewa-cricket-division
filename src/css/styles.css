@@ -1141,6 +1141,33 @@ span.chip,
   border-radius: 10px;
   padding: 1.25rem;
 }
+.search-suggest-chip {
+  background: var(--bg-alt, #f8f9fa);
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 999px;
+  color: var(--text, #1f2937);
+  padding: 0.35rem 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.search-suggest-chip:hover {
+  background: rgba(179, 27, 27, 0.08);
+  border-color: var(--brand, #b31b1b);
+  color: var(--brand, #b31b1b);
+  transform: translateY(-1px);
+}
+.search-highlight {
+  background: rgba(255, 230, 0, 0.45);
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 2px;
+  font-weight: 700;
+}
 
 /* ---------- What's New (MP Sports) ---------- */
 .whats-new .stat-grid {

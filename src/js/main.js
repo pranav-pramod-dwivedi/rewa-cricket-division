@@ -69,11 +69,14 @@
   var resultsEl = document.querySelector('[data-search-results]');
   var countEl = document.querySelector('[data-search-count]');
   var pageForm = document.querySelector('.search-page-form');
+  var suggestChips = document.querySelectorAll('.search-suggest-chip');
 
   if (resultsEl) {
     var qParam = new URLSearchParams(window.location.search).get('q') || '';
     var input = document.getElementById('sq');
     if (input && qParam) input.value = qParam;
+
+    var cachedIndex = null;
 
     var normalize = function (s) {
       return String(s || '')
@@ -82,17 +85,53 @@
         .replace(/[\u0300-\u036f]/g, '');
     };
 
+    var highlight = function (text, terms) {
+      if (!text) return '';
+      var safe = esc(text);
+      terms.forEach(function (t) {
+        if (!t || t.length < 2) return;
+        var re = new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+        safe = safe.replace(re, '<mark class="search-highlight">$1</mark>');
+      });
+      return safe;
+    };
+
     var render = function (items, q) {
-      var qn = normalize(q);
+      var rawQ = (q || '').trim();
+      if (!rawQ) {
+        resultsEl.innerHTML = '<p class="card-meta">Type a query above and press Search, or click any suggestion chip above.</p>';
+        if (countEl) countEl.classList.add('hidden');
+        resultsEl.classList.remove('search-has-results');
+        return;
+      }
+
+      var qn = normalize(rawQ);
       var terms = qn.split(/\s+/).filter(Boolean);
+
       var scored = items
         .map(function (it) {
-          var hay = normalize(it.title + ' ' + it.description + ' ' + it.path);
+          var titleNorm = normalize(it.title || '');
+          var descNorm = normalize(it.description || '');
+          var textNorm = normalize(it.text || '');
+          var pathNorm = normalize(it.path || '');
+
           var score = 0;
+          if (titleNorm.indexOf(qn) !== -1) score += 20;
+          if (descNorm.indexOf(qn) !== -1) score += 10;
+          if (textNorm.indexOf(qn) !== -1) score += 5;
+
+          var allTermsFound = true;
           terms.forEach(function (t) {
-            if (hay.indexOf(t) !== -1) score += 1;
-            if (normalize(it.title).indexOf(t) !== -1) score += 2;
+            var found = false;
+            if (titleNorm.indexOf(t) !== -1) { score += 12; found = true; }
+            if (descNorm.indexOf(t) !== -1) { score += 6; found = true; }
+            if (textNorm.indexOf(t) !== -1) { score += 3; found = true; }
+            if (pathNorm.indexOf(t) !== -1) { score += 2; found = true; }
+            if (!found) allTermsFound = false;
           });
+
+          if (allTermsFound) score += 10;
+
           return { it: it, score: score };
         })
         .filter(function (x) {
@@ -101,47 +140,77 @@
         .sort(function (a, b) {
           return b.score - a.score || a.it.title.localeCompare(b.it.title);
         })
-        .slice(0, 40);
+        .slice(0, 50);
 
-      if (!q) {
-        resultsEl.innerHTML = '<p class="card-meta">Type a query above and press Search, or use the search box in the header.</p>';
-        countEl.classList.add('hidden');
-        return;
-      }
       if (!scored.length) {
-        resultsEl.innerHTML = '<p>No results for <strong>' + esc(q) + '</strong> in the archive.</p><p class="card-meta">Try a player name, team, tournament or venue.</p>';
-        countEl.classList.add('hidden');
+        resultsEl.innerHTML = '<p>No results for <strong>' + esc(rawQ) + '</strong> in the archive.</p><p class="card-meta">Try searching for a player name, match, team, tournament or venue from the suggestions above.</p>';
+        if (countEl) countEl.classList.add('hidden');
         return;
       }
-      countEl.classList.remove('hidden');
-      countEl.textContent = scored.length + (scored.length === 1 ? ' result' : ' results') + ' for "' + q + '"';
+
+      if (countEl) {
+        countEl.classList.remove('hidden');
+        countEl.innerHTML = 'Showing <strong>' + scored.length + '</strong> ' + (scored.length === 1 ? 'result' : 'results') + ' for "<em>' + esc(rawQ) + '</em>"';
+      }
       resultsEl.classList.add('search-has-results');
       resultsEl.innerHTML =
         '<div class="grid grid-2">' +
         scored
           .map(function (x) {
-            var d = x.it.description
-              ? '<div class="card-meta">' + esc(x.it.description.slice(0, 140)) + '</div>'
-              : '';
+            var highlightedTitle = highlight(x.it.title, terms);
+            var snippet = x.it.description || (x.it.text ? x.it.text.slice(0, 140) + '…' : '');
+            var highlightedSnippet = highlight(snippet.slice(0, 160), terms);
+            var d = snippet ? '<div class="card-meta">' + highlightedSnippet + '</div>' : '';
             return '<a class="card row-card card-link" href="' + esc(x.it.path) + '">' +
-              '<span><span class="card-title">' + esc(x.it.title) + '</span>' + d + '</span></a>';
+              '<span><span class="card-title">' + highlightedTitle + '</span>' + d + '</span></a>';
           })
           .join('\n') +
         '</div>';
     };
 
+    var doSearch = function (q) {
+      if (cachedIndex) {
+        render(cachedIndex, q);
+      } else {
+        fetch('/search-index.json')
+          .then(function (r) { return r.json(); })
+          .then(function (idx) {
+            cachedIndex = idx;
+            render(idx, q);
+          })
+          .catch(function () {
+            resultsEl.innerHTML = '<p class="card-meta">Search index unavailable. Please try again later.</p>';
+          });
+      }
+    };
+
     if (qParam) {
-      fetch('/search-index.json')
-        .then(function (r) {
-          return r.json();
-        })
-        .then(function (idx) {
-          render(idx, qParam);
-        })
-        .catch(function () {
-          resultsEl.innerHTML = '<p class="card-meta">Search index unavailable. Please try again later.</p>';
-        });
+      doSearch(qParam);
     }
+
+    if (input) {
+      input.addEventListener('input', function (e) {
+        doSearch(e.target.value);
+      });
+    }
+
+    if (pageForm) {
+      pageForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (input) doSearch(input.value);
+      });
+    }
+
+    suggestChips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        var val = chip.getAttribute('data-search');
+        if (input) {
+          input.value = val;
+          input.focus();
+        }
+        doSearch(val);
+      });
+    });
   }
 
   // ---- Players page: interactive sorting & filtering ----
