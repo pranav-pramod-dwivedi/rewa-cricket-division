@@ -1259,10 +1259,55 @@ function renderTournament(t) {
       <p class="card-meta" style="margin-bottom:1rem">The two marquee franchise clubs competing for the Atal Bihari Vajpayee Memorial Trophy maintain independent official digital arenas:</p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap">
         <a href="https://abv-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-primary">ABV Memorial Tournament Official Portal &rarr;</a>
+        <a href="https://abv-rewacricket.pages.dev/stats/" target="_blank" rel="noopener" class="btn btn-primary">Consolidated Leaderboards (Both Teams) &rarr;</a>
         <a href="https://destroyers-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-secondary">Destroyers CC Official Portal &rarr;</a>
         <a href="https://dread-eleven-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-secondary">Dread Eleven Digital Stadium &rarr;</a>
       </div>
-    </div>`;
+    </div>
+
+    <!-- Official Tournament Leaderboards (Both Teams Combined) -->
+    <section class="section" style="margin-bottom:2.5rem">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">Both Teams Combined (34 Matches)</p>
+          <h2>All-Time Tournament Leaderboards</h2>
+        </div>
+        <span class="badge badge-completed">Series Tied 3–3</span>
+      </div>
+      <p class="card-meta" style="margin-bottom:1.25rem">Official certified player statistics across all 6 tournament editions (2021–2026). Titles stand tied at 3–3 between Dread Eleven (2021, 2022, 2023) and Destroyers CC (2024, 2025, 2026).</p>
+      <div class="grid grid-2">
+        <div>
+          <h3 style="margin-bottom:0.75rem">Leading Run Scorers</h3>
+          <div class="card table-wrap">
+            <table>
+              <thead><tr><th>Player</th><th>Team</th><th class="num">Runs</th><th class="num">Avg</th><th class="num">SR</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Pranav Dwivedi</strong></td><td>Destroyers CC</td><td class="num font-bold">1435</td><td class="num">57.4</td><td class="num">146.4</td></tr>
+                <tr><td><strong>Akhil Mishra</strong></td><td>Dread Eleven</td><td class="num font-bold">1378</td><td class="num">44.5</td><td class="num">130</td></tr>
+                <tr><td><strong>Anant Verma</strong></td><td>Destroyers CC</td><td class="num font-bold">782</td><td class="num">39.1</td><td class="num">134.2</td></tr>
+                <tr><td><strong>Sagar Pratap Singh</strong></td><td>Destroyers CC</td><td class="num font-bold">694</td><td class="num">34.7</td><td class="num">128.5</td></tr>
+                <tr><td><strong>Aditya Shrivastava</strong></td><td>Dread Eleven</td><td class="num font-bold">612</td><td class="num">30.6</td><td class="num">122.4</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h3 style="margin-bottom:0.75rem">Leading Wicket Takers</h3>
+          <div class="card table-wrap">
+            <table>
+              <thead><tr><th>Player</th><th>Team</th><th class="num">Wkts</th><th class="num">Avg</th><th class="num">Econ</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Pranav Dwivedi</strong></td><td>Destroyers CC</td><td class="num font-bold">66</td><td class="num">16.3</td><td class="num">5.48</td></tr>
+                <tr><td><strong>Aditya Shrivastava</strong></td><td>Dread Eleven</td><td class="num font-bold">49</td><td class="num">21.2</td><td class="num">5.76</td></tr>
+                <tr><td><strong>Somil Khan</strong></td><td>Destroyers CC</td><td class="num font-bold">42</td><td class="num">19.8</td><td class="num">5.62</td></tr>
+                <tr><td><strong>Akhil Mishra</strong></td><td>Dread Eleven</td><td class="num font-bold">38</td><td class="num">61.1</td><td class="num">5.92</td></tr>
+                <tr><td><strong>Harshit Patel</strong></td><td>Destroyers CC</td><td class="num font-bold">34</td><td class="num">22.1</td><td class="num">6.04</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>`;
   }
   html += `<section class="section"><div class="section-title"><h2>Matches</h2></div>
     <div class="grid grid-2">${tMatches.length ? tMatches.map(matchCard).join('\n') : empty('No matches yet', 'Match fixtures for this tournament will be published here when confirmed.')}</div></section>`;
