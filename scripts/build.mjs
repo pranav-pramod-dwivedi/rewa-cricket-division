@@ -174,7 +174,8 @@ function footer() {
       <ul>
         <li><a href="https://destroyers-rewacricket.pages.dev" target="_blank" rel="noopener">Destroyers CC Portal 🏆</a></li>
         <li><a href="https://dread-eleven-rewacricket.pages.dev" target="_blank" rel="noopener">Dread Eleven Digital Stadium ⚡</a></li>
-        <li><a href="/tournaments/atal-bihari-vajpayee-memorial-tournament/">ABV Memorial Tournament</a></li>
+        <li><a href="https://abv-rewacricket.pages.dev" target="_blank" rel="noopener">ABV Memorial Tournament Official 🌐</a></li>
+        <li><a href="/tournaments/atal-bihari-vajpayee-memorial-tournament/">ABV Memorial Tournament (RDCA Hub)</a></li>
       </ul>
     </div>
     <div>
@@ -1257,8 +1258,9 @@ function renderTournament(t) {
       <h3 style="margin-bottom:0.5rem">Official Franchise Digital Portals</h3>
       <p class="card-meta" style="margin-bottom:1rem">The two marquee franchise clubs competing for the Atal Bihari Vajpayee Memorial Trophy maintain independent official digital arenas:</p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap">
-        <a href="https://destroyers-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-primary">&#127942; Destroyers CC Official Portal</a>
-        <a href="https://dread-eleven-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-primary">&#9889; Dread Eleven Digital Stadium</a>
+        <a href="https://abv-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-primary">&#127942; ABV Memorial Tournament Official Portal ↗</a>
+        <a href="https://destroyers-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-secondary">&#127942; Destroyers CC Official Portal</a>
+        <a href="https://dread-eleven-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-secondary">&#9889; Dread Eleven Digital Stadium</a>
       </div>
     </div>`;
   }
