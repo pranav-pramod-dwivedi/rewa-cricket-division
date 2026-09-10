@@ -1922,7 +1922,7 @@ renderStatic({
       <button type="button" class="search-suggest-chip" data-search="MPL">MP League (MPL)</button>
       <button type="button" class="search-suggest-chip" data-search="Atal Bihari">ABV Tournament</button>
       <button type="button" class="search-suggest-chip" data-search="Awadhesh Pratap">APSU Stadium</button>
-      <button type="button" class="search-suggest-chip" data-search="Yash Dubey">⭐ Yash Dubey</button>
+      <button type="button" class="search-suggest-chip" data-search="Yash Dubey">Yash Dubey</button>
       <button type="button" class="search-suggest-chip" data-search="Rewa Jaguars">Rewa Jaguars</button>
       <button type="button" class="search-suggest-chip" data-search="Academy">Women's Academy</button>
     </div>
