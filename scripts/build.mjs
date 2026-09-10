@@ -1426,12 +1426,13 @@ function renderMatch(m) {
     html += `<section class="section" style="margin-top:2rem">
       <div class="card" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;border-left:4px solid var(--c-accent,#e5a93c);padding:1.25rem 1.5rem">
         <div>
-          <p class="eyebrow" style="margin-bottom:0.25rem">Official Franchise Digital Match Centres</p>
-          <h3 style="font-size:1.15rem;margin:0">Explore Full Detailed Ball-by-Ball Scorecards</h3>
+          <p class="eyebrow" style="margin-bottom:0.25rem">Official Tournament Network</p>
+          <h3 style="font-size:1.15rem;margin:0">Atal Bihari Vajpayee Memorial Tournament Central</h3>
         </div>
         <div style="display:flex;gap:1rem;flex-wrap:wrap">
-          <a href="https://destroyers-rewacricket.pages.dev/matches/${esc(m.slug)}" target="_blank" rel="noopener" class="btn btn-primary">Destroyers Match Centre &rarr;</a>
-          <a href="https://dread-eleven-rewacricket.pages.dev/matches/${esc(m.slug)}" target="_blank" rel="noopener" class="btn btn-primary">Dread Eleven Scorecard &rarr;</a>
+          <a href="https://abv-rewacricket.pages.dev/matches/" target="_blank" rel="noopener" class="btn btn-primary">ABV Tournament Portal &rarr;</a>
+          <a href="https://destroyers-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-secondary">Destroyers CC &rarr;</a>
+          <a href="https://dread-eleven-rewacricket.pages.dev" target="_blank" rel="noopener" class="btn btn-secondary">Dread Eleven &rarr;</a>
         </div>
       </div>
     </section>`;
@@ -1450,6 +1451,13 @@ function renderMatch(m) {
   }
   html += closeLayout();
   writePage(`matches/${m.slug}`, html);
+  if (m.tournamentId === 't-atal-bihari-vajpayee-memorial') {
+    if (m.slug.startsWith('de-vs-des-')) {
+      writePage(`matches/${m.slug.replace('de-vs-des-', 'destroyers-vs-dread-eleven-')}`, html);
+    } else if (m.slug.startsWith('destroyers-vs-dread-eleven-')) {
+      writePage(`matches/${m.slug.replace('destroyers-vs-dread-eleven-', 'de-vs-des-')}`, html);
+    }
+  }
 }
 
 // ============================================================
