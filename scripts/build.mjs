@@ -134,7 +134,7 @@ function header(pinned = true) {
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand" href="/" aria-label="${esc(org.name)} — home">
-      <img class="brand-logo" src="/img/logo-rewa-official.jpg" alt="Official emblem of Rewa District, Madhya Pradesh" width="44" height="44" />
+      <img class="brand-logo" src="/logo.png" alt="Official emblem of Rewa Division Cricket Association" width="44" height="44" />
       <span class="brand-text">
         <strong>${esc(org.name)}</strong>
         <small>Official Archive</small>
@@ -156,7 +156,7 @@ function footer() {
   <div class="container">
     <div>
       <div class="footer-brand">
-        <img src="/img/logo-rewa-official.jpg" alt="Official emblem of Rewa District" width="40" height="40" />
+        <img class="brand-logo" src="/logo.png" alt="Official emblem of Rewa Division Cricket Association" width="44" height="44" />
         <h3>${esc(org.name)}</h3>
       </div>
       <p class="footer-note">The official website &amp; archive of the ${esc(org.name)}, built with the permission of the division. सफ़ेद शेरों की धरती — Land of the White Tigers.</p>
@@ -556,9 +556,17 @@ ${entries.map((e) => `  <url>
   </sitemap>
 </sitemapindex>
 `;
-  writeFileSync(join(DIST, 'sitemap.xml'), sitemapIndexXml);
+  const allUrlXml = buildUrlXml(allEntries);
+  writeFileSync(join(DIST, 'sitemap.xml'), allUrlXml);
+  writeFileSync(join(DIST, 'sitemap-all.xml'), allUrlXml);
+  writeFileSync(join(DIST, 'sitemap-core.xml'), buildUrlXml(coreEntries));
+  writeFileSync(join(DIST, 'sitemap-matches.xml'), buildUrlXml(matchEntries));
+  writeFileSync(join(DIST, 'sitemap-players.xml'), buildUrlXml(playerEntries));
+  writeFileSync(join(DIST, 'sitemap-roster.xml'), buildUrlXml(rosterEntries));
+  writeFileSync(join(DIST, 'sitemap-index.xml'), sitemapIndexXml);
   console.log(`sitemaps ok:`);
-  console.log(` - sitemap.xml (Sitemap Index)`);
+  console.log(` - sitemap.xml (${allEntries.length} canonical URLs)`);
+  console.log(` - sitemap-index.xml (Sitemap Index)`);
   console.log(` - sitemap-core.xml (${coreEntries.length} URLs)`);
   console.log(` - sitemap-matches.xml (${matchEntries.length} URLs)`);
   console.log(` - sitemap-players.xml (${playerEntries.length} URLs)`);
@@ -633,7 +641,7 @@ function renderHome() {
   });
 
   html += `<section class="hero">
-    <img class="hero-logo" src="/img/logo-rewa-official.jpg" alt="Official emblem of Rewa District" width="88" height="88" />
+    <img class="hero-logo" src="/logo.png" alt="Official emblem of Rewa Division Cricket Association" width="96" height="96" />
     <p class="eyebrow">सफ़ेद शेरों की धरती · Land of the White Tigers</p>
     <h1>Rewa Division Cricket Association (RDCA) — The Official Home of Cricket in Rewa</h1>
     <p>${esc(org.description)}</p>
@@ -2176,11 +2184,12 @@ Allow: /
 Disallow: /admin/
 
 Sitemap: ${absUrl('/sitemap.xml')}
+Sitemap: ${absUrl('/sitemap-index.xml')}
+Sitemap: ${absUrl('/sitemap-all.xml')}
 Sitemap: ${absUrl('/sitemap-core.xml')}
 Sitemap: ${absUrl('/sitemap-matches.xml')}
 Sitemap: ${absUrl('/sitemap-players.xml')}
 Sitemap: ${absUrl('/sitemap-roster.xml')}
-Sitemap: ${absUrl('/sitemap-all.xml')}
 `;
   writeFileSync(join(DIST, 'robots.txt'), txt);
 }
