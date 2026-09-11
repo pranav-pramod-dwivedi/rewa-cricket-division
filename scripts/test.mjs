@@ -216,7 +216,7 @@ describe('integration (build + serve)', () => {
     const r = await get('/llms.txt');
     assert.equal(r.status, 200);
     assert.match(r.body, /^# Rewa Division Cricket Association \(RDCA\)/m);
-    assert.ok(r.body.includes('## When to use this site'));
+    assert.ok(r.body.includes('## When to use this'));
     assert.ok(r.body.includes('## Developer resources'));
     assert.ok(r.body.includes('search-index.json'));
     assert.ok(r.body.includes('sitemap.xml'));
@@ -250,17 +250,49 @@ describe('integration (build + serve)', () => {
     assert.ok(Array.isArray(entries) && entries.length > 1900);
   });
 
-  test('Organization JSON-LD has contactPoint + PostalAddress', async () => {
+  test('Organization JSON-LD has Organization type, contactPoint + PostalAddress', async () => {
     const r = await get('/');
     const blocks = [...r.body.matchAll(
       /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g,
     )].map((m) => JSON.parse(m[1]));
-    const org = blocks.find((b) => b['@type'] === 'SportsOrganization');
-    assert.ok(org, 'SportsOrganization missing');
+    const org = blocks.find((b) => {
+      const t = b['@type'];
+      return Array.isArray(t) ? t.includes('Organization') : t === 'Organization';
+    });
+    assert.ok(org, 'Organization type missing in JSON-LD');
     assert.equal(org.name, 'Rewa Division Cricket Association (RDCA)');
     assert.equal(org.address['@type'], 'PostalAddress');
+    assert.ok(org.address.streetAddress, 'streetAddress missing');
     assert.equal(org.address.addressCountry, 'IN');
-    assert.ok(org.contactPoint?.email);
+    assert.ok(org.contactPoint?.email, 'email missing');
+    assert.ok(org.contactPoint?.telephone, 'telephone missing');
+  });
+
+  test('Trust anchor pages: /privacy/ and /about/ exist with >= 500 characters', async () => {
+    const privacy = await get('/privacy/');
+    assert.equal(privacy.status, 200);
+    assert.ok(privacy.body.length >= 500, `privacy body too short: ${privacy.body.length}`);
+
+    const about = await get('/about/');
+    assert.equal(about.status, 200);
+    assert.ok(about.body.length >= 500, `about body too short: ${about.body.length}`);
+  });
+
+  test('Developer resources: /developers/, /api/openapi.json, and MCP manifest', async () => {
+    const dev = await get('/developers/');
+    assert.equal(dev.status, 200);
+    assert.ok(dev.body.length >= 500);
+
+    const openapi = await get('/api/openapi.json');
+    assert.equal(openapi.status, 200);
+    const spec = JSON.parse(openapi.body);
+    assert.equal(spec.openapi, '3.1.0');
+    assert.ok(spec.paths['/']);
+
+    const mcp = await get('/.well-known/mcp');
+    assert.equal(mcp.status, 200);
+    const mcpJson = JSON.parse(mcp.body);
+    assert.ok(mcpJson.tools?.length > 0);
   });
 
   test('deep page: player HTML + markdown variant agree', async () => {

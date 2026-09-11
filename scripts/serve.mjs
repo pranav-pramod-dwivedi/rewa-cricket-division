@@ -78,10 +78,10 @@ const send = (res, status, body, type, extra = {}) => {
 };
 
 createServer(async (req, res) => {
+  const url = new URL(req.url, 'http://x');
+  const path = decodeURIComponent(url.pathname);
+  const base = siteBase(req);
   try {
-    const url = new URL(req.url, 'http://x');
-    const path = decodeURIComponent(url.pathname);
-    const base = siteBase(req);
 
     // ---- dynamic sitemap.xml (never served from disk) ----
     if (path === '/sitemap.xml') {
@@ -100,6 +100,20 @@ createServer(async (req, res) => {
       });
       res.end(acceptGzip ? gzipSync(body) : body);
       return;
+    }
+
+    // ---- MCP live handshake ----
+    if (path === '/.well-known/mcp' || path === '/.well-known/mcp/') {
+      try {
+        const mcpData = await readFile(join(DIST, '.well-known', 'mcp', 'manifest.json'));
+        res.writeHead(200, {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Access-Control-Allow-Origin': '*',
+          ...SECURITY_HEADERS,
+        });
+        res.end(mcpData);
+        return;
+      } catch {}
     }
 
     // ---- dynamic robots.txt ----
@@ -152,13 +166,22 @@ createServer(async (req, res) => {
     res.writeHead(200, headers);
     res.end(acceptGzip && GZIP_TYPES.has(mime.split(';')[0]) ? gzipSync(body) : body);
   } catch {
-    // ---- 404 with custom page if present ----
+    // ---- 404: content negotiation (markdown for agents, HTML for browsers) ----
+    const accept = req.headers.accept || '';
+    const ua = req.headers['user-agent'] || '';
+    const wantsMd = negotiateVariant(accept) === 'markdown' ||
+      (/curl|bot|spider|crawler|agent|ora/i.test(ua) && !accept.includes('text/html'));
+
+    if (wantsMd) {
+      send(res, 404, notFoundMarkdown(path), 'text/markdown; charset=utf-8');
+      return;
+    }
     try {
       const notFound = await readFile(join(DIST, '404.html'));
       res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8', ...SECURITY_HEADERS });
       res.end(notFound);
     } catch {
-      send(res, 404, '404 Not Found', 'text/plain');
+      send(res, 404, notFoundMarkdown(path), 'text/markdown; charset=utf-8');
     }
   }
 }).listen(PORT, HOST, () => {

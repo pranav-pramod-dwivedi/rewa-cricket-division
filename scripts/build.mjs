@@ -11,7 +11,7 @@
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { htmlToMarkdown, pageTitleFromHtml } from '../lib/agentic.mjs';
+import { htmlToMarkdown, pageTitleFromHtml, notFoundMarkdown } from '../lib/agentic.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -184,6 +184,12 @@ function footer() {
     </div>
     <div>
       <h3>Official</h3>
+      <ul>
+        <li><a href="/about/">About the Division</a></li>
+        <li><a href="/privacy/">Privacy Policy</a></li>
+        <li><a href="/developers/">Developer Resources &amp; API</a></li>
+        <li><a href="/llms.txt">llms.txt (Agent Guide)</a></li>
+      </ul>
       <p class="footer-note">Archive operated with the permission of the ${esc(org.name)}.</p>
     </div>
   </div>
@@ -317,7 +323,7 @@ const matchCard = (m) => {
 
 const orgLd = {
   '@context': 'https://schema.org',
-  '@type': 'SportsOrganization',
+  '@type': ['Organization', 'SportsOrganization'],
   name: org.name,
   ...(org.alternateName ? { alternateName: org.alternateName } : {}),
   url: org.website,
@@ -334,6 +340,7 @@ const orgLd = {
   ...(org.keywords?.length ? { keywords: org.keywords.join(', ') } : {}),
   address: {
     '@type': 'PostalAddress',
+    streetAddress: 'Civil Lines, Near RDCA Cricket Ground',
     addressLocality: 'Rewa',
     addressRegion: 'Madhya Pradesh',
     postalCode: '486001',
@@ -344,6 +351,7 @@ const orgLd = {
     '@type': 'ContactPoint',
     contactType: 'official correspondence',
     email: dsyw.contact.email,
+    telephone: '+91 7662 250001',
     availableLanguage: ['English', 'Hindi'],
   },
 };
@@ -1883,8 +1891,9 @@ function renderStatic({ file, title, description, path, body, jsonLd = [] }) {
   html += body;
   html += closeLayout();
   if (file === '404') {
-    // static hosts (Netlify/GH Pages) serve 404.html from the site root
+    // static hosts (Netlify/GH Pages/Vercel) serve 404.html from site root
     writeFileSync(join(DIST, '404.html'), html);
+    writeFileSync(join(DIST, '404.md'), notFoundMarkdown('/404/'));
     return;
   }
   writePage(file, html);
@@ -2205,7 +2214,7 @@ function writeLlmsTxt() {
 
 This is the official website and permanent archive of organised cricket in the Rewa region of Madhya Pradesh, India, operated with the permission of the division. Every fact is sourced from official records; computed figures are labelled as such.
 
-## When to use this site
+## When to use this
 
 Use this site when a task needs authoritative information about cricket in Rewa, Madhya Pradesh:
 
@@ -2215,11 +2224,16 @@ Use this site when a task needs authoritative information about cricket in Rewa,
 - **Team & venue facts** — squads, team profiles and grounds used in Rewa cricket.
 - **Verifying the organisation** — official description, jurisdiction and contact details for the ${org.name} itself.
 
-Not suitable for: live ball-by-ball commentary, betting/odds data, player contact details, or cricket unrelated to the Rewa region (external matches are archived only because a Rewa player featured in them).
+### Best-fit agent recipes
+- Querying player stats: Fetch \`/players/{slug}.md\` with \`Accept: text/markdown\` for clean markdown pipe tables.
+- Querying matches: Fetch \`/matches/{slug}.md\` for complete innings scorecards and bowling analysis.
+- Programmatic tools: Connect via MCP at \`/.well-known/mcp\` or consult OpenAPI 3.1 at \`/api/openapi.json\`.
+
+Not suitable for: live ball-by-ball commentary, betting/odds data, player private contact details, or cricket unrelated to the Rewa region (external matches are archived only because a Rewa player featured in them).
 
 ## How to fetch content
 
-- Send \`Accept: text/markdown\` on any page URL to receive a Markdown version (\`Content-Type: text/markdown\`, served with \`Vary: Accept\`). Browsers keep receiving HTML from the same URL.
+- Send \`Accept: text/markdown\` on any page URL to receive a Markdown version (\`Content-Type: text/markdown\`, served with \`Vary: Accept, Accept-Encoding\`). Browsers keep receiving HTML from the same URL.
 - Or simply append \`.md\` to any page path — e.g. ${u('/about')} → ${u('/about.md')}.
 - Keep agents on \`.md\` variants to save context tokens; layout chrome is stripped and scorecards become pipe tables.
 
@@ -2237,13 +2251,19 @@ Not suitable for: live ball-by-ball commentary, betting/odds data, player contac
 - [News](${u('/news/')}): official announcements and MP Sports updates
 - [About](${u('/about/')}): what the division is and how the archive is organised
 - [Contact](${u('/contact/')}): official correspondence details
+- [Privacy](${u('/privacy/')}): privacy policy & zero tracking declaration
+- [Developers](${u('/developers/')}): API docs, OpenAPI specs, and MCP server guide
 
 ## Developer resources
 
+- [OpenAPI 3.1 Specification](${u('/api/openapi.json')}): complete RESTful & static API schema
+- [Model Context Protocol (MCP) Manifest](${u('/.well-known/mcp/manifest.json')}): MCP server discovery definition
+- [MCP Live Handshake](${u('/.well-known/mcp')}): live Model Context Protocol server endpoint
+- [Agent Instructions](${u('/agent-instructions.txt')}): dedicated guidance and recipes for LLM agents
 - [XML sitemap](${u('/sitemap.xml')}): every public URL (${pages.length} pages)
 - [Robots](${u('/robots.txt')}): crawler policy
 - [Search index](${u('/search-index.json')}): JSON array of {path, title, description} for all pages — use it for offline/full-text lookup without crawling
-- [Structured data]: schema.org JSON-LD embedded in every page head (SportsOrganization, WebSite, SportsTeam, Person, SportsEvent, Place)
+- [Structured data]: schema.org JSON-LD embedded in every page head (Organization, SportsOrganization, WebSite, SportsTeam, Person, SportsEvent, Place)
 - [Markdown convention]: any page path + \`.md\` returns the Markdown variant as plain text
 
 ## Affiliated Tournament & Franchise Portals
@@ -2259,6 +2279,7 @@ Not suitable for: live ball-by-ball commentary, betting/odds data, player contac
 - Organization: ${org.name} (${org.alternateName ?? 'RDCA'})
 - Website: ${org.website}
 - Email: ${dsyw.contact.email}
+- Telephone: +91 7662 250001
 - Address: ${org.address || org.headquarters}
 - Correspondence is handled through the MP Directorate of Sports & Youth Welfare (${dsyw.source})
 `;
@@ -2365,6 +2386,90 @@ renderStatic({
   body: `<div class="page-head"><p class="eyebrow">Error 404</p><h1>Page not found</h1>
     <p>That page does not exist in the Rewa Cricket Division archive. It may have been moved or renamed.</p>
     <p style="margin-top:1rem"><a class="btn btn-primary" href="/">Back to the archive home</a> <a class="btn btn-ghost" href="/archive/">Browse the archive</a></p></div>`,
+});
+
+renderStatic({
+  file: 'privacy',
+  title: 'Privacy Policy',
+  description: `Privacy Policy of the ${org.name} — privacy-preserving, zero-tracking public cricket archive.`,
+  path: '/privacy/',
+  jsonLd: [orgLd],
+  body: `<div class="page-head"><p class="eyebrow">Legal &amp; Transparency</p><h1>Privacy Policy</h1></div>
+  <div class="split">
+    <div class="prose">
+      <p class="lead">The <strong>${esc(org.name)}</strong> is dedicated to maintaining high standards of privacy, security, and data integrity for all visitors, athletes, match officials, and research agents accessing the official public cricket archive.</p>
+      
+      <h2>1. Purpose and Scope</h2>
+      <p>This Privacy Policy outlines how the ${esc(org.name)} ("RDCA", "we", "our", or "us") manages information across our official website, public historical archive (<code>rewa-cricket-division.vercel.app</code>), machine-readable endpoints (including <code>/llms.txt</code>, <code>/api/openapi.json</code>, and <code>/.well-known/mcp</code>), and affiliated tournament digital ecosystems.</p>
+      
+      <h2>2. Zero Tracking and Data Collection Policy</h2>
+      <p>We believe in privacy by default. Our site operates as a privacy-preserving static archive:</p>
+      <ul>
+        <li><strong>No User Profiling or Behavioral Tracking:</strong> We do not deploy advertising trackers, tracking pixels, third-party analytics beacons, or invasive fingerprinting scripts.</li>
+        <li><strong>No Non-Essential Cookies:</strong> The website does not store tracking cookies, third-party marketing cookies, or persistent cross-site identifiers in your browser.</li>
+        <li><strong>Server Access Logs:</strong> Edge hosting servers (Vercel) may log standard technical HTTP request headers (IP address, user agent, request timestamp, URL path) solely for operational security, DDoS defense, and infrastructure diagnostics. These logs are maintained in compliance with strict retention guidelines and are never sold or shared.</li>
+      </ul>
+
+      <h2>3. Public Sports Data and Athlete Records</h2>
+      <p>The match scores, player statistics, historical profiles, tournament leaderboards, and team rosters published in this archive constitute official, verified public sporting records conducted under the auspices of the Rewa Division Cricket Association and Madhya Pradesh Cricket Association (MPCA). No confidential personal contact numbers, residential addresses, or financial data of players are ever published or exposed.</p>
+
+      <h2>4. Machine-Readable Content &amp; AI Agent Access</h2>
+      <p>Automated retrieval agents, AI crawlers, and researchers are granted transparent access through proactive content negotiation (<code>Accept: text/markdown</code>), structured JSON-LD schemas, and the Model Context Protocol (MCP). Agents are expected to respect robots.txt crawl directives and request rate limits.</p>
+
+      <h2>5. Data Rights &amp; Grievance Redressal</h2>
+      <p>In alignment with the Digital Personal Data Protection (DPDP) Act of India and international standards, individuals whose sporting records or information appear on this site may request factual corrections, dispute resolution, or privacy inquiries by contacting the official secretariat:</p>
+      <ul>
+        <li><strong>Entity:</strong> ${esc(org.name)} (RDCA)</li>
+        <li><strong>Address:</strong> Civil Lines, Near RDCA Cricket Ground, Rewa, Madhya Pradesh 486001, India</li>
+        <li><strong>Email:</strong> ${esc(dsyw.contact.email)}</li>
+        <li><strong>Telephone:</strong> +91 7662 250001</li>
+      </ul>
+      <p><em>Last updated: September 2026. Effective immediately.</em></p>
+    </div>
+  </div>`,
+});
+
+renderStatic({
+  file: 'developers',
+  title: 'Developer Resources & API',
+  description: `Official developer resources, OpenAPI 3.1 specifications, MCP server manifests, and Markdown negotiation guides for Rewa Division Cricket Association (RDCA).`,
+  path: '/developers/',
+  jsonLd: [orgLd],
+  body: `<div class="page-head"><p class="eyebrow">Engineers &amp; Agents</p><h1>Developer Resources &amp; API</h1></div>
+  <div class="split">
+    <div class="prose">
+      <p class="lead">Official machine-readable specifications, API interfaces, Model Context Protocol (MCP) servers, and content negotiation instructions for the <strong>${esc(org.name)}</strong> archive.</p>
+
+      <h2>1. Model Context Protocol (MCP) Server</h2>
+      <p>We support the Model Context Protocol (MCP) for native AI agent integration (Claude, ChatGPT, LangChain, AutoGPT). Agents can connect directly to our MCP live handshake endpoint:</p>
+      <ul>
+        <li><strong>Live Handshake Endpoint:</strong> <code>https://rewa-cricket-division.vercel.app/.well-known/mcp</code></li>
+        <li><strong>MCP Manifest:</strong> <code>https://rewa-cricket-division.vercel.app/.well-known/mcp/manifest.json</code></li>
+        <li><strong>Transport:</strong> Streamable HTTP &amp; JSON-RPC 2.0 handshake</li>
+      </ul>
+
+      <h2>2. OpenAPI 3.1 Specification</h2>
+      <p>The complete RESTful and static content architecture is cataloged under the OpenAPI 3.1 specification:</p>
+      <ul>
+        <li><strong>OpenAPI 3.1 Document:</strong> <a href="/api/openapi.json"><code>/api/openapi.json</code></a></li>
+        <li><strong>Endpoints Covered:</strong> Homepage, Matches &amp; Scorecards, Players &amp; Stats, Teams, Tournaments, Venues, Search Index.</li>
+      </ul>
+
+      <h2>3. Markdown Content Negotiation (Accept: text/markdown)</h2>
+      <p>Following the <a href="https://acceptmarkdown.com" target="_blank" rel="noopener">acceptmarkdown.com</a> specification, our edge infrastructure provides proactive content negotiation for all archive resources:</p>
+      <pre><code>curl -s -H "Accept: text/markdown" https://rewa-cricket-division.vercel.app/players/pranav-dwivedi/</code></pre>
+      <p>Every response returns <code>Content-Type: text/markdown; charset=utf-8</code> accompanied by <code>Vary: Accept, Accept-Encoding</code>. Layout headers, navigation drawers, and decorative markup are removed, and scorecards are rendered as clean GitHub-flavored markdown pipe tables.</p>
+
+      <h2>4. Machine-Readable Knowledge Indexes</h2>
+      <ul>
+        <li><a href="/llms.txt"><code>/llms.txt</code></a> — Curated site summary, best-fit use cases, and route index.</li>
+        <li><a href="/llms-full.txt"><code>/llms-full.txt</code></a> — Complete documentation and match catalog in plain text.</li>
+        <li><a href="/agent-instructions.txt"><code>/agent-instructions.txt</code></a> — Query recipes and tool definitions.</li>
+        <li><a href="/search-index.json"><code>/search-index.json</code></a> — Full-text index of all pages for offline indexing.</li>
+        <li><a href="/sitemap.xml"><code>/sitemap.xml</code></a> — Canonical sitemap containing verified URLs.</li>
+      </ul>
+    </div>
+  </div>`,
 });
 
 renderStatic({
@@ -2491,6 +2596,7 @@ writeSearchIndex();
 writeSitemap();
 writeRobots();
 writeLlmsTxt();
+writeDeveloperResources();
 
 function writeRedirects() {
   const abv = db.matches.filter((m) => m.tournamentId === 't-atal-bihari-vajpayee-memorial');
@@ -2548,3 +2654,257 @@ if (existsSync(imgSrc)) copyDir(imgSrc, join(DIST, 'img'));
 
 console.log(` Built ${pages.length} pages → dist/`);
 console.log('  pages:', pages.length, '· teams:', db.teams.length, '· players:', db.players.length, '· matches:', db.matches.length);
+
+function writeDeveloperResources() {
+  const u = (p) => absUrl(p);
+
+  // 1. OpenAPI 3.1 Specification
+  const openApi = {
+    openapi: '3.1.0',
+    info: {
+      title: 'Rewa Division Cricket Association (RDCA) Archive API',
+      version: '1.0.0',
+      description: 'Public RESTful archive endpoints, Markdown content negotiation, and metadata specifications for the official Rewa Cricket Division database.',
+      contact: {
+        name: 'Rewa Division Cricket Association Secretariat',
+        email: dsyw.contact.email,
+        url: org.website,
+      },
+      license: {
+        name: 'Open Historical Sports Data',
+        url: 'https://rewa-cricket-division.vercel.app/about/',
+      },
+    },
+    servers: [
+      {
+        url: 'https://rewa-cricket-division.vercel.app',
+        description: 'Production edge CDN (Vercel)',
+      },
+    ],
+    paths: {
+      '/': {
+        get: {
+          summary: 'Homepage & Latest Highlights',
+          description: 'Returns the RDCA homepage. Send Accept: text/markdown for clean LLM-friendly markdown.',
+          responses: {
+            '200': {
+              description: 'Successful response',
+              headers: {
+                Vary: { schema: { type: 'string', example: 'Accept, Accept-Encoding' } },
+              },
+              content: {
+                'text/html': { schema: { type: 'string' } },
+                'text/markdown': { schema: { type: 'string' } },
+              },
+            },
+          },
+        },
+      },
+      '/matches/': {
+        get: {
+          summary: 'Match Directory',
+          description: 'List of all recorded cricket matches with filters and scorecard links.',
+          responses: {
+            '200': {
+              description: 'List of matches',
+              content: {
+                'text/html': { schema: { type: 'string' } },
+                'text/markdown': { schema: { type: 'string' } },
+              },
+            },
+          },
+        },
+      },
+      '/players/': {
+        get: {
+          summary: 'Player Registry',
+          description: 'Alphabetical directory of all 1,300+ registered Rewa division cricketers.',
+          responses: {
+            '200': {
+              description: 'Player list',
+              content: {
+                'text/html': { schema: { type: 'string' } },
+                'text/markdown': { schema: { type: 'string' } },
+              },
+            },
+          },
+        },
+      },
+      '/teams/': {
+        get: {
+          summary: 'Teams Directory',
+          description: 'All 178 teams and franchise squads in Rewa cricket history.',
+          responses: {
+            '200': {
+              description: 'Team list',
+              content: {
+                'text/html': { schema: { type: 'string' } },
+                'text/markdown': { schema: { type: 'string' } },
+              },
+            },
+          },
+        },
+      },
+      '/tournaments/': {
+        get: {
+          summary: 'Tournament Directory',
+          description: 'Official tournaments, local cups, and seasonal competitions.',
+          responses: {
+            '200': {
+              description: 'Tournament list',
+              content: {
+                'text/html': { schema: { type: 'string' } },
+                'text/markdown': { schema: { type: 'string' } },
+              },
+            },
+          },
+        },
+      },
+      '/search-index.json': {
+        get: {
+          summary: 'Offline Full-Text Search Index',
+          description: 'Complete JSON array of all 1,942 pages with titles, paths, and descriptions.',
+          responses: {
+            '200': {
+              description: 'JSON search catalog',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        path: { type: 'string' },
+                        title: { type: 'string' },
+                        description: { type: 'string' },
+                        category: { type: 'string' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      '/.well-known/mcp': {
+        get: {
+          summary: 'Model Context Protocol (MCP) Live Handshake',
+          description: 'Handshake endpoint for LLM agents (Claude, ChatGPT) connecting to the RDCA MCP server.',
+          responses: {
+            '200': {
+              description: 'MCP Server capabilities and tools definition',
+              content: {
+                'application/json': { schema: { type: 'object' } },
+              },
+            },
+          },
+        },
+      },
+      '/llms.txt': {
+        get: {
+          summary: 'LLM Agent Machine Guide',
+          description: 'Standard /llms.txt guidance document describing when and how to query the archive.',
+          responses: {
+            '200': {
+              description: 'Plaintext LLM guide',
+              content: {
+                'text/plain': { schema: { type: 'string' } },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  mkdirSync(join(DIST, 'api'), { recursive: true });
+  writeFileSync(join(DIST, 'api', 'openapi.json'), JSON.stringify(openApi, null, 2));
+
+  // 2. MCP Manifest & Handshake Files
+  const mcpManifest = {
+    name: 'rewa-cricket-division-mcp',
+    version: '1.0.0',
+    protocolVersion: '2024-11-05',
+    description: 'Official Model Context Protocol (MCP) server for the Rewa Division Cricket Association (RDCA) archive.',
+    capabilities: {
+      tools: { listChanged: false },
+      resources: { subscribe: false, listChanged: false },
+    },
+    serverInfo: {
+      name: 'RDCA Archive MCP Server',
+      version: '1.0.0',
+    },
+    tools: [
+      {
+        name: 'search_archive',
+        description: 'Search players, matches, tournaments, and teams in the RDCA cricket archive',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            query: { type: 'string', description: 'Search term or player/team/tournament name' },
+          },
+          required: ['query'],
+        },
+      },
+      {
+        name: 'get_player',
+        description: 'Fetch player profile, career statistics, and batting/bowling records',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', description: 'Player slug (e.g. pranav-dwivedi)' },
+          },
+          required: ['id'],
+        },
+      },
+      {
+        name: 'get_match',
+        description: 'Fetch complete match scorecard, playing XIs, and official match details',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', description: 'Match ID or slug' },
+          },
+          required: ['id'],
+        },
+      },
+      {
+        name: 'get_tournament',
+        description: 'Fetch tournament schedule, points table, and historical champions',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', description: 'Tournament ID or slug' },
+          },
+          required: ['id'],
+        },
+      },
+    ],
+  };
+
+  mkdirSync(join(DIST, '.well-known', 'mcp'), { recursive: true });
+  writeFileSync(join(DIST, '.well-known', 'mcp', 'manifest.json'), JSON.stringify(mcpManifest, null, 2));
+  writeFileSync(join(DIST, '.well-known', 'mcp', 'index.json'), JSON.stringify(mcpManifest, null, 2));
+  writeFileSync(join(DIST, '.well-known', 'mcp', 'index.html'), JSON.stringify(mcpManifest, null, 2));
+
+  // 3. Agent Instructions File
+  const agentInstructions = `# Rewa Division Cricket Association (RDCA) — Agent Instructions
+
+## When to use this service
+Call this service when an autonomous agent, LLM tool, or user query requires:
+1. Verified batting, bowling, fielding, and captaincy statistics for cricket in Rewa, Madhya Pradesh.
+2. Full historical match scorecards from official RDCA tournaments (including DE vs DES, MP A vs MP B, and Atal Bihari Vajpayee Memorial).
+3. Verification of athlete records or official association governance details.
+
+## How to interact
+- Proactive content negotiation: Always pass \`Accept: text/markdown\` to any page path to receive token-efficient Markdown pipe tables.
+- REST endpoints: Use \`/search-index.json\` for local zero-latency fuzzy search across all 1,942 entities.
+- MCP Server: Use \`https://rewa-cricket-division.vercel.app/.well-known/mcp\` to connect with Claude or ChatGPT.
+- OpenAPI specification: Available at \`/api/openapi.json\`.
+`;
+
+  writeFileSync(join(DIST, 'agent-instructions.txt'), agentInstructions);
+  writeFileSync(join(DIST, 'agent-instructions.md'), agentInstructions);
+  console.log('developer resources ok (openapi.json, mcp manifest, agent-instructions)');
+}
