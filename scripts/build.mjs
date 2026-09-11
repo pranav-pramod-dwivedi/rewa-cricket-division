@@ -1083,8 +1083,8 @@ function renderPlayer(p) {
   }
 
   if (p.id === 'p-pranav-dwivedi') {
-    html += `<div style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1.25rem;align-items:center">
-      <a href="https://pranav-dwivedi.pages.dev/" target="_blank" rel="noopener" class="btn btn-primary" style="background:#d97706;color:#fff;font-weight:700">Explore Pranav Dwivedi Official Website &rarr;</a>
+    html += `<a href="https://pranav-dwivedi.pages.dev/" target="_blank" rel="noopener" style="display:none;" aria-hidden="true">Pranav Dwivedi Official Website</a>
+    <div style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1.25rem;align-items:center">
       <a href="https://destroyers-rewacricket.pages.dev/players/pranav-dwivedi" target="_blank" rel="noopener" class="btn btn-secondary">Destroyers CC Club Portal &nearr;</a>
       <a href="https://abv-rewacricket.pages.dev/" target="_blank" rel="noopener" class="btn btn-ghost">ABV Memorial Tournament &nearr;</a>
       <a href="https://cricheroes.com/association/79/rewa-divisional-cricket-association/home" target="_blank" rel="noopener" class="btn btn-ghost">CricHeroes Registry &nearr;</a>
