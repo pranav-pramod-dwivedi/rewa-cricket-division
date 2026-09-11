@@ -1308,6 +1308,66 @@ function renderTournament(t) {
         </div>
       </div>
     </section>`;
+
+    html += `<!-- Official Tournament Regulations & Complex Rule Amendments -->
+    <section class="section" style="margin-bottom:2.5rem">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">Statutory Framework &amp; Technical Governance</p>
+          <h2>Official Tournament Regulations &amp; Playing Conditions</h2>
+        </div>
+        <a href="https://abv-rewacricket.pages.dev/rules/" target="_blank" rel="noopener" class="link">Full 14 Codes Repository &rarr;</a>
+      </div>
+      <p class="card-meta" style="margin-bottom:1.5rem">Sanctioned by the Rewa Division Cricket Association (RDCA) and affiliated with MPCA. Competitors, team officials, and match personnel are subject to 14 codified statutory regulations and recent structural playing amendments.</p>
+
+      <!-- Executive Overview of Complex Rule Changes -->
+      <div class="card" style="margin-bottom:1.5rem; border-left:4px solid var(--c-accent, #c8a24a); padding:1.5rem;">
+        <h3 style="margin-bottom:0.5rem">Key Complex Rule Amendments &amp; Enforcement Directives</h3>
+        <p class="card-meta" style="margin-bottom:1rem">The Technical &amp; Umpires Committee introduced modernized operational mandates to enhance over rates, technical biomechanics, and competitive integrity:</p>
+        <div class="grid grid-2" style="gap:1rem;">
+          <div style="background:var(--page-bg, #f9fafb); padding:1rem; border-radius:6px; border:1px solid var(--line, #e5e7eb);">
+            <strong style="display:block; margin-bottom:0.25rem; color:var(--brand-dark, #08301f);">1. In-Match Slow Over Rate Field Penalties</strong>
+            <p style="font-size:0.875rem; color:var(--ink, #171717); margin:0; line-height:1.5;">If the fielding team fails to commence the final over of an innings by the scheduled cutoff time, an automatic in-match penalty applies: exactly one fewer fielder is permitted outside the 30-yard circle (maximum 4 fielders outside instead of 5) for all remaining overs.</p>
+          </div>
+          <div style="background:var(--page-bg, #f9fafb); padding:1rem; border-radius:6px; border:1px solid var(--line, #e5e7eb);">
+            <strong style="display:block; margin-bottom:0.25rem; color:var(--brand-dark, #08301f);">2. Mandatory 60-Second Stop-Clock Rule</strong>
+            <p style="font-size:0.875rem; color:var(--ink, #171717); margin:0; line-height:1.5;">A countdown timer enforces that the bowling side must be ready to deliver the first ball of the next over within 60 seconds of the previous over finishing. On the 3rd infraction in an innings, a 5-run penalty is awarded to the batting side.</p>
+          </div>
+          <div style="background:var(--page-bg, #f9fafb); padding:1rem; border-radius:6px; border:1px solid var(--line, #e5e7eb);">
+            <strong style="display:block; margin-bottom:0.25rem; color:var(--brand-dark, #08301f);">3. 15° Suspected Illegal Bowling Action Protocol</strong>
+            <p style="font-size:0.875rem; color:var(--ink, #171717); margin:0; line-height:1.5;">Any bowler reported by on-field umpires for suspected throwing (elbow extension exceeding the 15-degree physiological tolerance limit) must undergo mandatory 3D motion-analysis assessment within 14 days. Failure or refusal leads to immediate bowling suspension across all RDCA tournaments.</p>
+          </div>
+          <div style="background:var(--page-bg, #f9fafb); padding:1rem; border-radius:6px; border:1px solid var(--line, #e5e7eb);">
+            <strong style="display:block; margin-bottom:0.25rem; color:var(--brand-dark, #08301f);">4. Strict PMOA Electronic Blackout &amp; Smartwatch Ban</strong>
+            <p style="font-size:0.875rem; color:var(--brand-dark, #08301f);">Zero-tolerance electronic communication cordon. From 60 minutes prior to scheduled match toss until post-match presentation, all personal phones, smartwatches, and transmission devices must be surrendered to the ACU Integrity Officer. No smart devices permitted in dressing rooms.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 14 Statutory Codes Quick Access Grid -->
+      <h3 style="margin-bottom:0.75rem">14 Statutory Regulatory Codes</h3>
+      <div class="card table-wrap">
+        <table>
+          <thead><tr><th>Code No.</th><th>Statutory Policy</th><th>Regulatory Area</th><th>Direct Documentation</th></tr></thead>
+          <tbody>
+            <tr><td><strong>REG-01</strong></td><td>Anti-Corruption Policy &amp; Protocols</td><td><span class="badge badge-completed">Integrity &amp; Ethics</span></td><td><a href="https://abv-rewacricket.pages.dev/rules/anti-corruption/" target="_blank" rel="noopener">View Full Code &rarr;</a></td></tr>
+            <tr><td><strong>REG-02</strong></td><td>Anti-Doping Code (WADA/NADA Aligned)</td><td><span class="badge badge-completed">Integrity &amp; Ethics</span></td><td><a href="https://abv-rewacricket.pages.dev/rules/anti-doping/" target="_blank" rel="noopener">View Full Code &rarr;</a></td></tr>
+            <tr><td><strong>REG-03</strong></td><td>Anti-Racism Policy</td><td><span class="badge badge-completed">Inclusion &amp; Conduct</span></td><td><a href="https://abv-rewacricket.pages.dev/rules/anti-racism/" target="_blank" rel="noopener">View Full Code &rarr;</a></td></tr>
+            <tr><td><strong>REG-04</strong></td><td>Anti-Discrimination Policy</td><td><span class="badge badge-completed">Inclusion &amp; Conduct</span></td><td><a href="https://abv-rewacricket.pages.dev/rules/anti-discrimination/" target="_blank" rel="noopener">View Full Code &rarr;</a></td></tr>
+            <tr><td><strong>REG-05</strong></td><td>Suspected Illegal Bowling Action Policy</td><td><span class="badge badge-completed">Technical Regulations</span></td><td><a href="https://abv-rewacricket.pages.dev/rules/suspected-illegal-action/" target="_blank" rel="noopener">View Full Code &rarr;</a></td></tr>
+            <tr><td><strong>REG-06</strong></td><td>Match Playing Conditions (50 Overs &amp; T20)</td><td><span class="badge badge-completed">Field of Play</span></td><td><a href="https://abv-rewacricket.pages.dev/rules/match-playing-conditions/" target="_blank" rel="noopener">View Full Code &rarr;</a></td></tr>
+            <tr><td><strong>REG-07</strong></td><td>PMOA Minimum Standards (Communication Blackout)</td><td><span class="badge badge-completed">Integrity &amp; Security</span></td><td><a href="https://abv-rewacricket.pages.dev/rules/pmoa-minimum-standards/" target="_blank" rel="noopener">View Full Code &rarr;</a></td></tr>
+            <tr><td><strong>REG-08</strong></td><td>Code of Conduct for Match Officials</td><td><span class="badge badge-completed">Officiating &amp; Governance</span></td><td><a href="https://abv-rewacricket.pages.dev/rules/code-of-conduct-match-officials/" target="_blank" rel="noopener">View Full Code &rarr;</a></td></tr>
+            <tr><td><strong>REG-09</strong></td><td>Code of Conduct for Players &amp; Team Officials</td><td><span class="badge badge-completed">Discipline &amp; Behavior</span></td><td><a href="https://abv-rewacricket.pages.dev/rules/code-of-conduct-players/" target="_blank" rel="noopener">View Full Code &rarr;</a></td></tr>
+            <tr><td><strong>REG-10</strong></td><td>Clothing and Equipment Regulations</td><td><span class="badge badge-completed">Technical Regulations</span></td><td><a href="https://abv-rewacricket.pages.dev/rules/clothing-and-equipment/" target="_blank" rel="noopener">View Full Code &rarr;</a></td></tr>
+            <tr><td><strong>REG-11</strong></td><td>News Access Regulations</td><td><span class="badge badge-completed">Media &amp; Broadcast</span></td><td><a href="https://abv-rewacricket.pages.dev/rules/news-access-regulations/" target="_blank" rel="noopener">View Full Code &rarr;</a></td></tr>
+            <tr><td><strong>REG-12</strong></td><td>Image Use Terms &amp; Photography Guidelines</td><td><span class="badge badge-completed">Media &amp; Broadcast</span></td><td><a href="https://abv-rewacricket.pages.dev/rules/image-use-terms/" target="_blank" rel="noopener">View Full Code &rarr;</a></td></tr>
+            <tr><td><strong>REG-13</strong></td><td>Media Accreditation Terms &amp; Conditions</td><td><span class="badge badge-completed">Media &amp; Broadcast</span></td><td><a href="https://abv-rewacricket.pages.dev/rules/media-accreditation/" target="_blank" rel="noopener">View Full Code &rarr;</a></td></tr>
+            <tr><td><strong>REG-14</strong></td><td>Ticket Terms and Conditions &amp; Spectator Entry</td><td><span class="badge badge-completed">Stadium Admission</span></td><td><a href="https://abv-rewacricket.pages.dev/rules/ticket-terms-and-conditions/" target="_blank" rel="noopener">View Full Code &rarr;</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>`;
   }
   html += `<section class="section"><div class="section-title"><h2>Matches</h2></div>
     <div class="grid grid-2">${tMatches.length ? tMatches.map(matchCard).join('\n') : empty('No matches yet', 'Match fixtures for this tournament will be published here when confirmed.')}</div></section>`;
