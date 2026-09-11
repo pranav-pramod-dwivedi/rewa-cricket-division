@@ -314,6 +314,13 @@ const orgLd = {
   name: org.name,
   ...(org.alternateName ? { alternateName: org.alternateName } : {}),
   url: org.website,
+  sameAs: [
+    'https://cricheroes.com/association/79/rewa-divisional-cricket-association/home',
+    'https://www.facebook.com/rewa.cricket.association',
+    'https://abv-rewacricket.pages.dev/',
+    'https://destroyers-rewacricket.pages.dev/',
+    'https://dread-eleven-rewacricket.pages.dev/'
+  ],
   logo: absUrl('/logo.png'),
   image: absUrl('/img/og-cover.png'),
   description: org.description,
@@ -769,6 +776,17 @@ function renderTeam(t) {
         url: absUrl(`/teams/${t.slug}/`),
         sport: 'Cricket',
         memberOf: { '@type': 'SportsOrganization', name: org.name },
+        ...(t.id === 't-destroyers' ? {
+          sameAs: [
+            'https://destroyers-rewacricket.pages.dev/',
+            'https://abv-rewacricket.pages.dev/'
+          ]
+        } : t.id === 't-de' ? {
+          sameAs: [
+            'https://dread-eleven-rewacricket.pages.dev/',
+            'https://abv-rewacricket.pages.dev/'
+          ]
+        } : {}),
       },
     ],
   });
@@ -989,6 +1007,8 @@ function renderPlayer(p) {
   const playerSameAs = p.id === 'p-pranav-dwivedi'
     ? [
         'https://pranav-dwivedi.pages.dev/',
+        'https://pranav-pramod-dwivedi.github.io/',
+        'https://github.com/pranav-pramod-dwivedi',
         'https://destroyers-rewacricket.pages.dev/players/pranav-dwivedi',
         'https://rewa-cricket-division.vercel.app/players/pranav-dwivedi/',
         'https://abv-rewacricket.pages.dev/',
@@ -2208,6 +2228,14 @@ Not suitable for: live ball-by-ball commentary, betting/odds data, player contac
 - [Search index](${u('/search-index.json')}): JSON array of {path, title, description} for all pages — use it for offline/full-text lookup without crawling
 - [Structured data]: schema.org JSON-LD embedded in every page head (SportsOrganization, WebSite, SportsTeam, Person, SportsEvent, Place)
 - [Markdown convention]: any page path + \`.md\` returns the Markdown variant as plain text
+
+## Affiliated Tournament & Franchise Portals
+
+- [Atal Bihari Vajpayee Memorial Tournament](https://abv-rewacricket.pages.dev/)
+- [Destroyers Cricket Club Official Hub](https://destroyers-rewacricket.pages.dev/)
+- [Dread Eleven Official Stadium](https://dread-eleven-rewacricket.pages.dev/)
+- [Capt. Pranav Dwivedi Independent Portfolio](https://pranav-dwivedi.pages.dev/)
+- [Capt. Pranav Dwivedi GitHub Mirror](https://pranav-pramod-dwivedi.github.io/)
 
 ## Contact
 
