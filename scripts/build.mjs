@@ -1042,7 +1042,7 @@ function renderPlayer(p) {
       } : {}),
       ...(p.id === 'p-akhil-mishra' ? {
         alternateName: ['Capt. Akhil Mishra', 'Akhil Mishra Rewa', 'A. Mishra'],
-        identifier: 'DE-10',
+        identifier: 'DE-45',
         award: [
           '2022 Atal Bihari Vajpayee Memorial Trophy Champion Captain',
           'Rewa Derby All-Time 2nd Leading Run Scorer (1,378 runs, 44.5 avg)',
