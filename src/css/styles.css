@@ -124,11 +124,10 @@ main .container {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  object-fit: contain;
+  object-fit: cover;
   flex-shrink: 0;
   display: block;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   aspect-ratio: 1 / 1;
 }
 
@@ -136,11 +135,10 @@ main .container {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  object-fit: contain;
+  object-fit: cover;
   flex-shrink: 0;
   display: block;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   aspect-ratio: 1 / 1;
 }
 
@@ -255,11 +253,10 @@ main .container {
   height: 96px;
   margin: 0 auto 1.25rem;
   border-radius: 50%;
-  object-fit: contain;
+  object-fit: cover;
   border: 3px solid var(--accent);
   box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.2), 0 8px 24px rgba(0, 0, 0, 0.25);
   display: block;
-  background: #ffffff;
   aspect-ratio: 1 / 1;
 }
 
