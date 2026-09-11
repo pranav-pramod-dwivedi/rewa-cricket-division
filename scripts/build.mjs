@@ -247,6 +247,13 @@ const tourneysById = new Map(db.tournaments.map((t) => [t.id, t]));
 const venuesById = new Map(db.venues.map((v) => [v.id, v]));
 const seasonsById = new Map(db.seasons.map((s) => [s.id, s]));
 
+// ---------- fictional / intra-squad trial status ----------
+const FICTIONAL_TOURS = new Set([
+  't-shared-mp', 't-shared-rj', 't-shared-de', 't-shared-de-odi', 't-shared-odide',
+  't-shared-rcb', 't-shared-mi', 't-shared-lsg', 't-shared-rcb-kkr',
+]);
+const isFictionalTour = (tid) => Boolean(tid && (tid.startsWith('t-shared-') || FICTIONAL_TOURS.has(tid)));
+
 // ---------- official status ----------
 const officialTournamentIds = new Set(db.tournaments.filter((t) => t.category === 'official').map((t) => t.id));
 const matchTournamentOf = new Map(db.matches.map((m) => [m.id, m.tournamentId]));
@@ -1423,8 +1430,9 @@ const ARCHIVE = [
 function tournCard(t) {
   const season = seasonsById.get(t.seasonId);
   const official = isOfficialTournament(t.id);
+  const yearTxt = season?.year ? String(season.year) : (t.editions?.length ? `${t.editions[0].year}–${t.editions[t.editions.length - 1].year}` : 'Season');
   return `<a class="card card-link${officialCardClass(official)}" href="/tournaments/${esc(t.slug)}/">
-    <p class="eyebrow">${esc(t.format)} · ${season?.year ?? 'Season'}</p>
+    <p class="eyebrow">${esc(t.format)} · ${yearTxt}</p>
     <span class="card-title">${esc(t.name)}</span>
     <div class="card-meta">${esc(t.status)}${official ? ` · ${esc(t.governingBody ?? 'Official')}` : ' · Local/Community'}</div>
   </a>`;
@@ -1490,8 +1498,9 @@ function renderTournaments() {
   });
   html += `<div class="page-head"><p class="eyebrow">Competition</p><h1>Tournaments</h1>
     <p>Official tournaments as announced by the division.</p></div>`;
-  const officialTs = db.tournaments.filter((t) => isOfficialTournament(t.id));
-  const communityTs = db.tournaments.filter((t) => !isOfficialTournament(t.id));
+  const visibleTs = db.tournaments.filter((t) => !isFictionalTour(t.id));
+  const officialTs = visibleTs.filter((t) => isOfficialTournament(t.id));
+  const communityTs = visibleTs.filter((t) => !isOfficialTournament(t.id));
   if (officialTs.length) {
     html += `<section class="section"><div class="section-title"><h2>Official</h2></div>`;
     const groups = new Map();
@@ -1501,7 +1510,9 @@ function renderTournaments() {
       groups.get(key).push(t);
     }
     for (const [gname, ts] of [...groups.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
-      html += `<div class="group-block"><div class="group-title"><h3>${esc(gname)}</h3><span class="count-pill">${ts.length} season${ts.length === 1 ? '' : 's'}</span></div><div class="grid grid-2 grid-3">${ts.sort((a, b) => b.name.localeCompare(a.name)).map(tournCard).join('\n')}</div></div>`;
+      const editionsCount = ts[0]?.editions?.length;
+      const countLabel = editionsCount && ts.length === 1 ? `${editionsCount} editions` : `${ts.length} season${ts.length === 1 ? '' : 's'}`;
+      html += `<div class="group-block"><div class="group-title"><h3>${esc(gname)}</h3><span class="count-pill">${countLabel}</span></div><div class="grid grid-2 grid-3">${ts.sort((a, b) => b.name.localeCompare(a.name)).map(tournCard).join('\n')}</div></div>`;
     }
     html += `</section>`;
   }
@@ -1691,10 +1702,7 @@ function renderMatches() {
 
 // hidden/fictional archived tournaments (intra-squad trial sides) —
 // their scorecards do not deep-link to player profiles ("hidden in profiles only").
-const FICTIONAL_TOURS = new Set([
-  't-shared-mp', 't-shared-rj', 't-shared-de', 't-shared-odide', 't-shared-rcb', 't-shared-mi',
-]);
-const isFictionalMatch = (m) => FICTIONAL_TOURS.has(m && m.tournamentId);
+const isFictionalMatch = (m) => isFictionalTour(m && m.tournamentId);
 // teams withheld from linking on player profiles (per request: RCB / MI + trial sides unclickable)
 const UNLINKABLE_TEAMS = new Set([
   't-mumbai-indians', 't-royal-challengers-bengaluru', 't-rcb-hinterland',
@@ -2448,7 +2456,7 @@ renderStatic({
 
 // season detail pages
 for (const s of db.seasons) {
-  const sTournaments = db.tournaments.filter((t) => t.seasonId === s.id);
+  const sTournaments = db.tournaments.filter((t) => t.seasonId === s.id && !isFictionalTour(t.id));
   const sMatches = db.matches.filter((m) => m.seasonId === s.id).sort(dateSort);
   renderAggregate({
     file: `seasons/${s.year}`,
@@ -2489,6 +2497,10 @@ function writeRedirects() {
       lines.push(`/matches/${alias}/ /matches/${m.slug}/ 301`);
     }
   }
+  lines.push(`/tournaments/de-v-des-t20-series /tournaments/atal-bihari-vajpayee-memorial-tournament/ 301`);
+  lines.push(`/tournaments/de-v-des-t20-series/ /tournaments/atal-bihari-vajpayee-memorial-tournament/ 301`);
+  lines.push(`/tournaments/de-v-des-odi-series /tournaments/atal-bihari-vajpayee-memorial-tournament/ 301`);
+  lines.push(`/tournaments/de-v-des-odi-series/ /tournaments/atal-bihari-vajpayee-memorial-tournament/ 301`);
   writeFileSync(join(DIST, '_redirects'), lines.join('\n') + '\n');
 }
 writeRedirects();

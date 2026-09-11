@@ -475,28 +475,8 @@
       "slug": "rj-a-v-rj-b",
       "format": "T20",
       "status": "completed",
-      "category": "official",
+      "category": "trial",
       "scope": "division",
-      "description": "Intra-squad trial series."
-    },
-    {
-      "id": "t-shared-de",
-      "name": "DE v DES T20 Series",
-      "slug": "de-v-des-t20-series",
-      "format": "T20",
-      "status": "completed",
-      "category": "official",
-      "scope": "division",
-      "description": "Intra-squad trial series."
-    },
-    {
-      "id": "t-shared-de-odi",
-      "name": "DE v DES ODI Series",
-      "slug": "de-v-des-odi-series",
-      "format": "ODI",
-      "status": "completed",
-      "category": "official",
-      "scope": "state",
       "description": "Intra-squad trial series."
     },
     {
@@ -505,7 +485,7 @@
       "slug": "mp-a-v-mp-b",
       "format": "First-class",
       "status": "completed",
-      "category": "official",
+      "category": "trial",
       "scope": "state",
       "description": "Intra-squad trial series."
     },
@@ -515,7 +495,7 @@
       "slug": "rcb-a-v-rcb-b",
       "format": "T20",
       "status": "completed",
-      "category": "official",
+      "category": "trial",
       "scope": "ipl",
       "description": "Intra-squad trial series."
     },
@@ -525,7 +505,7 @@
       "slug": "mi-a-v-mi-b",
       "format": "T20",
       "status": "completed",
-      "category": "official",
+      "category": "trial",
       "scope": "ipl",
       "description": "Intra-squad trial series."
     },
@@ -535,7 +515,7 @@
       "slug": "lsg-a-v-lsg-b",
       "format": "T20",
       "status": "completed",
-      "category": "official",
+      "category": "trial",
       "scope": "ipl",
       "description": "Intra-squad trial series."
     },
@@ -545,7 +525,7 @@
       "slug": "rcb-v-kkr",
       "format": "IPL",
       "status": "completed",
-      "category": "official",
+      "category": "trial",
       "scope": "ipl",
       "description": "Intra-squad trial series."
     },

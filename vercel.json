@@ -198,6 +198,26 @@
       "source": "/matches/de-vs-des-2026-09-20",
       "destination": "/matches/destroyers-vs-dread-eleven-2026-09-20/",
       "permanent": true
+    },
+    {
+      "source": "/tournaments/de-v-des-t20-series",
+      "destination": "/tournaments/atal-bihari-vajpayee-memorial-tournament/",
+      "permanent": true
+    },
+    {
+      "source": "/tournaments/de-v-des-t20-series/",
+      "destination": "/tournaments/atal-bihari-vajpayee-memorial-tournament/",
+      "permanent": true
+    },
+    {
+      "source": "/tournaments/de-v-des-odi-series",
+      "destination": "/tournaments/atal-bihari-vajpayee-memorial-tournament/",
+      "permanent": true
+    },
+    {
+      "source": "/tournaments/de-v-des-odi-series/",
+      "destination": "/tournaments/atal-bihari-vajpayee-memorial-tournament/",
+      "permanent": true
     }
   ]
 }
