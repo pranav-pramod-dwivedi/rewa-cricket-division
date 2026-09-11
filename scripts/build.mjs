@@ -988,7 +988,7 @@ function renderPlayer(p) {
   const seoDesc = `${p.name} is a ${p.role}${seoTeam ? ` for ${seoTeam}` : ''} at Rewa Cricket Division (RDCA), Madhya Pradesh. ${p.battingStyle ? p.battingStyle + ' batsman; ' : ''}Browse ${p.name}'s career statistics, batting, bowling and match scorecards — Rewa district cricket.`;
   const playerSameAs = p.id === 'p-pranav-dwivedi'
     ? [
-        'https://destroyers-rewacricket.pages.dev/portfolio/',
+        'https://pranav-dwivedi.pages.dev/',
         'https://destroyers-rewacricket.pages.dev/players/pranav-dwivedi',
         'https://rewa-cricket-division.vercel.app/players/pranav-dwivedi/',
         'https://abv-rewacricket.pages.dev/',
@@ -999,7 +999,6 @@ function renderPlayer(p) {
       ]
     : p.id === 'p-akhil-mishra'
     ? [
-        'https://dread-eleven-rewacricket.pages.dev/portfolio/',
         'https://dread-eleven-rewacricket.pages.dev/players/akhil-mishra',
         'https://rewa-cricket-division.vercel.app/players/akhil-mishra/',
         'https://abv-rewacricket.pages.dev/',
@@ -1065,15 +1064,14 @@ function renderPlayer(p) {
 
   if (p.id === 'p-pranav-dwivedi') {
     html += `<div style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1.25rem;align-items:center">
-      <a href="https://destroyers-rewacricket.pages.dev/portfolio/" target="_blank" rel="noopener" class="btn btn-primary" style="background:#d97706;color:#fff;font-weight:700">Explore Pranav Dwivedi Official Portfolio &rarr;</a>
+      <a href="https://pranav-dwivedi.pages.dev/" target="_blank" rel="noopener" class="btn btn-primary" style="background:#d97706;color:#fff;font-weight:700">Explore Pranav Dwivedi Official Website &rarr;</a>
       <a href="https://destroyers-rewacricket.pages.dev/players/pranav-dwivedi" target="_blank" rel="noopener" class="btn btn-secondary">Destroyers CC Club Portal &nearr;</a>
       <a href="https://abv-rewacricket.pages.dev/" target="_blank" rel="noopener" class="btn btn-ghost">ABV Memorial Tournament &nearr;</a>
       <a href="https://cricheroes.com/association/79/rewa-divisional-cricket-association/home" target="_blank" rel="noopener" class="btn btn-ghost">CricHeroes Registry &nearr;</a>
     </div>`;
   } else if (p.id === 'p-akhil-mishra') {
     html += `<div style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1.25rem;align-items:center">
-      <a href="https://dread-eleven-rewacricket.pages.dev/portfolio/" target="_blank" rel="noopener" class="btn btn-primary" style="background:#16a34a;color:#fff;font-weight:700">Explore Akhil Mishra Official Portfolio &rarr;</a>
-      <a href="https://dread-eleven-rewacricket.pages.dev/players/akhil-mishra" target="_blank" rel="noopener" class="btn btn-secondary">Dread Eleven Digital Stadium &nearr;</a>
+      <a href="https://dread-eleven-rewacricket.pages.dev/players/akhil-mishra" target="_blank" rel="noopener" class="btn btn-primary" style="background:#16a34a;color:#fff;font-weight:700">Dread Eleven Digital Stadium Profile &nearr;</a>
       <a href="https://abv-rewacricket.pages.dev/" target="_blank" rel="noopener" class="btn btn-ghost">ABV Memorial Tournament &nearr;</a>
       <a href="https://cricheroes.com/association/79/rewa-divisional-cricket-association/home" target="_blank" rel="noopener" class="btn btn-ghost">CricHeroes Registry &nearr;</a>
     </div>`;
