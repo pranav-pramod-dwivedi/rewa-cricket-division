@@ -8,8 +8,196 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Vary", "value": "Accept, Accept-Encoding" }
+        {
+          "key": "Vary",
+          "value": "Accept, Accept-Encoding"
+        }
       ]
+    },
+    {
+      "source": "/sitemap(.*).xml",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/xml; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=3600"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2021-08-01",
+      "destination": "/matches/de-vs-des-2021-08-01/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2021-08-04",
+      "destination": "/matches/de-vs-des-2021-08-04/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2021-08-07",
+      "destination": "/matches/de-vs-des-2021-08-07/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2021-08-11",
+      "destination": "/matches/de-vs-des-2021-08-11/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2021-08-15",
+      "destination": "/matches/de-vs-des-2021-08-15/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2021-08-20",
+      "destination": "/matches/de-vs-des-2021-08-20/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2021-08-28",
+      "destination": "/matches/de-vs-des-2021-08-28/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2022-08-10",
+      "destination": "/matches/de-vs-des-2022-08-10/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2022-08-12",
+      "destination": "/matches/de-vs-des-2022-08-12/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2022-09-04",
+      "destination": "/matches/de-vs-des-2022-09-04/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2022-09-07",
+      "destination": "/matches/de-vs-des-2022-09-07/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2022-09-10",
+      "destination": "/matches/de-vs-des-2022-09-10/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2022-09-14",
+      "destination": "/matches/de-vs-des-2022-09-14/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2022-09-18",
+      "destination": "/matches/de-vs-des-2022-09-18/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2023-09-05",
+      "destination": "/matches/de-vs-des-2023-09-05/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2023-09-08",
+      "destination": "/matches/de-vs-des-2023-09-08/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2023-09-12",
+      "destination": "/matches/de-vs-des-2023-09-12/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2023-09-16",
+      "destination": "/matches/de-vs-des-2023-09-16/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2023-09-20",
+      "destination": "/matches/de-vs-des-2023-09-20/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2024-09-05",
+      "destination": "/matches/de-vs-des-2024-09-05/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2024-09-08",
+      "destination": "/matches/de-vs-des-2024-09-08/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2024-09-12",
+      "destination": "/matches/de-vs-des-2024-09-12/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2024-09-16",
+      "destination": "/matches/de-vs-des-2024-09-16/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2024-09-20",
+      "destination": "/matches/de-vs-des-2024-09-20/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/de-vs-des-2025-09-05",
+      "destination": "/matches/destroyers-vs-dread-eleven-2025-09-05/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/de-vs-des-2025-09-08",
+      "destination": "/matches/destroyers-vs-dread-eleven-2025-09-08/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/de-vs-des-2025-09-12",
+      "destination": "/matches/destroyers-vs-dread-eleven-2025-09-12/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/de-vs-des-2025-09-16",
+      "destination": "/matches/destroyers-vs-dread-eleven-2025-09-16/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/de-vs-des-2025-09-20",
+      "destination": "/matches/destroyers-vs-dread-eleven-2025-09-20/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/de-vs-des-2026-09-05",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-09-05/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/de-vs-des-2026-09-08",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-09-08/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/de-vs-des-2026-09-12",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-09-12/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/de-vs-des-2026-09-16",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-09-16/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/de-vs-des-2026-09-20",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-09-20/",
+      "permanent": true
     }
   ]
 }

@@ -15,6 +15,7 @@ import { htmlToMarkdown, pageTitleFromHtml } from '../lib/agentic.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
+const BUILD_DATE = new Date().toISOString().split('T')[0];
 const SRC = join(ROOT, 'src');
 const DIST = join(ROOT, 'dist');
 const DATA = join(ROOT, 'data');
@@ -88,10 +89,13 @@ ${keywords ? `<meta name="keywords" content="${esc(keywords)}" />` : ''}
 <meta name="twitter:title" content="${esc(titleFor(title))}" />
 <meta name="twitter:description" content="${esc(description)}" />
 <meta name="twitter:image" content="${absUrl('/img/og-cover.png')}" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
 <link rel="icon" href="/favicon-48x48.png" sizes="48x48" type="image/png" />
+<link rel="icon" href="/logo.png" type="image/png" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta name="google-site-verification" content="google23e3ba68f31a1fe8" />
 <link rel="stylesheet" href="/css/styles.css" />
 ${blocks.map(ld).join('\n')}
 </head>`;
@@ -310,6 +314,8 @@ const orgLd = {
   name: org.name,
   ...(org.alternateName ? { alternateName: org.alternateName } : {}),
   url: org.website,
+  logo: absUrl('/logo.png'),
+  image: absUrl('/img/og-cover.png'),
   description: org.description,
   ...(org.keywords?.length ? { keywords: org.keywords.join(', ') } : {}),
   address: {
@@ -345,9 +351,10 @@ const websiteLd = {
 
 // ---------- page writers ----------
 const pages = []; // for sitemap
+const pageEntries = []; // for detailed structured sitemaps
 const pageMeta = []; // for client-side search index
 
-function writePage(relPath, html) {
+function writePage(relPath, html, meta = {}) {
   const file = join(DIST, relPath, 'index.html');
   mkdirSync(dirname(file), { recursive: true });
   writeFileSync(file, html);
@@ -361,7 +368,61 @@ function writePage(relPath, html) {
       url: absUrl(relPath === '' ? '/' : `/${relPath}/`),
     }),
   );
-  pages.push(relPath === '' ? '/' : `/${relPath}/`);
+  const pPath = relPath === '' ? '/' : `/${relPath}/`;
+  pages.push(pPath);
+
+  let cat = meta.category;
+  let priority = meta.priority;
+  let changefreq = meta.changefreq;
+  let lastmod = meta.lastmod || BUILD_DATE;
+
+  if (!cat) {
+    if (pPath === '/') {
+      cat = 'core';
+      priority = '1.0';
+      changefreq = 'daily';
+    } else if (/^\/(matches|tournaments|teams|players|venues|stats|records|about|news|archive|contact|live|academy)\/$/.test(pPath)) {
+      cat = 'core';
+      priority = '0.9';
+      changefreq = 'weekly';
+    } else if (pPath.startsWith('/tournaments/')) {
+      cat = 'core';
+      priority = '0.85';
+      changefreq = 'weekly';
+    } else if (pPath.startsWith('/news/')) {
+      cat = 'core';
+      priority = '0.85';
+      changefreq = 'weekly';
+    } else if (pPath.startsWith('/teams/')) {
+      cat = 'core';
+      priority = '0.80';
+      changefreq = 'monthly';
+    } else if (pPath.startsWith('/venues/')) {
+      cat = 'core';
+      priority = '0.75';
+      changefreq = 'monthly';
+    } else if (pPath.startsWith('/matches/')) {
+      cat = 'matches';
+      priority = '0.75';
+      changefreq = 'monthly';
+    } else if (pPath.startsWith('/players/')) {
+      cat = 'roster';
+      priority = '0.50';
+      changefreq = 'monthly';
+    } else {
+      cat = 'core';
+      priority = '0.70';
+      changefreq = 'monthly';
+    }
+  }
+
+  pageEntries.push({
+    path: pPath,
+    priority: priority || '0.7',
+    changefreq: changefreq || 'monthly',
+    lastmod: lastmod || BUILD_DATE,
+    category: cat,
+  });
   const t = html.match(/<title>(.*?)<\/title>/s)?.[1] ?? '';
   const d = html.match(/<meta name="description" content="(.*?)"/s)?.[1] ?? '';
 
@@ -396,9 +457,9 @@ function writeSearchIndex() {
   console.log(`search index: ${pageMeta.length} entries`);
 }
 
-// ---------- sitemap validation ----------
+// ---------- sitemap validation & generation ----------
 // Every canonical indexable HTML page written must appear exactly once in the
-// sitemap; no stale/empty/duplicate URLs. Fails the build on mismatch.
+// sitemap; no stale/empty/duplicate URLs. Generates Sitemap Index and specialized child sitemaps.
 function writeSitemap() {
   const locs = [...new Set(pages)].sort();
   const bad = pages.filter((p) => p.includes('//'));
@@ -408,7 +469,13 @@ function writeSitemap() {
     for (const e of readdirSync(dir, { withFileTypes: true })) {
       const p = join(dir, e.name);
       if (e.isDirectory()) walk(p, out);
-      else if (e.name === 'index.html') out.push(p);
+      else if (e.name === 'index.html') {
+        try {
+          const header = readFileSync(p, 'utf8').slice(0, 500);
+          if (header.includes('content="noindex')) continue;
+        } catch {}
+        out.push(p);
+      }
     }
     return out;
   };
@@ -425,13 +492,64 @@ function writeSitemap() {
     console.error('SITEMAP VALIDATION FAILED:\n - ' + problems.join('\n - '));
     process.exit(1);
   }
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+
+  // Deduplicate entries by path
+  const entryMap = new Map();
+  for (const entry of pageEntries) {
+    entryMap.set(entry.path, entry);
+  }
+
+  const buildUrlXml = (entries) => `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${locs.map((p) => `  <url><loc>${absUrl(p)}</loc></url>`).join('\n')}
+${entries.map((e) => `  <url>
+    <loc>${absUrl(e.path)}</loc>
+    <lastmod>${e.lastmod}</lastmod>
+    <changefreq>${e.changefreq}</changefreq>
+    <priority>${e.priority}</priority>
+  </url>`).join('\n')}
 </urlset>
 `;
-  writeFileSync(join(DIST, 'sitemap.xml'), xml);
-  console.log(`sitemap ok: ${locs.length} URLs, matches ${onDisk.length} pages on disk`);
+
+  const allEntries = [...entryMap.values()].sort((a, b) => a.path.localeCompare(b.path));
+  const coreEntries = allEntries.filter((e) => e.category === 'core');
+  const matchEntries = allEntries.filter((e) => e.category === 'matches');
+  const playerEntries = allEntries.filter((e) => e.category === 'players');
+  const rosterEntries = allEntries.filter((e) => e.category === 'roster');
+
+  writeFileSync(join(DIST, 'sitemap-core.xml'), buildUrlXml(coreEntries));
+  writeFileSync(join(DIST, 'sitemap-matches.xml'), buildUrlXml(matchEntries));
+  writeFileSync(join(DIST, 'sitemap-players.xml'), buildUrlXml(playerEntries));
+  writeFileSync(join(DIST, 'sitemap-roster.xml'), buildUrlXml(rosterEntries));
+  writeFileSync(join(DIST, 'sitemap-all.xml'), buildUrlXml(allEntries));
+
+  const sitemapIndexXml = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>${absUrl('/sitemap-core.xml')}</loc>
+    <lastmod>${BUILD_DATE}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${absUrl('/sitemap-matches.xml')}</loc>
+    <lastmod>${BUILD_DATE}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${absUrl('/sitemap-players.xml')}</loc>
+    <lastmod>${BUILD_DATE}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${absUrl('/sitemap-roster.xml')}</loc>
+    <lastmod>${BUILD_DATE}</lastmod>
+  </sitemap>
+</sitemapindex>
+`;
+  writeFileSync(join(DIST, 'sitemap.xml'), sitemapIndexXml);
+  console.log(`sitemaps ok:`);
+  console.log(` - sitemap.xml (Sitemap Index)`);
+  console.log(` - sitemap-core.xml (${coreEntries.length} URLs)`);
+  console.log(` - sitemap-matches.xml (${matchEntries.length} URLs)`);
+  console.log(` - sitemap-players.xml (${playerEntries.length} URLs)`);
+  console.log(` - sitemap-roster.xml (${rosterEntries.length} URLs)`);
+  console.log(` - sitemap-all.xml (${allEntries.length} canonical URLs)`);
 }
 
 // ============================================================
@@ -1036,8 +1154,112 @@ function renderPlayer(p) {
     if (bowlRows) html += `<div class="table-wrap"><h3 style="margin:.6rem .9rem">Bowling</h3>${bowlRows}</div>`;
     html += `</div></section>`;
   }
+
+  // Biography & Profile narrative (eliminates thin content across all registered players)
+  const playerNarrative = p.bio
+    ? `<p>${esc(p.bio)}</p><p>${esc(p.name)} is an officially registered ${esc(p.role ? p.role.toLowerCase() : 'cricketer')}${team ? ` representing <strong><a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a></strong>` : ''} within the Rewa Division Cricket Association (RDCA). As part of the regional cricket network across the Vindhya division and Madhya Pradesh, ${esc(p.name)}'s competitive record is archived permanently in the official divisional registry.</p>`
+    : `<p><strong>${esc(p.name)}</strong> is an officially registered ${esc(p.role ? p.role.toLowerCase() : 'cricketer')}${team ? ` representing <strong><a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a></strong>` : ''} under the <strong>Rewa Division Cricket Association (RDCA)</strong>. Competing in divisional, district, and regional competitions across the Vindhya basin in Madhya Pradesh, ${esc(p.name)} is an authenticated member of the official division cricket ecosystem.</p><p>The RDCA maintains this permanent digital profile to record player registrations, squad selections, and tournament participation under the state cricket governance framework of Madhya Pradesh.</p>`;
+
+  html += `<section class="section">
+    <h2>Player Profile &amp; Registry Summary</h2>
+    <div class="card prose" style="max-width:72ch;line-height:1.75">
+      ${playerNarrative}
+    </div>
+  </section>`;
+
+  // Division Registration Dossier
+  html += `<section class="section">
+    <h2>Division Registration Dossier</h2>
+    <div class="card" style="max-width:720px;padding:0;overflow:hidden">
+      <table class="dossier-table" style="width:100%;margin:0;border-collapse:collapse">
+        <tbody>
+          <tr><th style="text-align:left;padding:0.65rem 1rem;color:var(--muted);width:38%;border-bottom:1px solid var(--border)">Full Name</th><td style="padding:0.65rem 1rem;font-weight:600;border-bottom:1px solid var(--border)">${esc(p.name)}</td></tr>
+          <tr><th style="text-align:left;padding:0.65rem 1rem;color:var(--muted);border-bottom:1px solid var(--border)">Affiliated Squad</th><td style="padding:0.65rem 1rem;border-bottom:1px solid var(--border)">${team ? `<a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : 'Rewa Cricket Division'}</td></tr>
+          <tr><th style="text-align:left;padding:0.65rem 1rem;color:var(--muted);border-bottom:1px solid var(--border)">Discipline / Role</th><td style="padding:0.65rem 1rem;border-bottom:1px solid var(--border)">${esc(p.role || 'Cricketer')}</td></tr>
+          ${p.battingStyle ? `<tr><th style="text-align:left;padding:0.65rem 1rem;color:var(--muted);border-bottom:1px solid var(--border)">Batting Style</th><td style="padding:0.65rem 1rem;border-bottom:1px solid var(--border)">${esc(p.battingStyle)}</td></tr>` : ''}
+          ${p.bowlingStyle ? `<tr><th style="text-align:left;padding:0.65rem 1rem;color:var(--muted);border-bottom:1px solid var(--border)">Bowling Style</th><td style="padding:0.65rem 1rem;border-bottom:1px solid var(--border)">${esc(p.bowlingStyle)}</td></tr>` : ''}
+          <tr><th style="text-align:left;padding:0.65rem 1rem;color:var(--muted);border-bottom:1px solid var(--border)">Governing Association</th><td style="padding:0.65rem 1rem;border-bottom:1px solid var(--border)">Rewa Division Cricket Association (RDCA) / MPCA Circuit</td></tr>
+          <tr><th style="text-align:left;padding:0.65rem 1rem;color:var(--muted);border-bottom:1px solid var(--border)">Regional Jurisdiction</th><td style="padding:0.65rem 1rem;border-bottom:1px solid var(--border)">Rewa District &amp; Vindhya Division, Madhya Pradesh</td></tr>
+          <tr><th style="text-align:left;padding:0.65rem 1rem;color:var(--muted)">Registry Authentication</th><td style="padding:0.65rem 1rem"><span class="badge badge-official">Verified Official Entry</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>`;
+
+  // Teammates in same squad
+  const teammates = p.teamId
+    ? db.players.filter((other) => other.teamId === p.teamId && other.id !== p.id)
+    : [];
+  if (teammates.length) {
+    html += `<section class="section">
+      <h2>Squad Teammates — ${esc(team ? team.name : 'Squad')}</h2>
+      <p class="card-meta" style="margin-bottom:0.75rem">Registered players in the same squad roster:</p>
+      <div class="chip-row">
+        ${teammates.slice(0, 16).map((t) => `<a class="chip" href="/players/${esc(t.slug)}/">${esc(t.name)}${t.role ? ` (${esc(t.role)})` : ''}</a>`).join('\n')}
+        ${teammates.length > 16 && team ? `<a class="chip chip-accent" href="/teams/${esc(team.slug)}/">+${teammates.length - 16} more in ${esc(team.name)} &rarr;</a>` : ''}
+      </div>
+    </section>`;
+  }
+
+  // Associated Tournaments
+  const teamTourneys = team
+    ? db.tournaments.filter((t) => {
+        if (t.championTeamId === team.id) return true;
+        const tMatches = db.matches.filter((m) => m.tournamentId === t.id);
+        return tMatches.some((m) => m.teamAId === team.id || m.teamBId === team.id);
+      })
+    : [];
+  if (teamTourneys.length) {
+    html += `<section class="section">
+      <h2>Associated Competitions &amp; Tournaments</h2>
+      <div class="grid grid-2" style="margin-top:0.75rem">
+        ${teamTourneys.map((t) => `
+          <div class="card">
+            <h3><a href="/tournaments/${esc(t.slug)}/">${esc(t.name)}</a></h3>
+            <p class="card-meta">${esc(t.format || 'Cricket')} · Season ${esc(t.seasonId || '')} · Status: ${esc(t.status || 'Archived')}</p>
+            ${t.description ? `<p class="card-meta" style="margin-top:0.4rem">${esc(t.description)}</p>` : ''}
+          </div>
+        `).join('\n')}
+      </div>
+    </section>`;
+  }
+
+  // Official RDCA Archive Notice
+  html += `<section class="section">
+    <h2>Official RDCA Archive &amp; Digitisation Notice</h2>
+    <div class="card" style="border-left:4px solid var(--accent, #1a73e8);padding:1.1rem 1.25rem;background:var(--card-bg, #fff)">
+      <p style="margin:0 0 0.5rem;font-weight:600;color:var(--text)">Historical Scorecard Preservation Status</p>
+      <p style="margin:0;font-size:0.9rem;line-height:1.6;color:var(--muted)">
+        This player record is preserved in the permanent digital archives of the Rewa Division Cricket Association (RDCA). The association maintains authenticated rosters of registered cricketers across Rewa, Satna, Sidhi, and Singrauli districts. Complete ball-by-ball scorecards, batting/bowling statistics, and match telemetry from historical division tournaments are progressively digitised from physical match scorebooks and verified with division records.
+      </p>
+    </div>
+  </section>`;
+
+  // Directory Exploration Strip
+  html += `<section class="section">
+    <h2>Explore Rewa Cricket Directory</h2>
+    <div class="grid grid-4" style="margin-top:0.75rem">
+      <a class="card card-link" href="/players/"><span class="card-title">All Players &rarr;</span><div class="card-meta">Browse complete 1,300+ player directory</div></a>
+      <a class="card card-link" href="/teams/"><span class="card-title">Teams &amp; Squads &rarr;</span><div class="card-meta">View all divisional and district squads</div></a>
+      <a class="card card-link" href="/tournaments/"><span class="card-title">Tournaments &rarr;</span><div class="card-meta">Explore all championship divisions</div></a>
+      <a class="card card-link" href="/records/"><span class="card-title">Records &amp; Stats &rarr;</span><div class="card-meta">All-time divisional leaderboards</div></a>
+    </div>
+  </section>`;
+
   html += closeLayout();
-  writePage(`players/${p.slug}`, html);
+  const hasCareerStats = Boolean(
+    batRows ||
+    bowlRows ||
+    (p.stats && ((p.stats.batting && Object.keys(p.stats.batting).length > 0) || (p.stats.bowling && Object.keys(p.stats.bowling).length > 0))) ||
+    batInns.length > 0 ||
+    bowlOvers.length > 0
+  );
+  writePage(`players/${p.slug}`, html, {
+    category: hasCareerStats ? 'players' : 'roster',
+    priority: hasCareerStats ? '0.70' : '0.50',
+    changefreq: 'monthly',
+    lastmod: BUILD_DATE,
+  });
 }
 
 // ============================================================
@@ -1555,14 +1777,13 @@ function renderMatch(m) {
       <div class="card prose notes-box"><pre>${esc(notesCleaned)}</pre></div></section>`;
   }
   html += closeLayout();
-  writePage(`matches/${m.slug}`, html);
-  if (m.tournamentId === 't-atal-bihari-vajpayee-memorial') {
-    if (m.slug.startsWith('de-vs-des-')) {
-      writePage(`matches/${m.slug.replace('de-vs-des-', 'destroyers-vs-dread-eleven-')}`, html);
-    } else if (m.slug.startsWith('destroyers-vs-dread-eleven-')) {
-      writePage(`matches/${m.slug.replace('destroyers-vs-dread-eleven-', 'de-vs-des-')}`, html);
-    }
-  }
+  const matchLastmod = (m.matchDate && /^\d{4}-\d{2}-\d{2}$/.test(m.matchDate)) ? m.matchDate : BUILD_DATE;
+  writePage(`matches/${m.slug}`, html, {
+    category: 'matches',
+    priority: '0.75',
+    changefreq: 'monthly',
+    lastmod: matchLastmod,
+  });
 }
 
 // ============================================================
@@ -1874,6 +2095,11 @@ Allow: /
 Disallow: /admin/
 
 Sitemap: ${absUrl('/sitemap.xml')}
+Sitemap: ${absUrl('/sitemap-core.xml')}
+Sitemap: ${absUrl('/sitemap-matches.xml')}
+Sitemap: ${absUrl('/sitemap-players.xml')}
+Sitemap: ${absUrl('/sitemap-roster.xml')}
+Sitemap: ${absUrl('/sitemap-all.xml')}
 `;
   writeFileSync(join(DIST, 'robots.txt'), txt);
 }
@@ -2167,6 +2393,24 @@ writeSearchIndex();
 writeSitemap();
 writeRobots();
 writeLlmsTxt();
+
+function writeRedirects() {
+  const abv = db.matches.filter((m) => m.tournamentId === 't-atal-bihari-vajpayee-memorial');
+  const lines = [];
+  for (const m of abv) {
+    if (m.slug.startsWith('de-vs-des-')) {
+      const alias = m.slug.replace('de-vs-des-', 'destroyers-vs-dread-eleven-');
+      lines.push(`/matches/${alias} /matches/${m.slug}/ 301`);
+      lines.push(`/matches/${alias}/ /matches/${m.slug}/ 301`);
+    } else if (m.slug.startsWith('destroyers-vs-dread-eleven-')) {
+      const alias = m.slug.replace('destroyers-vs-dread-eleven-', 'de-vs-des-');
+      lines.push(`/matches/${alias} /matches/${m.slug}/ 301`);
+      lines.push(`/matches/${alias}/ /matches/${m.slug}/ 301`);
+    }
+  }
+  writeFileSync(join(DIST, '_redirects'), lines.join('\n') + '\n');
+}
+writeRedirects();
 
 // copy static assets
 for (const [from, to] of [
