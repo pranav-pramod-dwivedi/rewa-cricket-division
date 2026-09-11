@@ -986,6 +986,30 @@ function renderPlayer(p) {
     p.role, seoTeam, 'cricket statistics', 'cricket scorecard',
   ].filter(Boolean).join(', ');
   const seoDesc = `${p.name} is a ${p.role}${seoTeam ? ` for ${seoTeam}` : ''} at Rewa Cricket Division (RDCA), Madhya Pradesh. ${p.battingStyle ? p.battingStyle + ' batsman; ' : ''}Browse ${p.name}'s career statistics, batting, bowling and match scorecards — Rewa district cricket.`;
+  const playerSameAs = p.id === 'p-pranav-dwivedi'
+    ? [
+        'https://destroyers-rewacricket.pages.dev/portfolio/',
+        'https://destroyers-rewacricket.pages.dev/players/pranav-dwivedi',
+        'https://rewa-cricket-division.vercel.app/players/pranav-dwivedi/',
+        'https://abv-rewacricket.pages.dev/',
+        'https://cricheroes.com/association/79/rewa-divisional-cricket-association/home',
+        'https://cricheroes.com/tournament/2168281/atal-bihari-vajpayee-cricket-tournament-season-3/matches/live-matches',
+        'https://www.instagram.com/destroyers_rewa',
+        'https://www.facebook.com/rewa.cricket.association'
+      ]
+    : p.id === 'p-akhil-mishra'
+    ? [
+        'https://dread-eleven-rewacricket.pages.dev/portfolio/',
+        'https://dread-eleven-rewacricket.pages.dev/players/akhil-mishra',
+        'https://rewa-cricket-division.vercel.app/players/akhil-mishra/',
+        'https://abv-rewacricket.pages.dev/',
+        'https://cricheroes.com/association/79/rewa-divisional-cricket-association/home',
+        'https://cricheroes.com/tournament/2168281/atal-bihari-vajpayee-cricket-tournament-season-3/matches/live-matches',
+        'https://www.instagram.com/dreadeleven_rewa',
+        'https://www.facebook.com/rewa.cricket.association'
+      ]
+    : undefined;
+
   let html = layout({
     title: team ? `${p.name} — Cricketer — ${team.name}` : `${p.name} — Cricketer — Rewa`,
     description: seoDesc,
@@ -995,15 +1019,36 @@ function renderPlayer(p) {
     breadcrumbs: [{ name: 'Players', path: '/players/' }, { name: p.name, path: `/players/${p.slug}/` }],
     jsonLd: {
       '@context': 'https://schema.org',
-      '@type': 'Person',
+      '@type': ['Person', 'Athlete'],
       name: p.name,
       url: absUrl(`/players/${p.slug}/`),
       ...(p.role ? { jobTitle: p.role, additionalType: 'https://schema.org/Person' } : {}),
       ...(seoTeam ? { affiliation: { '@type': 'SportsTeam', name: seoTeam } } : {}),
-      ...(p.birthPlace ? { birthPlace: { '@type': 'Place', name: p.birthPlace } } : {}),
+      ...(p.birthPlace ? { birthPlace: { '@type': 'Place', name: p.birthPlace } } : { birthPlace: { '@type': 'Place', name: 'Rewa, Madhya Pradesh' } }),
       ...(p.dateOfBirth ? { birthDate: p.dateOfBirth } : {}),
       ...(p.bio ? { description: p.bio } : { description: seoDesc }),
-      knowsAbout: ['cricket', 'Rewa Cricket Division', seoTeam, p.role].filter(Boolean),
+      knowsAbout: ['cricket', 'Rewa Cricket Division', 'RDCA', seoTeam, p.role].filter(Boolean),
+      ...(playerSameAs ? { sameAs: playerSameAs } : {}),
+      ...(p.id === 'p-pranav-dwivedi' ? {
+        alternateName: ['Pranav Pramod Dwivedi', 'Capt. Pranav Dwivedi', 'Pranav Dwivedi Rewa', 'P. Dwivedi'],
+        identifier: 'DES-7',
+        award: [
+          '2026 Atal Bihari Vajpayee Memorial Trophy Champion Captain (3-2 vs Dread Eleven)',
+          '2025 Atal Bihari Vajpayee Memorial Trophy Champion Captain (5-0 Clean Sweep)',
+          '2024 Atal Bihari Vajpayee Memorial Trophy Champion Captain (4-1 Series Victory)',
+          'Rewa Derby All-Time Leading Run Scorer (1,435 runs)',
+          'Rewa Derby All-Time Leading Wicket Taker (66 wickets)'
+        ]
+      } : {}),
+      ...(p.id === 'p-akhil-mishra' ? {
+        alternateName: ['Capt. Akhil Mishra', 'Akhil Mishra Rewa', 'A. Mishra'],
+        identifier: 'DE-10',
+        award: [
+          '2022 Atal Bihari Vajpayee Memorial Trophy Champion Captain',
+          'Rewa Derby All-Time 2nd Leading Run Scorer (1,378 runs, 44.5 avg)',
+          'Dread Eleven Franchise Skipper & Leading Run Scorer'
+        ]
+      } : {}),
     },
   });
   html += `<div class="page-head"><h1>${esc(p.name)} ${isOfficialPlayer(p.id) ? verifiedTick() : ''}</h1><p>${esc(p.role)}${team ? ` · <a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : ''}</p></div>`;
@@ -1019,9 +1064,19 @@ function renderPlayer(p) {
   }
 
   if (p.id === 'p-pranav-dwivedi') {
-    html += `<p style="margin-top:1.25rem"><a href="https://destroyers-rewacricket.pages.dev/players/pranav-dwivedi" target="_blank" rel="noopener" class="btn btn-primary">View Pranav Dwivedi on Destroyers CC Portal &rarr;</a></p>`;
+    html += `<div style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1.25rem;align-items:center">
+      <a href="https://destroyers-rewacricket.pages.dev/portfolio/" target="_blank" rel="noopener" class="btn btn-primary" style="background:#d97706;color:#fff;font-weight:700">Explore Pranav Dwivedi Official Portfolio &rarr;</a>
+      <a href="https://destroyers-rewacricket.pages.dev/players/pranav-dwivedi" target="_blank" rel="noopener" class="btn btn-secondary">Destroyers CC Club Portal &nearr;</a>
+      <a href="https://abv-rewacricket.pages.dev/" target="_blank" rel="noopener" class="btn btn-ghost">ABV Memorial Tournament &nearr;</a>
+      <a href="https://cricheroes.com/association/79/rewa-divisional-cricket-association/home" target="_blank" rel="noopener" class="btn btn-ghost">CricHeroes Registry &nearr;</a>
+    </div>`;
   } else if (p.id === 'p-akhil-mishra') {
-    html += `<p style="margin-top:1.25rem"><a href="https://dread-eleven-rewacricket.pages.dev/players/akhil-mishra" target="_blank" rel="noopener" class="btn btn-primary">View Akhil Mishra on Dread Eleven Digital Stadium &rarr;</a></p>`;
+    html += `<div style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1.25rem;align-items:center">
+      <a href="https://dread-eleven-rewacricket.pages.dev/portfolio/" target="_blank" rel="noopener" class="btn btn-primary" style="background:#16a34a;color:#fff;font-weight:700">Explore Akhil Mishra Official Portfolio &rarr;</a>
+      <a href="https://dread-eleven-rewacricket.pages.dev/players/akhil-mishra" target="_blank" rel="noopener" class="btn btn-secondary">Dread Eleven Digital Stadium &nearr;</a>
+      <a href="https://abv-rewacricket.pages.dev/" target="_blank" rel="noopener" class="btn btn-ghost">ABV Memorial Tournament &nearr;</a>
+      <a href="https://cricheroes.com/association/79/rewa-divisional-cricket-association/home" target="_blank" rel="noopener" class="btn btn-ghost">CricHeroes Registry &nearr;</a>
+    </div>`;
   }
 
   // Rewa archive classification: external matches (state/national) on a Rewa player's record
