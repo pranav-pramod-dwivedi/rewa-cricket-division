@@ -855,13 +855,13 @@ function renderTeam(t) {
     html += `<div class="card" style="margin-bottom:2rem;background:var(--card-bg, #111827);border:1px solid var(--border-color, #1f2937);padding:1.5rem;border-radius:12px;">
       <h2 style="font-size:1.25rem;margin-top:0;margin-bottom:0.75rem;color:var(--c-accent, #E6FD53);">About Destroyers Cricket Club (Rewa Division)</h2>
       <p class="prose" style="line-height:1.65;margin-bottom:1rem;">
-        <strong>Destroyers Cricket Club</strong> (often shortened to <em>DES</em> or <em>Destroyers CC</em>) is a championship-winning professional cricket club based in Rewa, Madhya Pradesh. Founded in 2021 and captained by star all-rounder <strong>Pranav Dwivedi</strong>, Destroyers compete in the <strong>Atal Bihari Vajpayee Memorial Cup (ABV Cup)</strong> and prestigious Rewa Divisional Cricket Association (RDCA) competitions. Playing their home matches at the <strong>Awadhesh Pratap Singh University (APSU) Stadium</strong>, Destroyers have established one of the most dominant dynasties in central Indian regional cricket.
+        <strong>Destroyers Cricket Club</strong> (often shortened to <em>DES</em> or <em>Destroyers CC</em>) is a championship-winning professional cricket club based in Rewa, Madhya Pradesh. Founded in 2021, Destroyers compete in the <strong>Atal Bihari Vajpayee Memorial Cup (ABV Cup)</strong> and prestigious Rewa Divisional Cricket Association (RDCA) competitions under champion captains <strong>Pranav Dwivedi</strong> (2024 &amp; 2025 Champions; 2026 Opener) and <strong>Aryan Deshmukh</strong> (2026 Championship-Winning Captain). Playing their home matches at the <strong>Awadhesh Pratap Singh University (APSU) Stadium</strong>, Destroyers have established one of the most dominant dynasties in central Indian regional cricket.
       </p>
       <p class="prose" style="line-height:1.65;margin-bottom:1rem;">
         Destroyers are <strong>3-time consecutive ABV Cup Champions (2024, 2025, 2026 - historic 3-peat)</strong>. Their roster features prominent Indian domestic and state cricketers including Venkatesh Iyer, Rajat Patidar, Kulwant Khejroliya, Ajay Rohera, and Aryan Deshmukh alongside Rewa divisional talents. Across 34 official matches against arch-rivals Dread Eleven, Destroyers hold a <strong>19–15 head-to-head advantage</strong>.
       </p>
       <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:1rem;font-size:0.9rem;color:var(--muted);">
-        <div><strong>Captain:</strong> Pranav Dwivedi</div>
+        <div><strong>Captain:</strong> Aryan Deshmukh (2026 Champions) &bull; Pranav Dwivedi (2024–25 Champions)</div>
         <div><strong>Home Stadium:</strong> APSU Stadium, Rewa</div>
         <div><strong>Honours:</strong> 3x ABV Champions (2024, 2025, 2026)</div>
         <div><strong>Affiliation:</strong> Rewa Divisional Cricket Association</div>
@@ -1803,6 +1803,8 @@ const UNLINKABLE_TEAMS = new Set([
 function getCaptainPlayerId(match, teamId) {
   if (!match || !teamId) return null;
   if (teamId === 't-destroyers') {
+    if (match.id === 'm-shared-60') return 'p-pranav-dwivedi';
+    if (['m-shared-61', 'm-shared-62', 'm-shared-63', 'm-shared-64'].includes(match.id)) return 'p-aryan-deshmukh';
     const played = db.batting.some((b) => {
       const inn = db.innings.find((i) => i.id === b.inningsId);
       return inn && inn.matchId === match.id && b.playerId === 'p-pranav-dwivedi';

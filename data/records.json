@@ -1733,7 +1733,7 @@
       "name": "Destroyers Cricket Club",
       "slug": "destroyers",
       "shortCode": "DES",
-      "description": "Destroyers Cricket Club (DES) is the premier franchise cricket club representing Rewa in the Atal Bihari Vajpayee Memorial Cup (ABV Cup) and Rewa Divisional Cricket Association tournaments. Captained by Pranav Dwivedi and based at the Awadhesh Pratap Singh University (APSU) Stadium, Destroyers are 3-time consecutive ABV Cup Champions (2024, 2025, 2026 - historic 3-peat) with a 19–15 record across 34 derby clashes against arch-rivals Dread Eleven.",
+      "description": "Destroyers Cricket Club (DES) is the premier franchise cricket club representing Rewa in the Atal Bihari Vajpayee Memorial Cup (ABV Cup) and Rewa Divisional Cricket Association tournaments. Based at the Awadhesh Pratap Singh University (APSU) Stadium, Destroyers are 3-time consecutive ABV Cup Champions (2024 & 2025 under captain Pranav Dwivedi; 2026 under winning captain Aryan Deshmukh, with Pranav captaining the 2026 Series Opener) with a 19–15 record across 34 derby clashes against arch-rivals Dread Eleven.",
       "establishedYear": 2021,
       "website": "https://destroyers-rewacricket.pages.dev",
       "playerIds": [
@@ -7154,7 +7154,6 @@
         "p-ajay-rohera",
         "p-akshat-raghuwanshi",
         "p-anant-verma",
-        "p-aryan-deshmukh",
         "p-ashwin-das",
         "p-avesh-khan",
         "p-chanchal-rathore",
@@ -7162,6 +7161,7 @@
         "p-kulwant-khejroliya",
         "p-kumar-kartikeya",
         "p-mohd-arham-aquil",
+        "p-pranav-dwivedi",
         "p-rahul-batham",
         "p-ramveer-singh-gurjar",
         "p-rishab-verma",
@@ -7326,10 +7326,10 @@
         "p-kulwant-khejroliya",
         "p-kumar-kartikeya",
         "p-mohd-arham-aquil",
-        "p-pranav-dwivedi",
         "p-rahul-batham",
         "p-ramveer-singh-gurjar",
         "p-sagar-pratap-singh",
+        "p-sani-patel",
         "p-saransh-jain",
         "p-shubham-sharma",
         "p-somil-khan",
@@ -8266,8 +8266,8 @@
       "name": "Aryan Deshmukh",
       "slug": "aryan-deshmukh",
       "teamId": "t-narmadapuram-u22",
-      "role": "Player",
-      "bio": "Aryan Deshmukh is a name that Rewa cricket whispers about with growing reverence. He has represented Rewa Jaguars, Malwa Stallions and more, proving his worth wherever the jersey has been handed to him. A proven performer across 3 official competitions, he has carried his form from district cricket to the state stage. In recorded Rewa cricket he has amassed 45 runs (best of 36*) and 1 wickets (best 1/9). With 45 runs and 1 wickets to his name on this platform, the numbers only tell half the story — the other half is heart.",
+      "role": "2026 Championship-Winning Captain",
+      "bio": "Aryan Deshmukh is a dynamic all-rounder and the 2026 Championship-Winning Captain of Destroyers Cricket Club in the Atal Bihari Vajpayee Memorial Tournament. Stepping up to lead Destroyers through the 2026 season, he hoisted the trophy after a thrilling 12-run Final triumph at APSU Stadium.",
       "teams": [
         "t-destroyers",
         "t-de"
@@ -41198,7 +41198,7 @@
       "fours": 4,
       "sixes": 1,
       "strikeRate": 150.0,
-      "dismissal": "c Chanchal Rathore b Aryan Deshmukh",
+      "dismissal": "c Chanchal Rathore b Pranav Dwivedi",
       "notOut": false
     },
     {
@@ -41336,7 +41336,7 @@
     {
       "id": "bat-m-shared-60-2-7",
       "inningsId": "m-shared-60-2",
-      "playerId": "p-aryan-deshmukh",
+      "playerId": "p-pranav-dwivedi",
       "runs": 4,
       "balls": 3,
       "fours": 0,
@@ -41996,7 +41996,7 @@
     {
       "id": "bat-m-shared-64-1-4",
       "inningsId": "m-shared-64-1",
-      "playerId": "p-pranav-dwivedi",
+      "playerId": "p-aryan-deshmukh",
       "runs": 31,
       "balls": 38,
       "fours": 3,
@@ -42098,7 +42098,7 @@
       "fours": 5,
       "sixes": 1,
       "strikeRate": 90.6,
-      "dismissal": "c Pranav Dwivedi b Kulwant Khejroliya",
+      "dismissal": "c Aryan Deshmukh b Kulwant Khejroliya",
       "notOut": false
     },
     {
@@ -42110,7 +42110,7 @@
       "fours": 3,
       "sixes": 0,
       "strikeRate": 88.2,
-      "dismissal": "b Pranav Dwivedi",
+      "dismissal": "b Sani Patel",
       "notOut": false
     },
     {
@@ -50032,7 +50032,7 @@
     {
       "id": "bowl-m-shared-60-1-2",
       "inningsId": "m-shared-60-1",
-      "playerId": "p-aryan-deshmukh",
+      "playerId": "p-pranav-dwivedi",
       "overs": 4,
       "maidens": 0,
       "runs": 36,
@@ -50502,7 +50502,7 @@
     {
       "id": "bowl-m-shared-64-2-4",
       "inningsId": "m-shared-64-2",
-      "playerId": "p-pranav-dwivedi",
+      "playerId": "p-sani-patel",
       "overs": 6,
       "maidens": 0,
       "runs": 32,
