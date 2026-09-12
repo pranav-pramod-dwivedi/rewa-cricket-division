@@ -758,12 +758,16 @@ function renderTeams() {
   const visibleTeams = db.teams.filter((t) => t.id !== 't-rcb-hinterland' && t.id !== 't-des');
   html += visibleTeams.length
     ? `<div class="grid grid-2 grid-3">${visibleTeams
-        .map(
-          (t) => `<a class="card row-card card-link" href="/teams/${esc(t.slug)}/">
-            <span class="avatar avatar-sm">${esc(t.shortCode || t.name.split(' ').map((w) => w[0]).join('').slice(0, 2))}</span>
+        .map((t) => {
+          const crest = t.id === 't-destroyers' ? '/img/des-crest.png' : (t.id === 't-de' ? '/img/de-crest.png' : null);
+          return `<a class="card row-card card-link" href="/teams/${esc(t.slug)}/">
+            ${crest
+              ? `<img src="${crest}" alt="${esc(t.name)} crest" width="40" height="40" style="border-radius:50%;object-fit:cover;aspect-ratio:1/1;flex-shrink:0;">`
+              : `<span class="avatar avatar-sm">${esc(t.shortCode || t.name.split(' ').map((w) => w[0]).join('').slice(0, 2))}</span>`
+            }
             <span><span class="card-title">${esc(t.name)}</span><div class="card-meta">${t.establishedYear ? 'Est. ' + t.establishedYear : 'Team'}</div></span>
-          </a>`,
-        )
+          </a>`;
+        })
         .join('\n')}</div>`
     : empty('No teams published yet', 'Official team profiles will appear here once confirmed by the Rewa Cricket Division.');
   html += closeLayout();
@@ -773,18 +777,26 @@ function renderTeams() {
 function renderTeam(t) {
   if (t.id === 't-rcb-hinterland' || t.id === 't-des') return; // Hinterland & duplicate aliases only
   const inTeams = (p, tid) => Array.isArray(p.teams) && p.teams.includes(tid);
+  const inPlayerIds = (p, team) => Array.isArray(team.playerIds) && team.playerIds.includes(p.id);
   // Pranav/Akhil stay on their own profiles but are not listed on the RCB/MI squad rosters
   const hiddenFromSquad = (p) =>
     (t.id === 't-royal-challengers-bengaluru' && p.id === 'p-pranav-dwivedi') ||
     (t.id === 't-rcb-hinterland' && p.id === 'p-pranav-dwivedi') ||
     (t.id === 't-mumbai-indians' && p.id === 'p-akhil-mishra');
+  const captainId = t.id === 't-destroyers' ? 'p-pranav-dwivedi' : (t.id === 't-de' ? 'p-akhil-mishra' : null);
   const squad = db.players
-    .filter((p) => !hiddenFromSquad(p) && (p.teamId === t.id || inTeams(p, t.id)))
-    .sort((a, b) => a.name.localeCompare(b.name));
+    .filter((p) => !hiddenFromSquad(p) && (p.teamId === t.id || inTeams(p, t.id) || inPlayerIds(p, t)))
+    .sort((a, b) => {
+      if (a.id === captainId) return -1;
+      if (b.id === captainId) return 1;
+      return a.name.localeCompare(b.name);
+    });
   const teamMatches = db.matches.filter((m) => m.teamAId === t.id || m.teamBId === t.id).sort(dateSort);
   const teamDesc = t.description && t.description.trim()
     ? t.description
     : `${t.name} — team profile, squad, matches and results from the Rewa Cricket Division archive.`;
+  const teamCrest = t.id === 't-destroyers' ? '/img/des-crest.png' : (t.id === 't-de' ? '/img/de-crest.png' : null);
+  const teamCrestAbs = teamCrest ? absUrl(teamCrest) : null;
   let html = layout({
     bodyClass: 'search-pinned',
     title: t.name,
@@ -798,23 +810,82 @@ function renderTeam(t) {
         name: t.name,
         url: absUrl(`/teams/${t.slug}/`),
         sport: 'Cricket',
-        memberOf: { '@type': 'SportsOrganization', name: org.name },
+        memberOf: { '@type': 'SportsOrganization', name: org.name, url: absUrl('/') },
+        ...(teamCrestAbs ? { logo: teamCrestAbs, image: teamCrestAbs } : {}),
         ...(t.id === 't-destroyers' ? {
+          foundingDate: '2021',
+          coach: { '@type': 'Person', name: 'Devendra Bundela' },
+          athlete: squad.map((p) => ({
+            '@type': 'Person',
+            name: p.name,
+            url: absUrl(`/players/${p.slug}/`),
+            jobTitle: p.id === 'p-pranav-dwivedi' ? 'Captain & All-rounder' : p.role,
+          })),
           sameAs: [
             'https://destroyers-rewacricket.pages.dev/',
-            'https://abv-rewacricket.pages.dev/'
-          ]
+            'https://abv-rewacricket.pages.dev/',
+            'https://pranavdwivedi.com/'
+          ],
         } : t.id === 't-de' ? {
+          foundingDate: '2021',
+          coach: { '@type': 'Person', name: 'Harpreet Singh Bhatia' },
+          athlete: squad.map((p) => ({
+            '@type': 'Person',
+            name: p.name,
+            url: absUrl(`/players/${p.slug}/`),
+            jobTitle: p.id === 'p-akhil-mishra' ? 'Captain & Wicket-keeper Batsman' : p.role,
+          })),
           sameAs: [
             'https://dread-eleven-rewacricket.pages.dev/',
             'https://abv-rewacricket.pages.dev/'
-          ]
+          ],
         } : {}),
       },
     ],
   });
-  html += `<div class="page-head"><h1>${esc(t.name)}</h1>${t.establishedYear ? `<p>Established ${t.establishedYear}</p>` : ''}</div>`;
-  if (t.description) html += `<p class="prose" style="max-width:62ch;margin-bottom:1.5rem">${esc(t.description)}</p>`;
+  html += `<div class="page-head" style="display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;">
+    ${teamCrest ? `<img src="${teamCrest}" alt="${esc(t.name)} official crest" width="72" height="72" style="border-radius:50%;object-fit:cover;aspect-ratio:1/1;box-shadow:0 4px 16px rgba(0,0,0,0.2);flex-shrink:0;">` : ''}
+    <div>
+      <h1 style="margin:0">${esc(t.name)}</h1>
+      ${t.establishedYear ? `<p style="margin:0.25rem 0 0;color:var(--muted);font-weight:500;">Established ${t.establishedYear} &bull; Rewa Divisional Cricket Association</p>` : ''}
+    </div>
+  </div>`;
+
+  if (t.id === 't-destroyers') {
+    html += `<div class="card" style="margin-bottom:2rem;background:var(--card-bg, #111827);border:1px solid var(--border-color, #1f2937);padding:1.5rem;border-radius:12px;">
+      <h2 style="font-size:1.25rem;margin-top:0;margin-bottom:0.75rem;color:var(--c-accent, #E6FD53);">About Destroyers Cricket Club (Rewa Division)</h2>
+      <p class="prose" style="line-height:1.65;margin-bottom:1rem;">
+        <strong>Destroyers Cricket Club</strong> (often shortened to <em>DES</em> or <em>Destroyers CC</em>) is a championship-winning professional cricket club based in Rewa, Madhya Pradesh. Founded in 2021 and captained by star all-rounder <strong>Pranav Dwivedi</strong>, Destroyers compete in the <strong>Atal Bihari Vajpayee Memorial Cup (ABV Cup)</strong> and prestigious Rewa Divisional Cricket Association (RDCA) competitions. Playing their home matches at the <strong>Awadhesh Pratap Singh University (APSU) Stadium</strong>, Destroyers have established one of the most dominant dynasties in central Indian regional cricket.
+      </p>
+      <p class="prose" style="line-height:1.65;margin-bottom:1rem;">
+        Destroyers are <strong>3-time consecutive ABV Cup Champions (2024, 2025, 2026 - historic 3-peat)</strong>. Their roster features prominent Indian domestic and state cricketers including Venkatesh Iyer, Rajat Patidar, Kulwant Khejroliya, Ajay Rohera, and Aryan Deshmukh alongside Rewa divisional talents. Across 34 official matches against arch-rivals Dread Eleven, Destroyers hold a <strong>21–13 head-to-head advantage</strong>.
+      </p>
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:1rem;font-size:0.9rem;color:var(--muted);">
+        <div><strong>Captain:</strong> Pranav Dwivedi</div>
+        <div><strong>Home Stadium:</strong> APSU Stadium, Rewa</div>
+        <div><strong>Honours:</strong> 3x ABV Champions (2024, 2025, 2026)</div>
+        <div><strong>Affiliation:</strong> Rewa Divisional Cricket Association</div>
+      </div>
+    </div>`;
+  } else if (t.id === 't-de') {
+    html += `<div class="card" style="margin-bottom:2rem;background:var(--card-bg, #111827);border:1px solid var(--border-color, #1f2937);padding:1.5rem;border-radius:12px;">
+      <h2 style="font-size:1.25rem;margin-top:0;margin-bottom:0.75rem;color:var(--c-accent, #E6FD53);">About Dread Eleven (Rewa Division)</h2>
+      <p class="prose" style="line-height:1.65;margin-bottom:1rem;">
+        <strong>Dread Eleven</strong> (often designated as <em>DE</em>) is a premier franchise cricket club representing Rewa in the <strong>Atal Bihari Vajpayee Memorial Cup (ABV Cup)</strong> and regional competitions sanctioned by the Rewa Divisional Cricket Association (RDCA). Founded in 2021 and captained by wicketkeeper-batsman <strong>Akhil Mishra</strong>, Dread Eleven host their home fixtures at <strong>Martand School Ground No. 3</strong> in Rewa, Madhya Pradesh.
+      </p>
+      <p class="prose" style="line-height:1.65;margin-bottom:1rem;">
+        Dread Eleven achieved an initial 3-peat dynasty, winning the <strong>ABV Memorial Cup in 2021, 2022, and 2023</strong>. Their squad brings together international and IPL stars such as Avesh Khan, Kuldeep Sen, Kumar Kartikeya, Yash Dubey, and Saransh Jain alongside elite Rewa divisional cricketers. The fierce 34-match Rewa Division Derby between Dread Eleven and Destroyers Cricket Club is recognized as the centerpiece rivalry of Vindhya regional cricket.
+      </p>
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:1rem;font-size:0.9rem;color:var(--muted);">
+        <div><strong>Captain:</strong> Akhil Mishra</div>
+        <div><strong>Home Ground:</strong> Martand School Ground No. 3, Rewa</div>
+        <div><strong>Honours:</strong> 3x ABV Champions (2021, 2022, 2023)</div>
+        <div><strong>Affiliation:</strong> Rewa Divisional Cricket Association</div>
+      </div>
+    </div>`;
+  } else if (t.description) {
+    html += `<p class="prose" style="max-width:62ch;margin-bottom:1.5rem">${esc(t.description)}</p>`;
+  }
 
   const clubWebsite = t.website || (t.id === 't-destroyers' ? 'https://destroyers-rewacricket.pages.dev' : (t.id === 't-de' ? 'https://dread-eleven-rewacricket.pages.dev' : null));
   if (clubWebsite) {
@@ -824,13 +895,13 @@ function renderTeam(t) {
 
   html += `<div class="split">
     <section class="section" style="margin-top:0">
-      <h2>Matches</h2>
+      <h2>Matches (${teamMatches.length})</h2>
       <div class="grid" style="margin-top:1rem">
         ${teamMatches.length ? teamMatches.map(matchCard).join('\n') : empty('No matches yet', 'Match fixtures for this team will appear here when confirmed.')}
       </div>
     </section>
     <aside>
-      <h2>Squad</h2>
+      <h2>Squad (${squad.length})</h2>
       <div class="grid" style="margin-top:1rem">
         ${
           squad.length
@@ -838,7 +909,10 @@ function renderTeam(t) {
                 .map(
                   (p) => `<a class="card row-card card-link" href="/players/${esc(p.slug)}/">
                     <span class="avatar avatar-sm">${esc(p.name.split(' ').map((w) => w[0]).slice(0, 2).join(''))}</span>
-                    <span><span class="card-title">${esc(p.name)}</span><div class="card-meta">${esc(p.role)}</div></span>
+                    <span>
+                      <span class="card-title">${esc(p.name)} ${p.id === captainId ? '<span class="badge" style="margin-left:0.4rem;font-size:0.75rem;">Captain</span>' : ''}</span>
+                      <div class="card-meta">${esc(p.role)}</div>
+                    </span>
                   </a>`,
                 )
                 .join('\n')

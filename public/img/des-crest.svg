@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff59d"/>
+      <stop offset="25%" stop-color="#ffd54f"/>
+      <stop offset="50%" stop-color="#ffb300"/>
+      <stop offset="75%" stop-color="#ff8f00"/>
+      <stop offset="100%" stop-color="#ff6f00"/>
+    </linearGradient>
+
+    <linearGradient id="emberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff9800"/>
+      <stop offset="40%" stop-color="#ff5722"/>
+      <stop offset="100%" stop-color="#bf360c"/>
+    </linearGradient>
+
+    <linearGradient id="darkCarbon" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1f140e"/>
+      <stop offset="50%" stop-color="#120a05"/>
+      <stop offset="100%" stop-color="#080301"/>
+    </linearGradient>
+
+    <radialGradient id="crimsonBg" cx="40%" cy="36%" r="65%">
+      <stop offset="0%" stop-color="#e53935"/>
+      <stop offset="35%" stop-color="#b71c1c"/>
+      <stop offset="70%" stop-color="#5f090d"/>
+      <stop offset="100%" stop-color="#1a0204"/>
+    </radialGradient>
+
+    <filter id="badgeGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#ff5722" flood-opacity="0.35"/>
+    </filter>
+
+    <filter id="innerShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+
+    <path id="textArcTop" d="M 64 256 A 192 192 0 0 1 448 256" fill="none" />
+    <path id="textArcBottom" d="M 448 256 A 192 192 0 0 1 64 256" fill="none" />
+  </defs>
+
+  <!-- 1. Outer Rings & Circular Frame -->
+  <circle cx="256" cy="256" r="248" fill="url(#darkCarbon)" stroke="url(#goldGrad)" stroke-width="4.5" filter="url(#badgeGlow)"/>
+  <circle cx="256" cy="256" r="238" fill="none" stroke="url(#emberGrad)" stroke-width="2.5"/>
+  <circle cx="256" cy="256" r="172" fill="none" stroke="url(#goldGrad)" stroke-width="2.5" stroke-dasharray="6 3"/>
+
+  <!-- 2. Typography Along Circular Ring Band -->
+  <text fill="url(#goldGrad)" font-family="'Plus Jakarta Sans', 'Arial Black', sans-serif" font-weight="900" font-size="20" letter-spacing="4">
+    <textPath href="#textArcTop" startOffset="50%" text-anchor="middle">DESTROYERS CRICKET CLUB</textPath>
+  </text>
+
+  <text fill="#ffffff" font-family="'Plus Jakarta Sans', 'Arial Black', sans-serif" font-weight="900" font-size="18.5" letter-spacing="3.5">
+    <textPath href="#textArcBottom" startOffset="50%" text-anchor="middle">REWA &#183; 3x CHAMPIONS</textPath>
+  </text>
+
+  <!-- Flanking Accent Stars on the Ring -->
+  <g fill="url(#goldGrad)">
+    <polygon points="50,256 53,260 59,260 54,264 56,270 50,266 44,270 46,264 41,260 47,260"/>
+    <polygon points="462,256 465,260 471,260 466,264 468,270 462,266 456,270 458,264 453,260 459,260"/>
+  </g>
+
+  <!-- 3. Inner Circular Core -->
+  <circle cx="256" cy="256" r="168" fill="url(#crimsonBg)" stroke="url(#emberGrad)" stroke-width="3" filter="url(#innerShadow)"/>
+  <circle cx="256" cy="256" r="160" fill="none" stroke="rgba(255, 215, 0, 0.25)" stroke-width="1.5"/>
+
+  <!-- Subtle Rays -->
+  <g stroke="rgba(255, 255, 255, 0.06)" stroke-width="1.5">
+    <line x1="256" y1="92" x2="256" y2="420"/>
+    <line x1="92" y1="256" x2="420" y2="256"/>
+    <line x1="140" y1="140" x2="372" y2="372"/>
+    <line x1="372" y1="140" x2="140" y2="372"/>
+  </g>
+
+  <!-- 4. Three Championship Crown Stars (2024, 2025, 2026) -->
+  <g fill="url(#goldGrad)" stroke="#5f090d" stroke-width="1">
+    <polygon points="214,136 217,143 224,143 219,148 221,155 214,151 207,155 209,148 204,143 211,143"/>
+    <polygon points="256,122 260,132 270,132 262,138 265,147 256,141 247,147 250,138 242,132 252,132"/>
+    <polygon points="298,136 301,143 308,143 303,148 305,155 298,151 291,155 293,148 288,143 295,143"/>
+  </g>
+
+  <!-- 5. Crossed Cricket Bats & Ball -->
+  <g stroke="#1a0204" stroke-width="1.5" stroke-linejoin="round">
+    <g transform="rotate(40, 256, 275)">
+      <rect x="252" y="165" width="8" height="55" rx="3" fill="#d7ccc8" stroke="#8d6e63" stroke-width="1"/>
+      <path d="M249 220 L263 220 L261 320 L251 320 Z" fill="url(#goldGrad)"/>
+    </g>
+    <g transform="rotate(-40, 256, 275)">
+      <rect x="252" y="165" width="8" height="55" rx="3" fill="#d7ccc8" stroke="#8d6e63" stroke-width="1"/>
+      <path d="M249 220 L263 220 L261 320 L251 320 Z" fill="url(#goldGrad)"/>
+    </g>
+  </g>
+
+  <!-- Central Red Cricket Ball -->
+  <circle cx="256" cy="298" r="16" fill="#c62828" stroke="url(#goldGrad)" stroke-width="2"/>
+  <path d="M245 289 C252 294 252 302 245 307" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="2 1.5"/>
+  <path d="M267 289 C260 294 260 302 267 307" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="2 1.5"/>
+
+  <!-- 6. Bold Iconic Monogram DES -->
+  <text x="256" y="235" font-family="'Syne', 'Plus Jakarta Sans', 'Arial Black', sans-serif" font-weight="900" font-size="74" fill="#ffffff" stroke="url(#emberGrad)" stroke-width="2.5" text-anchor="middle" letter-spacing="3" filter="url(#innerShadow)">DES</text>
+
+  <!-- 7. Bottom Central Banner: RDCA AFFILIATED -->
+  <path d="M 188 344 L 256 337 L 324 344 L 314 366 L 256 359 L 198 366 Z" fill="url(#darkCarbon)" stroke="url(#goldGrad)" stroke-width="1.8"/>
+  <text x="256" y="355" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="10" fill="url(#goldGrad)" text-anchor="middle" letter-spacing="3">RDCA &#183; MPCA</text>
+</svg>
