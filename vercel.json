@@ -235,27 +235,77 @@
     },
     {
       "source": "/matches/de-vs-des-2026-09-05",
-      "destination": "/matches/destroyers-vs-dread-eleven-2026-09-05/",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-06-05/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2026-09-05",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-06-05/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2026-09-05/",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-06-05/",
       "permanent": true
     },
     {
       "source": "/matches/de-vs-des-2026-09-08",
-      "destination": "/matches/destroyers-vs-dread-eleven-2026-09-08/",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-06-08/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2026-09-08",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-06-08/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2026-09-08/",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-06-08/",
       "permanent": true
     },
     {
       "source": "/matches/de-vs-des-2026-09-12",
-      "destination": "/matches/destroyers-vs-dread-eleven-2026-09-12/",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-06-12/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2026-09-12",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-06-12/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2026-09-12/",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-06-12/",
       "permanent": true
     },
     {
       "source": "/matches/de-vs-des-2026-09-16",
-      "destination": "/matches/destroyers-vs-dread-eleven-2026-09-16/",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-06-16/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2026-09-16",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-06-16/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2026-09-16/",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-06-16/",
       "permanent": true
     },
     {
       "source": "/matches/de-vs-des-2026-09-20",
-      "destination": "/matches/destroyers-vs-dread-eleven-2026-09-20/",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-06-20/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2026-09-20",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-06-20/",
+      "permanent": true
+    },
+    {
+      "source": "/matches/destroyers-vs-dread-eleven-2026-09-20/",
+      "destination": "/matches/destroyers-vs-dread-eleven-2026-06-20/",
       "permanent": true
     },
     {
