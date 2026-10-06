@@ -1307,6 +1307,11 @@ function renderPlayer(p) {
   // career tables — first column = linked match, not dismissal
   const innOf = (id) => db.innings.find((i) => i.id === id);
   const matchOf = (inn) => inn && db.matches.find((x) => x.id === inn.matchId);
+  const byMatchDateDesc = (aId, bId) => {
+    const ma = matchOf(innOf(aId));
+    const mb = matchOf(innOf(bId));
+    return (mb?.matchDate || '').localeCompare(ma?.matchDate || '');
+  };
   const matchLabel = (m) => {
     const a = teamsById.get(m?.teamAId);
     const b = teamsById.get(m?.teamBId);
@@ -1314,7 +1319,7 @@ function renderPlayer(p) {
     return `${fmt}${a?.shortCode ?? 'A'} v ${b?.shortCode ?? 'B'} · ${m?.matchDate ?? ''}`;
   };
   const batRows = batInns.length
-    ? `<table><thead><tr><th>Match</th><th class="num">R</th><th class="num">B</th><th class="num">4s</th><th class="num">6s</th><th class="num">SR</th><th>Dismissal</th></tr></thead><tbody>${batInns.map((b) => { const m = matchOf(innOf(b.inningsId)); return `<tr><td>${m ? `<a href="/matches/${esc(m.slug)}/">${esc(matchLabel(m))}</a>` : '—'}</td><td class="num">${b.runs}</td><td class="num">${b.balls ? b.balls : '—'}</td><td class="num">${b.fours ?? 0}</td><td class="num">${b.sixes ?? 0}</td><td class="num">${b.strikeRate?.toFixed(2) ?? '—'}</td><td>${esc(b.dismissal || 'not out')}</td></tr>`; }).join('\n')}</tbody></table>`
+    ? `<table><thead><tr><th>Match</th><th class="num">R</th><th class="num">B</th><th class="num">4s</th><th class="num">6s</th><th class="num">SR</th><th>Dismissal</th></tr></thead><tbody>${[...batInns].sort((a, b) => byMatchDateDesc(a.inningsId, b.inningsId)).map((b) => { const m = matchOf(innOf(b.inningsId)); return `<tr><td>${m ? `<a href="/matches/${esc(m.slug)}/">${esc(matchLabel(m))}</a>` : '—'}</td><td class="num">${b.runs}</td><td class="num">${b.balls ? b.balls : '—'}</td><td class="num">${b.fours ?? 0}</td><td class="num">${b.sixes ?? 0}</td><td class="num">${b.strikeRate?.toFixed(2) ?? '—'}</td><td>${esc(b.dismissal || 'not out')}</td></tr>`; }).join('\n')}</tbody></table>`
     : '';
 
   const mergedBowlList = [];
@@ -1335,6 +1340,7 @@ function renderPlayer(p) {
       rec.wickets += w.wickets || 0;
     }
     for (const rec of mergedBowlList) rec.overs = ballsToOvers(rec.balls);
+    mergedBowlList.sort((a, b) => (b.m?.matchDate || '').localeCompare(a.m?.matchDate || ''));
     return mergedBowlList;
   })();
 
