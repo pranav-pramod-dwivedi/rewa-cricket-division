@@ -65,7 +65,7 @@ const ballsToOvers = (balls) => {
 // team-name disambiguation for player page titles (common names collide)
 const teamOf = (p) => (p.teamId ? teamsById.get(p.teamId) : null);
 
-function head({ title, description, keywords, path, jsonLd = [], ogType = 'website' }) {
+function head({ title, description, keywords, path, jsonLd = [], ogType = 'website', robots }) {
   const blocks = Array.isArray(jsonLd) ? jsonLd : [jsonLd];
   return `<!doctype html>
 <html lang="en">
@@ -75,6 +75,7 @@ function head({ title, description, keywords, path, jsonLd = [], ogType = 'websi
 <title>${esc(titleFor(title))}</title>
 <meta name="description" content="${esc(description)}" />
 ${keywords ? `<meta name="keywords" content="${esc(keywords)}" />` : ''}
+<meta name="robots" content="${robots || 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}" />
 <link rel="canonical" href="${absUrl(path)}" />
 <meta property="og:site_name" content="${esc(org.name)}" />
 <meta property="og:title" content="${esc(titleFor(title))}" />
@@ -205,9 +206,9 @@ function footer() {
 </html>`;
 }
 
-function layout({ title, description, keywords, path, jsonLd = [], ogType, breadcrumbs = [], bodyClass = '' }) {
+function layout({ title, description, keywords, path, jsonLd = [], ogType, breadcrumbs = [], bodyClass = '', robots }) {
   const crumbItems = [{ name: 'Home', path: '/' }, ...breadcrumbs];
-  return `${head({ title, description, keywords, path, jsonLd, ogType })}
+  return `${head({ title, description, keywords, path, jsonLd, ogType, robots })}
 <body class="${bodyClass}">
 ${header(bodyClass.includes('search-pinned'))}
 ${breadcrumbs.length ? crumbs(crumbItems) : ''}
@@ -391,60 +392,63 @@ function writePage(relPath, html, meta = {}) {
     }),
   );
   const pPath = relPath === '' ? '/' : `/${relPath}/`;
-  pages.push(pPath);
+  const isNoIndex = html.includes('content="noindex');
+  if (!isNoIndex) {
+    pages.push(pPath);
 
-  let cat = meta.category;
-  let priority = meta.priority;
-  let changefreq = meta.changefreq;
-  let lastmod = meta.lastmod || BUILD_DATE;
+    let cat = meta.category;
+    let priority = meta.priority;
+    let changefreq = meta.changefreq;
+    let lastmod = meta.lastmod || BUILD_DATE;
 
-  if (!cat) {
-    if (pPath === '/') {
-      cat = 'core';
-      priority = '1.0';
-      changefreq = 'daily';
-    } else if (/^\/(matches|tournaments|teams|players|venues|stats|records|about|news|archive|contact|live|academy)\/$/.test(pPath)) {
-      cat = 'core';
-      priority = '0.9';
-      changefreq = 'weekly';
-    } else if (pPath.startsWith('/tournaments/')) {
-      cat = 'core';
-      priority = '0.85';
-      changefreq = 'weekly';
-    } else if (pPath.startsWith('/news/')) {
-      cat = 'core';
-      priority = '0.85';
-      changefreq = 'weekly';
-    } else if (pPath.startsWith('/teams/')) {
-      cat = 'core';
-      priority = '0.80';
-      changefreq = 'monthly';
-    } else if (pPath.startsWith('/venues/')) {
-      cat = 'core';
-      priority = '0.75';
-      changefreq = 'monthly';
-    } else if (pPath.startsWith('/matches/')) {
-      cat = 'matches';
-      priority = '0.75';
-      changefreq = 'monthly';
-    } else if (pPath.startsWith('/players/')) {
-      cat = 'roster';
-      priority = '0.50';
-      changefreq = 'monthly';
-    } else {
-      cat = 'core';
-      priority = '0.70';
-      changefreq = 'monthly';
+    if (!cat) {
+      if (pPath === '/') {
+        cat = 'core';
+        priority = '1.0';
+        changefreq = 'daily';
+      } else if (/^\/(matches|tournaments|teams|players|venues|stats|records|about|news|archive|contact|live|academy)\/$/.test(pPath)) {
+        cat = 'core';
+        priority = '0.9';
+        changefreq = 'weekly';
+      } else if (pPath.startsWith('/tournaments/')) {
+        cat = 'core';
+        priority = '0.85';
+        changefreq = 'weekly';
+      } else if (pPath.startsWith('/news/')) {
+        cat = 'core';
+        priority = '0.85';
+        changefreq = 'weekly';
+      } else if (pPath.startsWith('/teams/')) {
+        cat = 'core';
+        priority = '0.80';
+        changefreq = 'monthly';
+      } else if (pPath.startsWith('/venues/')) {
+        cat = 'core';
+        priority = '0.75';
+        changefreq = 'monthly';
+      } else if (pPath.startsWith('/matches/')) {
+        cat = 'matches';
+        priority = '0.75';
+        changefreq = 'monthly';
+      } else if (pPath.startsWith('/players/')) {
+        cat = 'roster';
+        priority = '0.50';
+        changefreq = 'monthly';
+      } else {
+        cat = 'core';
+        priority = '0.70';
+        changefreq = 'monthly';
+      }
     }
-  }
 
-  pageEntries.push({
-    path: pPath,
-    priority: priority || '0.7',
-    changefreq: changefreq || 'monthly',
-    lastmod: lastmod || BUILD_DATE,
-    category: cat,
-  });
+    pageEntries.push({
+      path: pPath,
+      priority: priority || '0.7',
+      changefreq: changefreq || 'monthly',
+      lastmod: lastmod || BUILD_DATE,
+      category: cat,
+    });
+  }
   const t = html.match(/<title>(.*?)<\/title>/s)?.[1] ?? '';
   const d = html.match(/<meta name="description" content="(.*?)"/s)?.[1] ?? '';
 
@@ -1962,8 +1966,8 @@ function renderMatch(m) {
 // ============================================================
 // STATIC MINI-PAGES
 // ============================================================
-function renderStatic({ file, title, description, path, body, jsonLd = [] }) {
-  let html = layout({ title, description, path, jsonLd });
+function renderStatic({ file, title, description, path, body, jsonLd = [], robots }) {
+  let html = layout({ title, description, path, jsonLd, robots });
   html += body;
   html += closeLayout();
   if (file === '404') {
@@ -2106,13 +2110,53 @@ function renderNews() {
   writePage('news', html);
 }
 
+function cleanExcerpt(text, maxLen = 155) {
+  if (!text) return '';
+  let clean = String(text).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  if (clean.length <= maxLen) return clean;
+  const sliced = clean.slice(0, maxLen - 3);
+  const lastSpace = sliced.lastIndexOf(' ');
+  return (lastSpace > 60 ? sliced.slice(0, lastSpace) : sliced).trim() + '...';
+}
+
 function renderNewsItem(n) {
+  const desc = cleanExcerpt(n.body, 155);
+  const isPressRelease = (n.category || '').toLowerCase().includes('press release') || (n.category || '').includes('विज्ञप्ति');
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': isPressRelease ? 'PressRelease' : 'NewsArticle',
+    headline: n.title,
+    description: desc,
+    datePublished: n.publishedAt ? `${n.publishedAt}T09:00:00+05:30` : undefined,
+    dateModified: n.publishedAt ? `${n.publishedAt}T09:00:00+05:30` : undefined,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': absUrl(`/news/${n.slug}/`)
+    },
+    author: {
+      '@type': 'SportsOrganization',
+      name: n.sourceName || org.name,
+      url: absUrl('/')
+    },
+    publisher: {
+      '@type': 'SportsOrganization',
+      name: org.name,
+      url: absUrl('/'),
+      logo: {
+        '@type': 'ImageObject',
+        url: absUrl('/logo.png')
+      }
+    },
+    image: absUrl('/img/og-cover.png')
+  };
+
   let html = layout({
     title: n.title,
-    description: n.body.slice(0, 155),
+    description: desc,
     path: `/news/${n.slug}/`,
     breadcrumbs: [{ name: 'News', path: '/news/' }, { name: n.title, path: `/news/${n.slug}/` }],
     ogType: 'article',
+    jsonLd: [articleSchema]
   });
   html += `<article class="prose" style="max-width:720px">
     <p class="eyebrow">${esc(n.category ?? 'Announcement')} · ${esc(n.publishedAt)}</p>
@@ -2122,7 +2166,12 @@ function renderNewsItem(n) {
     <p style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem">${n.source ? 'Reproduced from the official MP Directorate of Sports &amp; Youth Welfare website for reference.' : `Published by the ${esc(org.name)}.`}</p>
   </article>`;
   html += closeLayout();
-  writePage(`news/${n.slug}`, html);
+  writePage(`news/${n.slug}`, html, {
+    category: 'core',
+    priority: '0.85',
+    changefreq: 'weekly',
+    lastmod: n.publishedAt || BUILD_DATE
+  });
 }
 
 // ============================================================
@@ -2135,6 +2184,7 @@ function renderLive() {
     title: 'Live &amp; Recent Results',
     description: 'Live match updates and recent results from the Rewa Cricket Division.',
     path: '/live/',
+    breadcrumbs: [{ name: 'Live & Recent Results', path: '/live/' }]
   });
   html += `<div class="page-head"><p class="eyebrow">Scoreboard</p><h1>Live &amp; Recent Results</h1></div>
   <section class="section"><div class="section-title"><h2><span class="live-dot" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#dc2626;vertical-align:middle;margin-right:6px;"></span>Live Now</h2></div>
@@ -2145,8 +2195,14 @@ function renderLive() {
   writePage('live', html);
 }
 
-function renderAggregate({ file, title, description, path, body }) {
-  let html = layout({ title, description, path });
+function renderAggregate({ file, title, description, path, body, jsonLd = [] }) {
+  let html = layout({
+    title,
+    description,
+    path,
+    breadcrumbs: [{ name: title, path }],
+    jsonLd
+  });
   html += body;
   html += closeLayout();
   writePage(file, html);
@@ -2213,6 +2269,20 @@ const aggregates = [
     title: 'Statistics',
     description: 'Official statistics of the Rewa Cricket Division — computed from verified match data.',
     path: '/stats/',
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Dataset',
+        name: 'Rewa Cricket Division Career & Season Statistics Leaderboard',
+        description: 'Official statistics and computed leaderboards from verified match records of the Rewa Cricket Division.',
+        url: absUrl('/stats/'),
+        creator: {
+          '@type': 'SportsOrganization',
+          name: org.name,
+          url: absUrl('/')
+        }
+      }
+    ],
     body: `<div class="page-head"><p class="eyebrow">Numbers</p><h1>Statistics</h1><p>All statistics are computed automatically from official, verified match records.</p></div>`
       + (db.batting.length || db.bowling.length
         ? statsBody()
@@ -2384,6 +2454,7 @@ renderStatic({
   title: 'Search',
   description: `Search the ${org.name} archive — players, teams, matches, tournaments, venues and more.`,
   path: '/search/',
+  robots: 'noindex, follow',
   body: `<div class="page-head"><p class="eyebrow">Find it</p><h1>Search the Archive</h1>
     <p>Search every player, team, match, tournament, venue and page in the Rewa Cricket Division archive.</p></div>
   <form class="search-page-form" role="search" action="/search/" method="get">
