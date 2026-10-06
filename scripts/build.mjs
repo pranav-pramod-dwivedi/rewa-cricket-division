@@ -1100,10 +1100,19 @@ function renderPlayer(p) {
   const age = ageOf(p.dateOfBirth);
   const seoTeam = team?.name;
   const seoKw = [
-    p.name, 'cricketer', `${p.name} cricketer`, `${p.name} Rewa`,
+    p.name, 'cricketer', `${p.name} cricketer`, `${p.name} Rewa`, `${p.name} stats`, `${p.name} records`,
     'Rewa cricketer', 'Rewa Cricket Division', 'RDCA', 'Madhya Pradesh cricket',
-    p.role, seoTeam, 'cricket statistics', 'cricket scorecard',
+    p.role, seoTeam, 'cricket statistics', 'cricket scorecard', 'records', 'highest score',
   ].filter(Boolean).join(', ');
+  const playerHs = batInns.length ? Math.max(...batInns.map((b) => b.runs || 0)) : 0;
+  const playerFaq = [
+    {
+      q: `What are ${p.name}'s career cricket stats?`,
+      a: `${p.name} has scored ${batRuns} runs and taken ${bowlWkts} wickets in ${totalMatchesCount || batInns.length || bowlOvers.length || 'multiple'} recorded matches for Rewa Cricket Division (RDCA), Madhya Pradesh. Full batting, bowling and match-by-match tables are on this page.`,
+    },
+    ...(playerHs ? [{ q: `What is ${p.name}'s highest score?`, a: `${p.name}'s highest recorded score is ${playerHs} runs.` }] : []),
+    { q: `Which team does ${p.name} play for?`, a: `${p.name} is a ${p.role || 'cricketer'}${seoTeam ? ` with ${seoTeam}` : ''} in the Rewa Cricket Division (RDCA), Madhya Pradesh.` },
+  ];
   const seoDesc = `${p.name} is a ${p.role}${seoTeam ? ` for ${seoTeam}` : ''} at Rewa Cricket Division (RDCA), Madhya Pradesh. ${p.battingStyle ? p.battingStyle + ' batsman; ' : ''}Browse ${p.name}'s career statistics, batting, bowling and match scorecards — Rewa district cricket.`;
   const playerSameAs = p.id === 'p-pranav-dwivedi'
     ? [
@@ -1131,13 +1140,14 @@ function renderPlayer(p) {
     : undefined;
 
   let html = layout({
-    title: team ? `${p.name} — Cricketer — ${team.name}` : `${p.name} — Cricketer — Rewa`,
+    title: `${p.name} — Cricket Stats, Records & Scorecards`,
     description: seoDesc,
     keywords: seoKw,
     path: `/players/${p.slug}/`,
     bodyClass: 'profile search-pinned',
     breadcrumbs: [{ name: 'Players', path: '/players/' }, { name: p.name, path: `/players/${p.slug}/` }],
-    jsonLd: {
+    jsonLd: [
+      {
       '@context': 'https://schema.org',
       '@type': ['Person', 'Athlete'],
       name: p.name,
@@ -1169,7 +1179,17 @@ function renderPlayer(p) {
           'Dread Eleven Franchise Skipper & Leading Run Scorer'
         ]
       } : {}),
-    },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: playerFaq.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      },
+    ],
   });
   html += `<div class="page-head"><h1>${esc(p.name)} ${isOfficialPlayer(p.id) ? verifiedTick() : ''}</h1><p>${esc(p.role)}${team ? ` · <a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : ''}</p></div>`;
   html += `<dl class="card dl-card" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:720px;margin-bottom:1.5rem">
@@ -1406,6 +1426,14 @@ function renderPlayer(p) {
       <p style="margin:0;font-size:0.9rem;line-height:1.6;color:var(--muted)">
         This player record is preserved in the permanent digital archives of the Rewa Division Cricket Association (RDCA). The association maintains authenticated rosters of registered cricketers across Rewa, Satna, Sidhi, and Singrauli districts. Complete ball-by-ball scorecards, batting/bowling statistics, and match telemetry from historical division tournaments are progressively digitised from physical match scorebooks and verified with division records.
       </p>
+    </div>
+  </section>`;
+
+  // Frequently asked questions (visible + FAQPage schema)
+  html += `<section class="section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="grid" style="margin-top:0.75rem">
+      ${playerFaq.map((f) => `<div class="card"><h3 style="font-size:1rem;margin-bottom:0.4rem">${esc(f.q)}</h3><p class="card-meta" style="font-size:0.9rem">${esc(f.a)}</p></div>`).join('\n')}
     </div>
   </section>`;
 
@@ -1849,7 +1877,7 @@ function renderMatch(m) {
     : '';
 
   const title = `${teamA?.name ?? 'Team A'} v ${teamB?.name ?? 'Team B'}`;
-  const docTitle = tourn ? `${title} — ${tourn.name}` : title;
+  const docTitle = m.resultText ? `${m.resultText} | ${title}${tourn ? ` — ${tourn.name}` : ''}` : (tourn ? `${title} — ${tourn.name}` : title);
   let html = layout({
     title: docTitle,
     description: m.resultText
