@@ -24048,8 +24048,8 @@
         }
       },
       "profileStats": {
-        "matches": 52,
-        "runs": 3073,
+        "matches": 53,
+        "runs": 3289,
         "wickets": 118
       },
       "teams": [
@@ -24058,7 +24058,8 @@
         "t-madhya-pradesh",
         "t-rcb-hinterland"
       ],
-      "teamId": "t-destroyers"
+      "teamId": "t-destroyers",
+      "bio": "Record T20 innings of 216 not out off 56 balls for RCB B against RCB A in a KSCA local tournament match at Alur, Bengaluru (October 2026), part of RCB B's 452 for 1 and a 254-run victory."
     },
     {
       "id": "p-akhil-mishra",
