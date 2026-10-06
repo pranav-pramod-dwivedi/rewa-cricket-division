@@ -1111,7 +1111,7 @@ function renderPlayer(p) {
       a: `${p.name} has scored ${batRuns} runs and taken ${bowlWkts} wickets in ${totalMatchesCount || batInns.length || bowlOvers.length || 'multiple'} recorded matches for Rewa Cricket Division (RDCA), Madhya Pradesh. Full batting, bowling and match-by-match tables are on this page.`,
     },
     ...(playerHs ? [{ q: `What is ${p.name}'s highest score?`, a: `${p.name}'s highest recorded score is ${playerHs} runs.` }] : []),
-    { q: `Which team does ${p.name} play for?`, a: `${p.name} is a ${p.role || 'cricketer'}${seoTeam ? ` with ${seoTeam}` : ''} in the Rewa Cricket Division (RDCA), Madhya Pradesh.` },
+    { q: `Which team does ${p.name} play for?`, a: `${p.name} is a${/^[aeiou]/i.test(p.role || '') ? 'n' : ''} ${p.role || 'cricketer'}${seoTeam ? ` with ${seoTeam}` : ''} in the Rewa Cricket Division (RDCA), Madhya Pradesh.` },
   ];
   const seoDesc = `${p.name} is a ${p.role}${seoTeam ? ` for ${seoTeam}` : ''} at Rewa Cricket Division (RDCA), Madhya Pradesh. ${p.battingStyle ? p.battingStyle + ' batsman; ' : ''}Browse ${p.name}'s career statistics, batting, bowling and match scorecards — Rewa district cricket.`;
   const playerSameAs = p.id === 'p-pranav-dwivedi'
