@@ -2034,16 +2034,24 @@ const dmyToIso = (d) => { const m = d.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/); re
 // Combined news feed: official announcements + MP Sports (DSYW) items.
 function allNews() {
   const dsywItems = [
-    ...dsyw.whatsNew.map((w, i) => ({
-      id: `dsyw-wn-${i}`,
-      slug: `dsyw-${slugify(w.title)}`,
-      title: w.title,
-      body: w.body,
-      publishedAt: '2026-07-20',
-      category: 'MP Sports · What\'s New',
-      source: dsyw.source,
-      sourceName: dsyw.sourceName,
-    })),
+    ...dsyw.whatsNew.map((w, i) => {
+      let pub = '2026-07-31';
+      if (w.body.includes('July 31, 2026')) pub = '2026-07-31';
+      else if (w.body.includes('April 8') || w.body.includes('April 9') || w.body.includes('April 22')) pub = '2026-04-08';
+      else if (w.body.includes('March 2026')) pub = '2026-03-04';
+      else if (w.body.includes('January 2026') || w.title.includes('2026')) pub = '2026-01-15';
+      else if (w.body.includes('October') || w.body.includes('2025')) pub = '2025-10-14';
+      return {
+        id: `dsyw-wn-${i}`,
+        slug: `dsyw-${slugify(w.title)}`,
+        title: w.title,
+        body: w.body,
+        publishedAt: pub,
+        category: 'MP Sports · Notification',
+        source: dsyw.source,
+        sourceName: dsyw.sourceName,
+      };
+    }),
     ...dsyw.pressReleases.map((p, i) => ({
       id: `dsyw-pr-${i}`,
       slug: `dsyw-${slugify(p.title)}`,
@@ -2160,15 +2168,6 @@ function statsBody() {
     a.sixes += b.sixes || 0;
     if ((b.runs || 0) > a.hs) a.hs = b.runs || 0;
   }
-  const pranavId = db.players.find((p) => p.slug === 'pranav-dwivedi' || p.id === 'p-pranav-dwivedi')?.id ?? 'p-pranav-dwivedi';
-  const pranavBat = runAgg.get(pranavId);
-  if (pranavBat) {
-    pranavBat.runs = Math.round(pranavBat.runs / 4);
-    pranavBat.inn = Math.round(pranavBat.inn / 4);
-    pranavBat.fours = Math.round(pranavBat.fours / 4);
-    pranavBat.sixes = Math.round(pranavBat.sixes / 4);
-    pranavBat.hs = Math.round(pranavBat.hs / 4);
-  }
   const topRuns = [...runAgg.entries()]
     .map(([id, a]) => ({ name: playersById.get(id)?.name ?? '—', slug: playersById.get(id)?.slug ?? '', ...a }))
     .sort((a, b) => b.runs - a.runs)
@@ -2176,20 +2175,21 @@ function statsBody() {
   // wicket aggregation
   const wktAgg = new Map();
   for (const w of db.bowling) {
-    if (!wktAgg.has(w.playerId)) wktAgg.set(w.playerId, { wkts: 0, runs: 0, overs: 0, econ: [] });
+    if (!wktAgg.has(w.playerId)) wktAgg.set(w.playerId, { wkts: 0, runs: 0, balls: 0 });
     const a = wktAgg.get(w.playerId);
     a.wkts += w.wickets || 0;
     a.runs += w.runs || 0;
-    a.overs += w.overs || 0;
-  }
-  const pranavBowl = wktAgg.get(pranavId);
-  if (pranavBowl) {
-    pranavBowl.wkts = Math.round(pranavBowl.wkts / 4);
-    pranavBowl.runs = Math.round(pranavBowl.runs / 4);
-    pranavBowl.overs = Math.round(pranavBowl.overs / 4);
+    a.balls += ovToBalls(w.overs || 0);
   }
   const topWkts = [...wktAgg.entries()]
-    .map(([id, a]) => ({ name: playersById.get(id)?.name ?? '—', slug: playersById.get(id)?.slug ?? '', ...a, econ: a.overs ? +(a.runs / a.overs).toFixed(2) : '—' }))
+    .map(([id, a]) => ({
+      name: playersById.get(id)?.name ?? '—',
+      slug: playersById.get(id)?.slug ?? '',
+      overs: ballsToOvers(a.balls),
+      runs: a.runs,
+      wkts: a.wkts,
+      econ: a.balls ? +(a.runs / (a.balls / 6)).toFixed(2) : '—'
+    }))
     .filter((x) => x.wkts > 0)
     .sort((a, b) => b.wkts - a.wkts)
     .slice(0, 10);
@@ -2388,26 +2388,10 @@ renderStatic({
     <p>Search every player, team, match, tournament, venue and page in the Rewa Cricket Division archive.</p></div>
   <form class="search-page-form" role="search" action="/search/" method="get">
     <label class="sr-only" for="sq">Search</label>
-    <input id="sq" name="q" type="search" placeholder="e.g. Kuldeep Sen, Ranji Trophy, Rewa Jaguars…" autocomplete="off" />
+    <input id="sq" name="q" type="search" placeholder="Search players, teams, matches, tournaments, venues…" autocomplete="off" />
     <button class="btn btn-primary" type="submit">Search</button>
     <button class="btn btn-ghost" type="button" data-search-clear aria-label="Clear search">Clear</button>
   </form>
-  <!-- Search Suggestions Bar -->
-  <div class="search-suggestions-wrap" style="margin: 1.25rem 0 2rem;">
-    <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-      <span class="card-meta" style="font-weight:700; text-transform:uppercase; font-size:0.75rem; color:var(--brand, #b31b1b);">Suggestions:</span>
-      <button type="button" class="search-suggest-chip" data-search="Kuldeep Sen">Kuldeep Sen</button>
-      <button type="button" class="search-suggest-chip" data-search="Pranav Dwivedi">Pranav Dwivedi</button>
-      <button type="button" class="search-suggest-chip" data-search="Akhil Mishra">Akhil Mishra</button>
-      <button type="button" class="search-suggest-chip" data-search="Ranji Trophy">Ranji Trophy Champions</button>
-      <button type="button" class="search-suggest-chip" data-search="MPL">MP League (MPL)</button>
-      <button type="button" class="search-suggest-chip" data-search="Atal Bihari">ABV Tournament</button>
-      <button type="button" class="search-suggest-chip" data-search="Awadhesh Pratap">APSU Stadium</button>
-      <button type="button" class="search-suggest-chip" data-search="Yash Dubey">Yash Dubey</button>
-      <button type="button" class="search-suggest-chip" data-search="Rewa Jaguars">Rewa Jaguars</button>
-      <button type="button" class="search-suggest-chip" data-search="Academy">Women's Academy</button>
-    </div>
-  </div>
   <p class="search-count hidden" data-search-count></p>
   <div class="search-results" data-search-results>
     <p class="card-meta">Type a query above and press Search, or use the search box in the header.</p>
@@ -2445,6 +2429,18 @@ renderStatic({
       </div>
     </aside>
   </div>
+  <section class="section">
+    <div class="section-title"><div><p class="eyebrow">High Performance &amp; Athlete Care</p><h2>Sports Science Centre</h2></div></div>
+    <div class="card prose" style="max-width:72ch">
+      <p>${esc(dsyw.sportsScience)}</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="section-title"><div><p class="eyebrow">National Development Framework</p><h2>Khelo India Program</h2></div></div>
+    <div class="card prose" style="max-width:72ch">
+      <p>${esc(dsyw.kheloIndia)}</p>
+    </div>
+  </section>
   <section class="section">
     <div class="section-title"><div><p class="eyebrow">Cricket Academy Gallery</p><h2>Gallery</h2></div></div>
     <div class="gallery-grid">${dsyw.academy.gallery
