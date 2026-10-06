@@ -7426,7 +7426,7 @@
         "p-ramveer-singh-gurjar",
         "p-sagar-pratap-singh",
         "p-saransh-jain",
-        "p-shivam-bansal",
+        "p-shivam-bansal-440",
         "p-shubham-sharma",
         "p-subhranshu-senapati",
         "p-venkatesh-iyer",
@@ -24172,7 +24172,7 @@
       "name": "Aditya Shrivastava",
       "slug": "aditya-shrivastava",
       "role": "Player",
-      "teamId": null,
+      "teamId": "t-madhya-pradesh",
       "teams": [
         "t-destroyers",
         "t-de"
@@ -45569,7 +45569,7 @@
       "maidens": 1,
       "runs": 20,
       "wickets": 2,
-      "economy": 5.71
+      "economy": 5.22
     },
     {
       "id": "w-m-shared-2-2-1",
@@ -45619,7 +45619,7 @@
       "maidens": 0,
       "runs": 78,
       "wickets": 2,
-      "economy": 52
+      "economy": 42.55
     },
     {
       "id": "w-m-shared-3-1-0",
@@ -52539,7 +52539,7 @@
       "maidens": 1,
       "runs": 17,
       "wickets": 2,
-      "economy": 4.86
+      "economy": 4.43
     },
     {
       "id": "w-m-shared-52-2-1",
@@ -52589,7 +52589,7 @@
       "maidens": 0,
       "runs": 37,
       "wickets": 0,
-      "economy": 10.57
+      "economy": 9.65
     },
     {
       "id": "w-m-shared-53-1-0",
@@ -53324,7 +53324,7 @@
     {
       "id": "bowl-m-shared-59-2-6",
       "inningsId": "m-shared-59-2",
-      "playerId": "p-shivam-bansal",
+      "playerId": "p-shivam-bansal-440",
       "overs": 5,
       "maidens": 0,
       "runs": 44,
