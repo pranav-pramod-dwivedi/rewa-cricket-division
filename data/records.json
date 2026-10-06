@@ -578,6 +578,126 @@
           "captain": "Pranav Dwivedi"
         }
       ]
+    },
+    {
+      "id": "t-india-a-vs-aus-a-2026",
+      "name": "India A vs Australia A One Day Series 2026",
+      "slug": "india-a-vs-australia-a-one-day-series-2026",
+      "seasonId": "s2026",
+      "format": "ODI",
+      "status": "completed",
+      "category": "official",
+      "governingBody": "BCCI / Cricket Australia",
+      "scope": "international",
+      "description": "Three-match unofficial ODI series between India A and Australia A in Puducherry."
+    },
+    {
+      "id": "t-india-a-vs-nz-a-2022",
+      "name": "India A vs New Zealand A One Day Series 2022",
+      "slug": "india-a-vs-new-zealand-a-one-day-series-2022",
+      "seasonId": "s2022",
+      "format": "ODI",
+      "status": "completed",
+      "category": "official",
+      "governingBody": "BCCI / New Zealand Cricket",
+      "scope": "international",
+      "description": "Three-match unofficial ODI series between India A and New Zealand A in Chennai."
+    },
+    {
+      "id": "t-india-a-vs-eng-lions-2024",
+      "name": "India A vs England Lions Series 2024",
+      "slug": "india-a-vs-england-lions-series-2024",
+      "seasonId": "s-2024",
+      "format": "First-class",
+      "status": "completed",
+      "category": "official",
+      "governingBody": "BCCI / ECB",
+      "scope": "international",
+      "description": "First-class unofficial Test series in Ahmedabad between India A and England Lions."
+    },
+    {
+      "id": "t-india-tour-of-sa-2023",
+      "name": "India Tour of South Africa 2023-24 (ODI Series)",
+      "slug": "india-tour-of-south-africa-2023-24-odi-series",
+      "seasonId": "s-2024",
+      "format": "ODI",
+      "status": "completed",
+      "category": "official",
+      "governingBody": "ICC / CSA / BCCI",
+      "scope": "international",
+      "description": "Senior international bilateral ODI series in South Africa."
+    },
+    {
+      "id": "t-india-tour-of-bangladesh-2022",
+      "name": "India Tour of Bangladesh 2022-23 (ODI Series)",
+      "slug": "india-tour-of-bangladesh-2022-23-odi-series",
+      "seasonId": "s-2023",
+      "format": "ODI",
+      "status": "completed",
+      "category": "official",
+      "governingBody": "ICC / BCB / BCCI",
+      "scope": "international",
+      "description": "Senior international bilateral ODI series in Bangladesh."
+    },
+    {
+      "id": "t-irani-cup-2022-23",
+      "name": "Irani Cup 2022-23",
+      "slug": "irani-cup-2022-23",
+      "seasonId": "s-2023",
+      "format": "First-class",
+      "status": "completed",
+      "category": "official",
+      "governingBody": "BCCI",
+      "scope": "national",
+      "description": "The historic Irani Cup clash between reigning Ranji Trophy champions Madhya Pradesh and Rest of India in Gwalior."
+    },
+    {
+      "id": "t-ipl-2022",
+      "name": "Indian Premier League 2022",
+      "slug": "indian-premier-league-2022",
+      "seasonId": "s2022",
+      "format": "T20",
+      "status": "completed",
+      "category": "official",
+      "governingBody": "BCCI / IPL",
+      "scope": "franchise",
+      "description": "Indian Premier League 2022 playoffs."
+    },
+    {
+      "id": "t-ipl-2024",
+      "name": "Indian Premier League 2024",
+      "slug": "indian-premier-league-2024",
+      "seasonId": "s-2024",
+      "format": "T20",
+      "status": "completed",
+      "category": "official",
+      "governingBody": "BCCI / IPL",
+      "scope": "franchise",
+      "description": "Indian Premier League 2024 championship final."
+    },
+    {
+      "id": "t-rdca-senior-championship-2026",
+      "name": "RDCA Divisional Senior Championship 2026",
+      "slug": "rdca-divisional-senior-championship-2026",
+      "seasonId": "s2026",
+      "format": "ODI",
+      "status": "completed",
+      "category": "official",
+      "governingBody": "MPCA / RDCA",
+      "scope": "division",
+      "description": "Annual inter-division senior limited-overs tournament in Rewa."
+    },
+    {
+      "id": "t-rdca-inter-district-2025",
+      "name": "RDCA Inter District One Day Tournament 2025",
+      "slug": "rdca-inter-district-one-day-tournament-2025",
+      "seasonId": "s2025",
+      "format": "ODI",
+      "status": "completed",
+      "category": "official",
+      "governingBody": "MPCA / RDCA",
+      "scope": "division",
+      "description": "Rewa zone inter-district limited overs tournament."
     }
   ],
   "teams": [
@@ -1995,6 +2115,83 @@
       "shortCode": "RCB B",
       "description": "Intra-squad / trial side.",
       "establishedYear": 2021
+    },
+    {
+      "id": "t-india-a",
+      "name": "India A",
+      "slug": "india-a",
+      "shortCode": "IND-A",
+      "description": "India A cricket team."
+    },
+    {
+      "id": "t-australia-a",
+      "name": "Australia A",
+      "slug": "australia-a",
+      "shortCode": "AUS-A",
+      "description": "Australia A cricket team."
+    },
+    {
+      "id": "t-new-zealand-a",
+      "name": "New Zealand A",
+      "slug": "new-zealand-a",
+      "shortCode": "NZ-A",
+      "description": "New Zealand A cricket team."
+    },
+    {
+      "id": "t-england-lions",
+      "name": "England Lions",
+      "slug": "england-lions",
+      "shortCode": "ENG-L",
+      "description": "England Lions cricket team."
+    },
+    {
+      "id": "t-south-africa",
+      "name": "South Africa",
+      "slug": "south-africa",
+      "shortCode": "SA",
+      "description": "South Africa cricket team."
+    },
+    {
+      "id": "t-india",
+      "name": "India",
+      "slug": "india",
+      "shortCode": "IND",
+      "description": "India cricket team."
+    },
+    {
+      "id": "t-bangladesh",
+      "name": "Bangladesh",
+      "slug": "bangladesh",
+      "shortCode": "BAN",
+      "description": "Bangladesh cricket team."
+    },
+    {
+      "id": "t-rest-of-india",
+      "name": "Rest of India",
+      "slug": "rest-of-india",
+      "shortCode": "ROI",
+      "description": "Rest of India cricket team."
+    },
+    {
+      "id": "t-royal-challengers-bangalore",
+      "name": "Royal Challengers Bangalore",
+      "slug": "royal-challengers-bangalore",
+      "shortCode": "RCB",
+      "description": "Royal Challengers Bangalore cricket team."
+    },
+    {
+      "id": "t-sunrisers-hyderabad",
+      "name": "Sunrisers Hyderabad",
+      "slug": "sunrisers-hyderabad",
+      "shortCode": "SRH",
+      "description": "Sunrisers Hyderabad cricket team."
+    },
+    {
+      "id": "t-shahdol-division",
+      "name": "Shahdol Division",
+      "slug": "shahdol-division",
+      "shortCode": "SHD",
+      "description": "Shahdol Division cricket team."
     }
   ],
   "venues": [
@@ -2405,6 +2602,54 @@
       "slug": "jaipuria-vidyalaya-ground-jaipur",
       "city": "India",
       "state": "",
+      "capacity": null
+    },
+    {
+      "id": "v-cricket-association-puducherry-siechem-ground",
+      "name": "Cricket Association Puducherry Siechem Ground",
+      "slug": "cricket-association-puducherry-siechem-ground",
+      "city": "Puducherry",
+      "state": "Puducherry",
+      "capacity": null
+    },
+    {
+      "id": "v-m-a-chidambaram-stadium",
+      "name": "M. A. Chidambaram Stadium",
+      "slug": "m-a-chidambaram-stadium",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "capacity": null
+    },
+    {
+      "id": "v-narendra-modi-stadium-ground-a",
+      "name": "Narendra Modi Stadium, Ground A",
+      "slug": "narendra-modi-stadium-ground-a",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "capacity": null
+    },
+    {
+      "id": "v-boland-park",
+      "name": "Boland Park",
+      "slug": "boland-park",
+      "city": "Paarl",
+      "state": "South Africa",
+      "capacity": null
+    },
+    {
+      "id": "v-sher-e-bangla-national-cricket-stadium",
+      "name": "Sher-e-Bangla National Cricket Stadium",
+      "slug": "sher-e-bangla-national-cricket-stadium",
+      "city": "Mirpur",
+      "state": "Bangladesh",
+      "capacity": null
+    },
+    {
+      "id": "v-captain-roop-singh-stadium-gwalior",
+      "name": "Captain Roop Singh Stadium, Gwalior",
+      "slug": "captain-roop-singh-stadium-gwalior",
+      "city": "Gwalior",
+      "state": "Madhya Pradesh",
       "capacity": null
     }
   ],
@@ -7337,6 +7582,171 @@
         "p-venkatesh-iyer",
         "p-yash-dubey"
       ]
+    },
+    {
+      "id": "m-india-a-vs-australia-a-1st-unofficial-odi-2026",
+      "slug": "india-a-vs-australia-a-1st-unofficial-odi-2026",
+      "tournamentId": "t-india-a-vs-aus-a-2026",
+      "seasonId": "s2026",
+      "venueId": "v-cricket-association-puducherry-siechem-ground",
+      "teamAId": "t-india-a",
+      "teamBId": "t-australia-a",
+      "matchDate": "2026-10-06",
+      "format": "ODI",
+      "status": "completed",
+      "resultText": "India A won by 14 runs",
+      "matchNumber": null,
+      "notes": "India A vs Australia A, 1st Unofficial ODI (6 Oct 2026). India A 285/6 (50 Ov), Australia A 271 (48.4 Ov). Rajat Patidar scored a fluent 68 off 62 balls batting at No. 3."
+    },
+    {
+      "id": "m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022",
+      "slug": "india-a-vs-new-zealand-a-1st-unofficial-odi-2022",
+      "tournamentId": "t-india-a-vs-nz-a-2022",
+      "seasonId": "s2022",
+      "venueId": "v-m-a-chidambaram-stadium",
+      "teamAId": "t-india-a",
+      "teamBId": "t-new-zealand-a",
+      "matchDate": "2022-09-22",
+      "format": "ODI",
+      "status": "completed",
+      "resultText": "India A won by 7 wickets",
+      "matchNumber": null,
+      "notes": "1st unofficial ODI, Chennai. New Zealand A 167 (40.2 Ov) bowled out by Kuldeep Sen (3/30) and Shardul Thakur (4/32). India A 170/3 (31.5 Ov) chased comfortably with Rajat Patidar 45* (41 balls) and Ruturaj Gaikwad 41."
+    },
+    {
+      "id": "m-india-a-vs-england-lions-1st-unofficial-test-2024",
+      "slug": "india-a-vs-england-lions-1st-unofficial-test-2024",
+      "tournamentId": "t-india-a-vs-eng-lions-2024",
+      "seasonId": "s-2024",
+      "venueId": "v-narendra-modi-stadium-ground-a",
+      "teamAId": "t-india-a",
+      "teamBId": "t-england-lions",
+      "matchDate": "2024-01-17",
+      "format": "First-class",
+      "status": "completed",
+      "resultText": "Match drawn",
+      "matchNumber": null,
+      "notes": "1st Unofficial Test, Ahmedabad. England Lions 553/8d & 163/6d. India A 227 & 426/5. Rajat Patidar played a masterclass knock of 151 off 158 balls (19 fours, 5 sixes) in the 1st innings. Saransh Jain contributed vital resistance with 63 in the 2nd innings."
+    },
+    {
+      "id": "m-south-africa-vs-india-3rd-odi-2023",
+      "slug": "south-africa-vs-india-3rd-odi-2023",
+      "tournamentId": "t-india-tour-of-sa-2023",
+      "seasonId": "s-2024",
+      "venueId": "v-boland-park",
+      "teamAId": "t-south-africa",
+      "teamBId": "t-india",
+      "matchDate": "2023-12-21",
+      "format": "ODI",
+      "status": "completed",
+      "resultText": "India won by 78 runs",
+      "matchNumber": null,
+      "notes": "3rd ODI, Paarl. India 296/8 (50 Ov). Rajat Patidar made his senior international debut, scoring a crisp 22 off 16 balls (1 four, 2 sixes). Avesh Khan dismantled the South African chase with a lethal spell of 4/44 in 7.5 overs."
+    },
+    {
+      "id": "m-bangladesh-vs-india-1st-odi-2022",
+      "slug": "bangladesh-vs-india-1st-odi-2022",
+      "tournamentId": "t-india-tour-of-bangladesh-2022",
+      "seasonId": "s-2023",
+      "venueId": "v-sher-e-bangla-national-cricket-stadium",
+      "teamAId": "t-bangladesh",
+      "teamBId": "t-india",
+      "matchDate": "2022-12-04",
+      "format": "ODI",
+      "status": "completed",
+      "resultText": "Bangladesh won by 1 wicket",
+      "matchNumber": null,
+      "notes": "1st ODI, Mirpur. Rewa pace sensation Kuldeep Sen made his international India ODI debut, picking up 2 wickets (Afif Hossain and Ebadot Hossain) in an over."
+    },
+    {
+      "id": "m-rest-of-india-vs-madhya-pradesh-irani-cup-2023",
+      "slug": "rest-of-india-vs-madhya-pradesh-irani-cup-2023",
+      "tournamentId": "t-irani-cup-2022-23",
+      "seasonId": "s-2023",
+      "venueId": "v-captain-roop-singh-stadium-gwalior",
+      "teamAId": "t-rest-of-india",
+      "teamBId": "t-madhya-pradesh",
+      "matchDate": "2023-03-01",
+      "format": "First-class",
+      "status": "completed",
+      "resultText": "Rest of India won by 238 runs",
+      "matchNumber": null,
+      "notes": "Irani Cup 2022-23, Captain Roop Singh Stadium, Gwalior. Rest of India 484 & 246. Madhya Pradesh 357 & 135. Rewa speedster Kuldeep Sen bagged 8 wickets in the match for ROI (3/62 & 5/38). Yash Dubey struck a gritty century (109) for MP alongside Harsh Gawli (54)."
+    },
+    {
+      "id": "m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022",
+      "slug": "madhya-pradesh-vs-mumbai-ranji-trophy-final-2022",
+      "tournamentId": "t-ranji-trophy-2021-22",
+      "seasonId": "s2022",
+      "venueId": "v-m-chinnaswamy-stadium-bengaluru",
+      "teamAId": "t-mumbai",
+      "teamBId": "t-madhya-pradesh",
+      "matchDate": "2022-06-22",
+      "format": "First-class",
+      "status": "completed",
+      "resultText": "Madhya Pradesh won by 6 wickets",
+      "matchNumber": null,
+      "notes": "Ranji Trophy 2021-22 Final, M. Chinnaswamy Stadium, Bengaluru. Historic first title for Madhya Pradesh coached by Chandrakant Pandit! Yash Dubey (133), Shubham Sharma (116) and Rajat Patidar (122) all cracked centuries in a monstrous 1st innings total of 536. Kumar Kartikeya spun MP to glory with 4/98 in the 2nd innings."
+    },
+    {
+      "id": "m-rcb-vs-lsg-ipl-eliminator-2022",
+      "slug": "rcb-vs-lsg-ipl-eliminator-2022",
+      "tournamentId": "t-ipl-2022",
+      "seasonId": "s2022",
+      "venueId": "v-eden-gardens-kolkata",
+      "teamAId": "t-royal-challengers-bangalore",
+      "teamBId": "t-lucknow-super-giants",
+      "matchDate": "2022-05-25",
+      "format": "T20",
+      "status": "completed",
+      "resultText": "Royal Challengers Bangalore won by 14 runs",
+      "matchNumber": null,
+      "notes": "IPL 2022 Eliminator, Kolkata. Rajat Patidar unleashed one of the greatest knocks in IPL playoff history: an unbeaten 112 off 54 balls (12 fours, 7 sixes, SR 207.41) becoming the first uncapped player to hit an IPL playoff ton. Avesh Khan bowled 4 overs for LSG (1/44)."
+    },
+    {
+      "id": "m-kkr-vs-srh-ipl-final-2024",
+      "slug": "kkr-vs-srh-ipl-final-2024",
+      "tournamentId": "t-ipl-2024",
+      "seasonId": "s-2024",
+      "venueId": "v-m-a-chidambaram-stadium",
+      "teamAId": "t-sunrisers-hyderabad",
+      "teamBId": "t-kkr",
+      "matchDate": "2024-05-26",
+      "format": "T20",
+      "status": "completed",
+      "resultText": "Kolkata Knight Riders won by 8 wickets",
+      "matchNumber": null,
+      "notes": "IPL 2024 Final, Chennai. KKR dismantled SRH for 113 in 18.3 overs. MP and KKR star Venkatesh Iyer smashed an electric 52* off just 26 balls (4 fours, 3 sixes, SR 200.00) to seal KKR third IPL title in under 11 overs."
+    },
+    {
+      "id": "m-rewa-division-vs-shahdol-division-rdca-championship-2026",
+      "slug": "rewa-division-vs-shahdol-division-rdca-championship-2026",
+      "tournamentId": "t-rdca-senior-championship-2026",
+      "seasonId": "s2026",
+      "venueId": "v-apsu-rewa",
+      "teamAId": "t-shahdol-division",
+      "teamBId": "t-rewa-div",
+      "matchDate": "2026-05-18",
+      "format": "ODI",
+      "status": "completed",
+      "resultText": "Rewa Division won by 5 wickets",
+      "matchNumber": null,
+      "notes": "RDCA Divisional Senior Championship 2026, APSU Stadium. Shahdol 215 all out. Rewa Division chased 218/5 in 41.3 overs powered by Pranav Dwivedi 68 (74 balls) and Akhil Mishra 45* (38 balls). Rohit Gupta picked up 3/34."
+    },
+    {
+      "id": "m-rewa-district-vs-satna-district-inter-district-2025",
+      "slug": "rewa-district-vs-satna-district-inter-district-2025",
+      "tournamentId": "t-rdca-inter-district-2025",
+      "seasonId": "s2025",
+      "venueId": "v-apsu-rewa",
+      "teamAId": "t-satna-district",
+      "teamBId": "t-rewa-district",
+      "matchDate": "2025-11-14",
+      "format": "ODI",
+      "status": "completed",
+      "resultText": "Rewa District won by 7 wickets",
+      "matchNumber": null,
+      "notes": "RDCA Inter-District Tournament 2025, Rewa. Satna District 198 all out. Rewa District 201/3 in 38.2 overs. Atul Tiwari played a match-winning 72 (86 balls), with Pranav Dwivedi remaining unbeaten on 48*. Rohit Gupta took 4/28."
     }
   ],
   "players": [
@@ -24053,6 +24463,496 @@
       "slug": "andrew-tye",
       "role": "Bowler",
       "teamId": "t-lucknow-super-giants"
+    },
+    {
+      "id": "p-ruturaj-gaikwad",
+      "name": "Ruturaj Gaikwad",
+      "slug": "ruturaj-gaikwad",
+      "teamId": "t-india-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-abhimanyu-easwaran",
+      "name": "Abhimanyu Easwaran",
+      "slug": "abhimanyu-easwaran",
+      "teamId": "t-india-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-ishan-kishan",
+      "name": "Ishan Kishan",
+      "slug": "ishan-kishan",
+      "teamId": "t-india-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-axar-patel",
+      "name": "Axar Patel",
+      "slug": "axar-patel",
+      "teamId": "t-india-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-xavier-bartlett",
+      "name": "Xavier Bartlett",
+      "slug": "xavier-bartlett",
+      "teamId": "t-australia-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-todd-murphy",
+      "name": "Todd Murphy",
+      "slug": "todd-murphy",
+      "teamId": "t-australia-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-cooper-connolly",
+      "name": "Cooper Connolly",
+      "slug": "cooper-connolly",
+      "teamId": "t-australia-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-josh-philippe",
+      "name": "Josh Philippe",
+      "slug": "josh-philippe",
+      "teamId": "t-australia-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-cameron-bancroft",
+      "name": "Cameron Bancroft",
+      "slug": "cameron-bancroft",
+      "teamId": "t-australia-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-matt-renshaw",
+      "name": "Matt Renshaw",
+      "slug": "matt-renshaw",
+      "teamId": "t-australia-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-arshdeep-singh",
+      "name": "Arshdeep Singh",
+      "slug": "arshdeep-singh",
+      "teamId": "t-india-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-mukesh-kumar",
+      "name": "Mukesh Kumar",
+      "slug": "mukesh-kumar",
+      "teamId": "t-india-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-chad-bowes",
+      "name": "Chad Bowes",
+      "slug": "chad-bowes",
+      "teamId": "t-new-zealand-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-rachin-ravindra",
+      "name": "Rachin Ravindra",
+      "slug": "rachin-ravindra",
+      "teamId": "t-new-zealand-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-joe-carter",
+      "name": "Joe Carter",
+      "slug": "joe-carter",
+      "teamId": "t-new-zealand-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-michael-rippon",
+      "name": "Michael Rippon",
+      "slug": "michael-rippon",
+      "teamId": "t-new-zealand-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-tom-blundell",
+      "name": "Tom Blundell",
+      "slug": "tom-blundell",
+      "teamId": "t-new-zealand-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-shardul-thakur",
+      "name": "Shardul Thakur",
+      "slug": "shardul-thakur",
+      "teamId": "t-india-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-umran-malik",
+      "name": "Umran Malik",
+      "slug": "umran-malik",
+      "teamId": "t-india-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-prithvi-shaw",
+      "name": "Prithvi Shaw",
+      "slug": "prithvi-shaw",
+      "teamId": "t-india-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-rahul-tripathi",
+      "name": "Rahul Tripathi",
+      "slug": "rahul-tripathi",
+      "teamId": "t-india-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-sanju-samson",
+      "name": "Sanju Samson",
+      "slug": "sanju-samson",
+      "teamId": "t-india-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-logan-van-beek",
+      "name": "Logan van Beek",
+      "slug": "logan-van-beek",
+      "teamId": "t-new-zealand-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-lockie-ferguson",
+      "name": "Lockie Ferguson",
+      "slug": "lockie-ferguson",
+      "teamId": "t-new-zealand-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-keaton-jennings",
+      "name": "Keaton Jennings",
+      "slug": "keaton-jennings",
+      "teamId": "t-england-lions",
+      "role": "Player"
+    },
+    {
+      "id": "p-alex-lees",
+      "name": "Alex Lees",
+      "slug": "alex-lees",
+      "teamId": "t-england-lions",
+      "role": "Player"
+    },
+    {
+      "id": "p-manav-suthar",
+      "name": "Manav Suthar",
+      "slug": "manav-suthar",
+      "teamId": "t-india-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-sai-sudharsan",
+      "name": "Sai Sudharsan",
+      "slug": "sai-sudharsan",
+      "teamId": "t-india-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-sarfaraz-khan",
+      "name": "Sarfaraz Khan",
+      "slug": "sarfaraz-khan",
+      "teamId": "t-india-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-k-s-bharat",
+      "name": "KS Bharat",
+      "slug": "ks-bharat",
+      "teamId": "t-india-a",
+      "role": "Player"
+    },
+    {
+      "id": "p-matthew-potts",
+      "name": "Matthew Potts",
+      "slug": "matthew-potts",
+      "teamId": "t-england-lions",
+      "role": "Player"
+    },
+    {
+      "id": "p-matthew-fisher",
+      "name": "Matthew Fisher",
+      "slug": "matthew-fisher",
+      "teamId": "t-england-lions",
+      "role": "Player"
+    },
+    {
+      "id": "p-rinku-singh",
+      "name": "Rinku Singh",
+      "slug": "rinku-singh",
+      "teamId": "t-india",
+      "role": "Player"
+    },
+    {
+      "id": "p-nandre-burger",
+      "name": "Nandre Burger",
+      "slug": "nandre-burger",
+      "teamId": "t-south-africa",
+      "role": "Player"
+    },
+    {
+      "id": "p-beuran-hendricks",
+      "name": "Beuran Hendricks",
+      "slug": "beuran-hendricks",
+      "teamId": "t-south-africa",
+      "role": "Player"
+    },
+    {
+      "id": "p-reeza-hendricks",
+      "name": "Reeza Hendricks",
+      "slug": "reeza-hendricks",
+      "teamId": "t-south-africa",
+      "role": "Player"
+    },
+    {
+      "id": "p-tony-de-zorzi",
+      "name": "Tony de Zorzi",
+      "slug": "tony-de-zorzi",
+      "teamId": "t-south-africa",
+      "role": "Player"
+    },
+    {
+      "id": "p-aiden-markram",
+      "name": "Aiden Markram",
+      "slug": "aiden-markram",
+      "teamId": "t-south-africa",
+      "role": "Player"
+    },
+    {
+      "id": "p-heinrich-klaasen",
+      "name": "Heinrich Klaasen",
+      "slug": "heinrich-klaasen",
+      "teamId": "t-south-africa",
+      "role": "Player"
+    },
+    {
+      "id": "p-david-miller",
+      "name": "David Miller",
+      "slug": "david-miller",
+      "teamId": "t-south-africa",
+      "role": "Player"
+    },
+    {
+      "id": "p-wiaan-mulder",
+      "name": "Wiaan Mulder",
+      "slug": "wiaan-mulder",
+      "teamId": "t-south-africa",
+      "role": "Player"
+    },
+    {
+      "id": "p-keshav-maharaj",
+      "name": "Keshav Maharaj",
+      "slug": "keshav-maharaj",
+      "teamId": "t-south-africa",
+      "role": "Player"
+    },
+    {
+      "id": "p-washington-sundar",
+      "name": "Washington Sundar",
+      "slug": "washington-sundar",
+      "teamId": "t-india",
+      "role": "Player"
+    },
+    {
+      "id": "p-shakib-al-hasan",
+      "name": "Shakib Al Hasan",
+      "slug": "shakib-al-hasan",
+      "teamId": "t-bangladesh",
+      "role": "Player"
+    },
+    {
+      "id": "p-ebadot-hossain",
+      "name": "Ebadot Hossain",
+      "slug": "ebadot-hossain",
+      "teamId": "t-bangladesh",
+      "role": "Player"
+    },
+    {
+      "id": "p-afif-hossain",
+      "name": "Afif Hossain",
+      "slug": "afif-hossain",
+      "teamId": "t-bangladesh",
+      "role": "Player"
+    },
+    {
+      "id": "p-mehidy-hasan-miraz",
+      "name": "Mehidy Hasan Miraz",
+      "slug": "mehidy-hasan-miraz",
+      "teamId": "t-bangladesh",
+      "role": "Player"
+    },
+    {
+      "id": "p-mohammed-siraj",
+      "name": "Mohammed Siraj",
+      "slug": "mohammed-siraj",
+      "teamId": "t-india",
+      "role": "Player"
+    },
+    {
+      "id": "p-yashasvi-jaiswal",
+      "name": "Yashasvi Jaiswal",
+      "slug": "yashasvi-jaiswal",
+      "teamId": "t-rest-of-india",
+      "role": "Player"
+    },
+    {
+      "id": "p-navdeep-saini",
+      "name": "Navdeep Saini",
+      "slug": "navdeep-saini",
+      "teamId": "t-rest-of-india",
+      "role": "Player"
+    },
+    {
+      "id": "p-shams-mulani",
+      "name": "Shams Mulani",
+      "slug": "shams-mulani",
+      "teamId": "t-mumbai",
+      "role": "Player"
+    },
+    {
+      "id": "p-tushar-deshpande",
+      "name": "Tushar Deshpande",
+      "slug": "tushar-deshpande",
+      "teamId": "t-mumbai",
+      "role": "Player"
+    },
+    {
+      "id": "p-suved-parkar",
+      "name": "Suved Parkar",
+      "slug": "suved-parkar",
+      "teamId": "t-mumbai",
+      "role": "Player"
+    },
+    {
+      "id": "p-faf-du-plessis",
+      "name": "Faf du Plessis",
+      "slug": "faf-du-plessis",
+      "teamId": "t-royal-challengers-bangalore",
+      "role": "Player"
+    },
+    {
+      "id": "p-glenn-maxwell",
+      "name": "Glenn Maxwell",
+      "slug": "glenn-maxwell",
+      "teamId": "t-royal-challengers-bangalore",
+      "role": "Player"
+    },
+    {
+      "id": "p-dinesh-karthik",
+      "name": "Dinesh Karthik",
+      "slug": "dinesh-karthik",
+      "teamId": "t-royal-challengers-bangalore",
+      "role": "Player"
+    },
+    {
+      "id": "p-wanindu-hasaranga",
+      "name": "Wanindu Hasaranga",
+      "slug": "wanindu-hasaranga",
+      "teamId": "t-royal-challengers-bangalore",
+      "role": "Player"
+    },
+    {
+      "id": "p-abhishek-sharma",
+      "name": "Abhishek Sharma",
+      "slug": "abhishek-sharma",
+      "teamId": "t-sunrisers-hyderabad",
+      "role": "Player"
+    },
+    {
+      "id": "p-travis-head",
+      "name": "Travis Head",
+      "slug": "travis-head",
+      "teamId": "t-sunrisers-hyderabad",
+      "role": "Player"
+    },
+    {
+      "id": "p-pat-cummins",
+      "name": "Pat Cummins",
+      "slug": "pat-cummins",
+      "teamId": "t-sunrisers-hyderabad",
+      "role": "Player"
+    },
+    {
+      "id": "p-mitchell-starc",
+      "name": "Mitchell Starc",
+      "slug": "mitchell-starc",
+      "teamId": "t-kkr",
+      "role": "Player"
+    },
+    {
+      "id": "p-andre-russell",
+      "name": "Andre Russell",
+      "slug": "andre-russell",
+      "teamId": "t-kkr",
+      "role": "Player"
+    },
+    {
+      "id": "p-rahmanullah-gurbaz",
+      "name": "Rahmanullah Gurbaz",
+      "slug": "rahmanullah-gurbaz",
+      "teamId": "t-kkr",
+      "role": "Player"
+    },
+    {
+      "id": "p-sunil-narine",
+      "name": "Sunil Narine",
+      "slug": "sunil-narine",
+      "teamId": "t-kkr",
+      "role": "Player"
+    },
+    {
+      "id": "p-shreyas-iyer",
+      "name": "Shreyas Iyer",
+      "slug": "shreyas-iyer",
+      "teamId": "t-kkr",
+      "role": "Player"
+    },
+    {
+      "id": "p-suresh-patel",
+      "name": "Suresh Patel",
+      "slug": "suresh-patel",
+      "teamId": "t-shahdol-division",
+      "role": "Player"
+    },
+    {
+      "id": "p-shivam-yadav",
+      "name": "Shivam Yadav",
+      "slug": "shivam-yadav",
+      "teamId": "t-shahdol-division",
+      "role": "Player"
+    },
+    {
+      "id": "p-deepak-mishra",
+      "name": "Deepak Mishra",
+      "slug": "deepak-mishra",
+      "teamId": "t-shahdol-division",
+      "role": "Player"
+    },
+    {
+      "id": "p-manish-tripathi",
+      "name": "Manish Tripathi",
+      "slug": "manish-tripathi",
+      "teamId": "t-satna-district",
+      "role": "Player"
+    },
+    {
+      "id": "p-anand-rawat",
+      "name": "Anand Rawat",
+      "slug": "anand-rawat",
+      "teamId": "t-satna-district",
+      "role": "Player"
     }
   ],
   "innings": [
@@ -25389,6 +26289,260 @@
       "wickets": 10,
       "overs": 49.1,
       "runRate": 5.53
+    },
+    {
+      "id": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1",
+      "matchId": "m-india-a-vs-australia-a-1st-unofficial-odi-2026",
+      "teamId": "t-india-a",
+      "battingOrder": 1,
+      "runs": 285,
+      "wickets": 6,
+      "overs": 50
+    },
+    {
+      "id": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-2",
+      "matchId": "m-india-a-vs-australia-a-1st-unofficial-odi-2026",
+      "teamId": "t-australia-a",
+      "battingOrder": 2,
+      "runs": 271,
+      "wickets": 10,
+      "overs": 48.4
+    },
+    {
+      "id": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1",
+      "matchId": "m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022",
+      "teamId": "t-new-zealand-a",
+      "battingOrder": 1,
+      "runs": 167,
+      "wickets": 10,
+      "overs": 40.2
+    },
+    {
+      "id": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2",
+      "matchId": "m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022",
+      "teamId": "t-india-a",
+      "battingOrder": 2,
+      "runs": 170,
+      "wickets": 3,
+      "overs": 31.5
+    },
+    {
+      "id": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-1",
+      "matchId": "m-india-a-vs-england-lions-1st-unofficial-test-2024",
+      "teamId": "t-england-lions",
+      "battingOrder": 1,
+      "runs": 553,
+      "wickets": 8,
+      "overs": 118,
+      "declared": true
+    },
+    {
+      "id": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2",
+      "matchId": "m-india-a-vs-england-lions-1st-unofficial-test-2024",
+      "teamId": "t-india-a",
+      "battingOrder": 2,
+      "runs": 227,
+      "wickets": 10,
+      "overs": 47
+    },
+    {
+      "id": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-3",
+      "matchId": "m-india-a-vs-england-lions-1st-unofficial-test-2024",
+      "teamId": "t-england-lions",
+      "battingOrder": 3,
+      "runs": 163,
+      "wickets": 6,
+      "overs": 29,
+      "declared": true
+    },
+    {
+      "id": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-4",
+      "matchId": "m-india-a-vs-england-lions-1st-unofficial-test-2024",
+      "teamId": "t-india-a",
+      "battingOrder": 4,
+      "runs": 426,
+      "wickets": 5,
+      "overs": 125
+    },
+    {
+      "id": "inn-m-south-africa-vs-india-3rd-odi-2023-1",
+      "matchId": "m-south-africa-vs-india-3rd-odi-2023",
+      "teamId": "t-india",
+      "battingOrder": 1,
+      "runs": 296,
+      "wickets": 8,
+      "overs": 50
+    },
+    {
+      "id": "inn-m-south-africa-vs-india-3rd-odi-2023-2",
+      "matchId": "m-south-africa-vs-india-3rd-odi-2023",
+      "teamId": "t-south-africa",
+      "battingOrder": 2,
+      "runs": 218,
+      "wickets": 10,
+      "overs": 45.5
+    },
+    {
+      "id": "inn-m-bangladesh-vs-india-1st-odi-2022-1",
+      "matchId": "m-bangladesh-vs-india-1st-odi-2022",
+      "teamId": "t-india",
+      "battingOrder": 1,
+      "runs": 186,
+      "wickets": 10,
+      "overs": 41.2
+    },
+    {
+      "id": "inn-m-bangladesh-vs-india-1st-odi-2022-2",
+      "matchId": "m-bangladesh-vs-india-1st-odi-2022",
+      "teamId": "t-bangladesh",
+      "battingOrder": 2,
+      "runs": 187,
+      "wickets": 9,
+      "overs": 46
+    },
+    {
+      "id": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-1",
+      "matchId": "m-rest-of-india-vs-madhya-pradesh-irani-cup-2023",
+      "teamId": "t-rest-of-india",
+      "battingOrder": 1,
+      "runs": 484,
+      "wickets": 10,
+      "overs": 121.3
+    },
+    {
+      "id": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2",
+      "matchId": "m-rest-of-india-vs-madhya-pradesh-irani-cup-2023",
+      "teamId": "t-madhya-pradesh",
+      "battingOrder": 2,
+      "runs": 357,
+      "wickets": 10,
+      "overs": 116.1
+    },
+    {
+      "id": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-3",
+      "matchId": "m-rest-of-india-vs-madhya-pradesh-irani-cup-2023",
+      "teamId": "t-rest-of-india",
+      "battingOrder": 3,
+      "runs": 246,
+      "wickets": 10,
+      "overs": 71.3
+    },
+    {
+      "id": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-4",
+      "matchId": "m-rest-of-india-vs-madhya-pradesh-irani-cup-2023",
+      "teamId": "t-madhya-pradesh",
+      "battingOrder": 4,
+      "runs": 135,
+      "wickets": 10,
+      "overs": 43.1
+    },
+    {
+      "id": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-1",
+      "matchId": "m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022",
+      "teamId": "t-mumbai",
+      "battingOrder": 1,
+      "runs": 374,
+      "wickets": 10,
+      "overs": 127.4
+    },
+    {
+      "id": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2",
+      "matchId": "m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022",
+      "teamId": "t-madhya-pradesh",
+      "battingOrder": 2,
+      "runs": 536,
+      "wickets": 10,
+      "overs": 177.2
+    },
+    {
+      "id": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-3",
+      "matchId": "m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022",
+      "teamId": "t-mumbai",
+      "battingOrder": 3,
+      "runs": 269,
+      "wickets": 10,
+      "overs": 57.3
+    },
+    {
+      "id": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-4",
+      "matchId": "m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022",
+      "teamId": "t-madhya-pradesh",
+      "battingOrder": 4,
+      "runs": 108,
+      "wickets": 4,
+      "overs": 29.5
+    },
+    {
+      "id": "inn-m-rcb-vs-lsg-ipl-eliminator-2022-1",
+      "matchId": "m-rcb-vs-lsg-ipl-eliminator-2022",
+      "teamId": "t-royal-challengers-bangalore",
+      "battingOrder": 1,
+      "runs": 207,
+      "wickets": 4,
+      "overs": 20
+    },
+    {
+      "id": "inn-m-rcb-vs-lsg-ipl-eliminator-2022-2",
+      "matchId": "m-rcb-vs-lsg-ipl-eliminator-2022",
+      "teamId": "t-lucknow-super-giants",
+      "battingOrder": 2,
+      "runs": 193,
+      "wickets": 6,
+      "overs": 20
+    },
+    {
+      "id": "inn-m-kkr-vs-srh-ipl-final-2024-1",
+      "matchId": "m-kkr-vs-srh-ipl-final-2024",
+      "teamId": "t-sunrisers-hyderabad",
+      "battingOrder": 1,
+      "runs": 113,
+      "wickets": 10,
+      "overs": 18.3
+    },
+    {
+      "id": "inn-m-kkr-vs-srh-ipl-final-2024-2",
+      "matchId": "m-kkr-vs-srh-ipl-final-2024",
+      "teamId": "t-kkr",
+      "battingOrder": 2,
+      "runs": 114,
+      "wickets": 2,
+      "overs": 10.3
+    },
+    {
+      "id": "inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-1",
+      "matchId": "m-rewa-division-vs-shahdol-division-rdca-championship-2026",
+      "teamId": "t-shahdol-division",
+      "battingOrder": 1,
+      "runs": 215,
+      "wickets": 10,
+      "overs": 45.2
+    },
+    {
+      "id": "inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2",
+      "matchId": "m-rewa-division-vs-shahdol-division-rdca-championship-2026",
+      "teamId": "t-rewa-div",
+      "battingOrder": 2,
+      "runs": 218,
+      "wickets": 5,
+      "overs": 41.3
+    },
+    {
+      "id": "inn-m-rewa-district-vs-satna-district-inter-district-2025-1",
+      "matchId": "m-rewa-district-vs-satna-district-inter-district-2025",
+      "teamId": "t-satna-district",
+      "battingOrder": 1,
+      "runs": 198,
+      "wickets": 10,
+      "overs": 44.1
+    },
+    {
+      "id": "inn-m-rewa-district-vs-satna-district-inter-district-2025-2",
+      "matchId": "m-rewa-district-vs-satna-district-inter-district-2025",
+      "teamId": "t-rewa-district",
+      "battingOrder": 2,
+      "runs": 201,
+      "wickets": 3,
+      "overs": 38.2
     }
   ],
   "batting": [
@@ -40165,7 +41319,7 @@
       "balls": 20,
       "fours": 3,
       "sixes": 1,
-      "strikeRate": 140.0,
+      "strikeRate": 140,
       "dismissal": "c Aditya Shrivastava b Kuldeep Sen",
       "notOut": false
     },
@@ -40189,7 +41343,7 @@
       "balls": 8,
       "fours": 1,
       "sixes": 0,
-      "strikeRate": 150.0,
+      "strikeRate": 150,
       "dismissal": "not out",
       "notOut": true
     },
@@ -40201,7 +41355,7 @@
       "balls": 2,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 200.0,
+      "strikeRate": 200,
       "dismissal": "not out",
       "notOut": true
     },
@@ -40213,7 +41367,7 @@
       "balls": 36,
       "fours": 5,
       "sixes": 2,
-      "strikeRate": 150.0,
+      "strikeRate": 150,
       "dismissal": "c Ajay Rohera b Kulwant Khejroliya",
       "notOut": false
     },
@@ -40273,7 +41427,7 @@
       "balls": 5,
       "fours": 1,
       "sixes": 0,
-      "strikeRate": 120.0,
+      "strikeRate": 120,
       "dismissal": "c Rahul Batham b Kulwant Khejroliya",
       "notOut": false
     },
@@ -40285,7 +41439,7 @@
       "balls": 4,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 100.0,
+      "strikeRate": 100,
       "dismissal": "run out (Aryan Deshmukh)",
       "notOut": false
     },
@@ -40297,7 +41451,7 @@
       "balls": 2,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 100.0,
+      "strikeRate": 100,
       "dismissal": "not out",
       "notOut": true
     },
@@ -40309,7 +41463,7 @@
       "balls": 1,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 200.0,
+      "strikeRate": 200,
       "dismissal": "not out",
       "notOut": true
     },
@@ -40369,7 +41523,7 @@
       "balls": 10,
       "fours": 1,
       "sixes": 0,
-      "strikeRate": 120.0,
+      "strikeRate": 120,
       "dismissal": "c Akshat Raghuwanshi b Aryan Deshmukh",
       "notOut": false
     },
@@ -40393,7 +41547,7 @@
       "balls": 5,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 120.0,
+      "strikeRate": 120,
       "dismissal": "run out (Rahul Batham)",
       "notOut": false
     },
@@ -40405,7 +41559,7 @@
       "balls": 4,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 100.0,
+      "strikeRate": 100,
       "dismissal": "not out",
       "notOut": true
     },
@@ -40417,7 +41571,7 @@
       "balls": 2,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 100.0,
+      "strikeRate": 100,
       "dismissal": "c Somil Khan b Kulwant Khejroliya",
       "notOut": false
     },
@@ -40429,7 +41583,7 @@
       "balls": 1,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 100.0,
+      "strikeRate": 100,
       "dismissal": "not out",
       "notOut": true
     },
@@ -40465,7 +41619,7 @@
       "balls": 20,
       "fours": 3,
       "sixes": 1,
-      "strikeRate": 140.0,
+      "strikeRate": 140,
       "dismissal": "c Subhranshu Senapati b Saransh Jain",
       "notOut": false
     },
@@ -40489,7 +41643,7 @@
       "balls": 12,
       "fours": 3,
       "sixes": 1,
-      "strikeRate": 200.0,
+      "strikeRate": 200,
       "dismissal": "not out",
       "notOut": true
     },
@@ -40585,7 +41739,7 @@
       "balls": 8,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 75.0,
+      "strikeRate": 75,
       "dismissal": "not out",
       "notOut": true
     },
@@ -40597,7 +41751,7 @@
       "balls": 4,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "b Kuldeep Sen",
       "notOut": false
     },
@@ -40609,7 +41763,7 @@
       "balls": 2,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "not out",
       "notOut": true
     },
@@ -40705,7 +41859,7 @@
       "balls": 8,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 75.0,
+      "strikeRate": 75,
       "dismissal": "b Kulwant Khejroliya",
       "notOut": false
     },
@@ -40741,7 +41895,7 @@
       "balls": 2,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "not out",
       "notOut": true
     },
@@ -40801,7 +41955,7 @@
       "balls": 24,
       "fours": 1,
       "sixes": 0,
-      "strikeRate": 75.0,
+      "strikeRate": 75,
       "dismissal": "c Rahul Batham b Sagar Pratap Singh",
       "notOut": false
     },
@@ -40813,7 +41967,7 @@
       "balls": 16,
       "fours": 1,
       "sixes": 0,
-      "strikeRate": 75.0,
+      "strikeRate": 75,
       "dismissal": "not out",
       "notOut": true
     },
@@ -40849,7 +42003,7 @@
       "balls": 4,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "not out",
       "notOut": true
     },
@@ -40909,7 +42063,7 @@
       "balls": 24,
       "fours": 2,
       "sixes": 0,
-      "strikeRate": 75.0,
+      "strikeRate": 75,
       "dismissal": "b Kuldeep Sen",
       "notOut": false
     },
@@ -40921,7 +42075,7 @@
       "balls": 16,
       "fours": 1,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "c Aditya Shrivastava b Kumar Kartikeya",
       "notOut": false
     },
@@ -41017,7 +42171,7 @@
       "balls": 10,
       "fours": 1,
       "sixes": 0,
-      "strikeRate": 80.0,
+      "strikeRate": 80,
       "dismissal": "not out",
       "notOut": true
     },
@@ -41029,7 +42183,7 @@
       "balls": 4,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 75.0,
+      "strikeRate": 75,
       "dismissal": "c Ramveer Singh Gurjar b Kuldeep Sen",
       "notOut": false
     },
@@ -41041,7 +42195,7 @@
       "balls": 2,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 100.0,
+      "strikeRate": 100,
       "dismissal": "not out",
       "notOut": true
     },
@@ -41149,7 +42303,7 @@
       "balls": 4,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 75.0,
+      "strikeRate": 75,
       "dismissal": "b Kulwant Khejroliya",
       "notOut": false
     },
@@ -41161,7 +42315,7 @@
       "balls": 2,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "not out",
       "notOut": true
     },
@@ -41173,7 +42327,7 @@
       "balls": 2,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "c Ajay Rohera b Kulwant Khejroliya",
       "notOut": false
     },
@@ -41197,7 +42351,7 @@
       "balls": 28,
       "fours": 4,
       "sixes": 1,
-      "strikeRate": 150.0,
+      "strikeRate": 150,
       "dismissal": "c Chanchal Rathore b Pranav Dwivedi",
       "notOut": false
     },
@@ -41221,7 +42375,7 @@
       "balls": 10,
       "fours": 1,
       "sixes": 0,
-      "strikeRate": 120.0,
+      "strikeRate": 120,
       "dismissal": "b Kulwant Khejroliya",
       "notOut": false
     },
@@ -41233,7 +42387,7 @@
       "balls": 6,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 100.0,
+      "strikeRate": 100,
       "dismissal": "run out (Rahul Batham)",
       "notOut": false
     },
@@ -41257,7 +42411,7 @@
       "balls": 1,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 200.0,
+      "strikeRate": 200,
       "dismissal": "not out",
       "notOut": true
     },
@@ -41293,7 +42447,7 @@
       "balls": 30,
       "fours": 4,
       "sixes": 2,
-      "strikeRate": 150.0,
+      "strikeRate": 150,
       "dismissal": "c Aditya Shrivastava b Kuldeep Sen",
       "notOut": false
     },
@@ -41317,7 +42471,7 @@
       "balls": 8,
       "fours": 1,
       "sixes": 0,
-      "strikeRate": 125.0,
+      "strikeRate": 125,
       "dismissal": "b Avesh Khan",
       "notOut": false
     },
@@ -41329,7 +42483,7 @@
       "balls": 4,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 100.0,
+      "strikeRate": 100,
       "dismissal": "c Ramveer Singh Gurjar b Kuldeep Sen",
       "notOut": false
     },
@@ -41353,7 +42507,7 @@
       "balls": 1,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 200.0,
+      "strikeRate": 200,
       "dismissal": "not out",
       "notOut": true
     },
@@ -41389,7 +42543,7 @@
       "balls": 24,
       "fours": 3,
       "sixes": 0,
-      "strikeRate": 125.0,
+      "strikeRate": 125,
       "dismissal": "c Venkatesh Iyer b Sagar Pratap Singh",
       "notOut": false
     },
@@ -41401,7 +42555,7 @@
       "balls": 15,
       "fours": 1,
       "sixes": 1,
-      "strikeRate": 120.0,
+      "strikeRate": 120,
       "dismissal": "b Kulwant Khejroliya",
       "notOut": false
     },
@@ -41425,7 +42579,7 @@
       "balls": 5,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 120.0,
+      "strikeRate": 120,
       "dismissal": "b Sagar Pratap Singh",
       "notOut": false
     },
@@ -41437,7 +42591,7 @@
       "balls": 4,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 100.0,
+      "strikeRate": 100,
       "dismissal": "run out (Akshat Raghuwanshi)",
       "notOut": false
     },
@@ -41449,7 +42603,7 @@
       "balls": 2,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 100.0,
+      "strikeRate": 100,
       "dismissal": "c Rahul Batham b Kulwant Khejroliya",
       "notOut": false
     },
@@ -41461,7 +42615,7 @@
       "balls": 1,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 200.0,
+      "strikeRate": 200,
       "dismissal": "not out",
       "notOut": true
     },
@@ -41569,7 +42723,7 @@
       "balls": 30,
       "fours": 2,
       "sixes": 0,
-      "strikeRate": 80.0,
+      "strikeRate": 80,
       "dismissal": "b Kulwant Khejroliya",
       "notOut": false
     },
@@ -41605,7 +42759,7 @@
       "balls": 8,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "not out",
       "notOut": true
     },
@@ -41617,7 +42771,7 @@
       "balls": 4,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "b Kulwant Khejroliya",
       "notOut": false
     },
@@ -41665,7 +42819,7 @@
       "balls": 32,
       "fours": 2,
       "sixes": 0,
-      "strikeRate": 75.0,
+      "strikeRate": 75,
       "dismissal": "c Subhranshu Senapati b Saransh Jain",
       "notOut": false
     },
@@ -41689,7 +42843,7 @@
       "balls": 12,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "c Ramveer Singh Gurjar b Kumar Kartikeya",
       "notOut": false
     },
@@ -41701,7 +42855,7 @@
       "balls": 8,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "b Kuldeep Sen",
       "notOut": false
     },
@@ -41725,7 +42879,7 @@
       "balls": 4,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "run out (Saransh Jain)",
       "notOut": false
     },
@@ -41737,7 +42891,7 @@
       "balls": 4,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 25.0,
+      "strikeRate": 25,
       "dismissal": "b Kuldeep Sen",
       "notOut": false
     },
@@ -41749,7 +42903,7 @@
       "balls": 4,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 25.0,
+      "strikeRate": 25,
       "dismissal": "not out",
       "notOut": true
     },
@@ -41809,7 +42963,7 @@
       "balls": 20,
       "fours": 1,
       "sixes": 0,
-      "strikeRate": 80.0,
+      "strikeRate": 80,
       "dismissal": "c Chanchal Rathore b Rahul Batham",
       "notOut": false
     },
@@ -41845,7 +42999,7 @@
       "balls": 4,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "run out (Akshat Raghuwanshi)",
       "notOut": false
     },
@@ -41857,7 +43011,7 @@
       "balls": 2,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "not out",
       "notOut": true
     },
@@ -41917,7 +43071,7 @@
       "balls": 20,
       "fours": 1,
       "sixes": 0,
-      "strikeRate": 70.0,
+      "strikeRate": 70,
       "dismissal": "c Subhranshu Senapati b Saransh Jain",
       "notOut": false
     },
@@ -41941,7 +43095,7 @@
       "balls": 8,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "not out",
       "notOut": true
     },
@@ -42037,7 +43191,7 @@
       "balls": 8,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 75.0,
+      "strikeRate": 75,
       "dismissal": "not out",
       "notOut": true
     },
@@ -42049,7 +43203,7 @@
       "balls": 3,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 100.0,
+      "strikeRate": 100,
       "dismissal": "b Kuldeep Sen",
       "notOut": false
     },
@@ -42061,7 +43215,7 @@
       "balls": 2,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 100.0,
+      "strikeRate": 100,
       "dismissal": "not out",
       "notOut": true
     },
@@ -42145,7 +43299,7 @@
       "balls": 8,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 75.0,
+      "strikeRate": 75,
       "dismissal": "c Akshat Raghuwanshi b Kulwant Khejroliya",
       "notOut": false
     },
@@ -42157,7 +43311,7 @@
       "balls": 4,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 75.0,
+      "strikeRate": 75,
       "dismissal": "b Kulwant Khejroliya",
       "notOut": false
     },
@@ -42181,7 +43335,7 @@
       "balls": 2,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "not out",
       "notOut": true
     },
@@ -42193,9 +43347,1569 @@
       "balls": 2,
       "fours": 0,
       "sixes": 0,
-      "strikeRate": 50.0,
+      "strikeRate": 50,
       "dismissal": "b Sagar Pratap Singh",
       "notOut": false
+    },
+    {
+      "id": "z-inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1-p-ruturaj-gaikwad",
+      "inningsId": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1",
+      "playerId": "p-ruturaj-gaikwad",
+      "runs": 84,
+      "balls": 92,
+      "fours": 8,
+      "sixes": 2,
+      "dismissal": "c Philippe b Bartlett",
+      "notOut": false,
+      "strikeRate": 91.3,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1-p-abhimanyu-easwaran",
+      "inningsId": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1",
+      "playerId": "p-abhimanyu-easwaran",
+      "runs": 42,
+      "balls": 56,
+      "fours": 4,
+      "sixes": 0,
+      "dismissal": "c Bancroft b Murphy",
+      "notOut": false,
+      "strikeRate": 75,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1-p-rajat-patidar",
+      "inningsId": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1",
+      "playerId": "p-rajat-patidar",
+      "runs": 68,
+      "balls": 62,
+      "fours": 7,
+      "sixes": 3,
+      "dismissal": "c Renshaw b Connolly",
+      "notOut": false,
+      "strikeRate": 109.68,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1-p-tilak-varma",
+      "inningsId": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1",
+      "playerId": "p-tilak-varma",
+      "runs": 38,
+      "balls": 41,
+      "fours": 3,
+      "sixes": 1,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 92.68,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1-p-ishan-kishan",
+      "inningsId": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1",
+      "playerId": "p-ishan-kishan",
+      "runs": 28,
+      "balls": 24,
+      "fours": 3,
+      "sixes": 1,
+      "dismissal": "c Inglis b Bartlett",
+      "notOut": false,
+      "strikeRate": 116.67,
+      "position": 5
+    },
+    {
+      "id": "z-inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1-p-axar-patel",
+      "inningsId": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1",
+      "playerId": "p-axar-patel",
+      "runs": 15,
+      "balls": 16,
+      "fours": 1,
+      "sixes": 0,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 93.75,
+      "position": 6
+    },
+    {
+      "id": "z-inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-2-p-josh-philippe",
+      "inningsId": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-2",
+      "playerId": "p-josh-philippe",
+      "runs": 62,
+      "balls": 58,
+      "fours": 7,
+      "sixes": 1,
+      "dismissal": "c Kishan b Arshdeep",
+      "notOut": false,
+      "strikeRate": 106.9,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-2-p-cameron-bancroft",
+      "inningsId": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-2",
+      "playerId": "p-cameron-bancroft",
+      "runs": 45,
+      "balls": 54,
+      "fours": 5,
+      "sixes": 0,
+      "dismissal": "c Patidar b Axar",
+      "notOut": false,
+      "strikeRate": 83.33,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-2-p-matt-renshaw",
+      "inningsId": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-2",
+      "playerId": "p-matt-renshaw",
+      "runs": 56,
+      "balls": 64,
+      "fours": 4,
+      "sixes": 1,
+      "dismissal": "c Gaikwad b Mukesh",
+      "notOut": false,
+      "strikeRate": 87.5,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-2-p-cooper-connolly",
+      "inningsId": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-2",
+      "playerId": "p-cooper-connolly",
+      "runs": 34,
+      "balls": 38,
+      "fours": 3,
+      "sixes": 0,
+      "dismissal": "b Axar",
+      "notOut": false,
+      "strikeRate": 89.47,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1-p-chad-bowes",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1",
+      "playerId": "p-chad-bowes",
+      "runs": 10,
+      "balls": 14,
+      "fours": 2,
+      "sixes": 0,
+      "dismissal": "c Samson b Thakur",
+      "notOut": false,
+      "strikeRate": 71.43,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1-p-rachin-ravindra",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1",
+      "playerId": "p-rachin-ravindra",
+      "runs": 49,
+      "balls": 65,
+      "fours": 6,
+      "sixes": 0,
+      "dismissal": "c Gaikwad b Kuldeep Sen",
+      "notOut": false,
+      "strikeRate": 75.38,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1-p-joe-carter",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1",
+      "playerId": "p-joe-carter",
+      "runs": 14,
+      "balls": 22,
+      "fours": 1,
+      "sixes": 0,
+      "dismissal": "b Kuldeep Sen",
+      "notOut": false,
+      "strikeRate": 63.64,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1-p-michael-rippon",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1",
+      "playerId": "p-michael-rippon",
+      "runs": 61,
+      "balls": 78,
+      "fours": 4,
+      "sixes": 1,
+      "dismissal": "c Tripathi b Thakur",
+      "notOut": false,
+      "strikeRate": 78.21,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1-p-tom-blundell",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1",
+      "playerId": "p-tom-blundell",
+      "runs": 4,
+      "balls": 12,
+      "fours": 0,
+      "sixes": 0,
+      "dismissal": "c Samson b Kuldeep Sen",
+      "notOut": false,
+      "strikeRate": 33.33,
+      "position": 5
+    },
+    {
+      "id": "z-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2-p-prithvi-shaw",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2",
+      "playerId": "p-prithvi-shaw",
+      "runs": 17,
+      "balls": 16,
+      "fours": 3,
+      "sixes": 0,
+      "dismissal": "c Blundell b van Beek",
+      "notOut": false,
+      "strikeRate": 106.25,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2-p-ruturaj-gaikwad",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2",
+      "playerId": "p-ruturaj-gaikwad",
+      "runs": 41,
+      "balls": 54,
+      "fours": 5,
+      "sixes": 0,
+      "dismissal": "c Rippon b Ferguson",
+      "notOut": false,
+      "strikeRate": 75.93,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2-p-rahul-tripathi",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2",
+      "playerId": "p-rahul-tripathi",
+      "runs": 31,
+      "balls": 40,
+      "fours": 4,
+      "sixes": 0,
+      "dismissal": "b Ravindra",
+      "notOut": false,
+      "strikeRate": 77.5,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2-p-rajat-patidar",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2",
+      "playerId": "p-rajat-patidar",
+      "runs": 45,
+      "balls": 41,
+      "fours": 7,
+      "sixes": 0,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 109.76,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2-p-sanju-samson",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2",
+      "playerId": "p-sanju-samson",
+      "runs": 29,
+      "balls": 32,
+      "fours": 1,
+      "sixes": 3,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 90.62,
+      "position": 5
+    },
+    {
+      "id": "z-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-1-p-keaton-jennings",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-1",
+      "playerId": "p-keaton-jennings",
+      "runs": 154,
+      "balls": 188,
+      "fours": 20,
+      "sixes": 0,
+      "dismissal": "c Bharat b Navdeep",
+      "notOut": false,
+      "strikeRate": 81.91,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-1-p-alex-lees",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-1",
+      "playerId": "p-alex-lees",
+      "runs": 73,
+      "balls": 98,
+      "fours": 9,
+      "sixes": 0,
+      "dismissal": "c Patidar b Suthar",
+      "notOut": false,
+      "strikeRate": 74.49,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2-p-abhimanyu-easwaran",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2",
+      "playerId": "p-abhimanyu-easwaran",
+      "runs": 4,
+      "balls": 12,
+      "fours": 1,
+      "sixes": 0,
+      "dismissal": "c Carson b Potts",
+      "notOut": false,
+      "strikeRate": 33.33,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2-p-sai-sudharsan",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2",
+      "playerId": "p-sai-sudharsan",
+      "runs": 0,
+      "balls": 4,
+      "fours": 0,
+      "sixes": 0,
+      "dismissal": "c Fisher b Potts",
+      "notOut": false,
+      "strikeRate": 0,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2-p-rajat-patidar",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2",
+      "playerId": "p-rajat-patidar",
+      "runs": 151,
+      "balls": 158,
+      "fours": 19,
+      "sixes": 5,
+      "dismissal": "c Fisher b Potts",
+      "notOut": false,
+      "strikeRate": 95.57,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2-p-sarfaraz-khan",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2",
+      "playerId": "p-sarfaraz-khan",
+      "runs": 4,
+      "balls": 13,
+      "fours": 1,
+      "sixes": 0,
+      "dismissal": "c Jennings b Fisher",
+      "notOut": false,
+      "strikeRate": 30.77,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2-p-saransh-jain",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2",
+      "playerId": "p-saransh-jain",
+      "runs": 18,
+      "balls": 32,
+      "fours": 2,
+      "sixes": 0,
+      "dismissal": "c Lees b Potts",
+      "notOut": false,
+      "strikeRate": 56.25,
+      "position": 5
+    },
+    {
+      "id": "z-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2-p-k-s-bharat",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2",
+      "playerId": "p-k-s-bharat",
+      "runs": 15,
+      "balls": 24,
+      "fours": 2,
+      "sixes": 0,
+      "dismissal": "b Carson",
+      "notOut": false,
+      "strikeRate": 62.5,
+      "position": 6
+    },
+    {
+      "id": "z-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-3-p-keaton-jennings",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-3",
+      "playerId": "p-keaton-jennings",
+      "runs": 64,
+      "balls": 65,
+      "fours": 7,
+      "sixes": 1,
+      "dismissal": "c Easwaran b Suthar",
+      "notOut": false,
+      "strikeRate": 98.46,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-4-p-abhimanyu-easwaran",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-4",
+      "playerId": "p-abhimanyu-easwaran",
+      "runs": 50,
+      "balls": 112,
+      "fours": 6,
+      "sixes": 0,
+      "dismissal": "lbw b Potts",
+      "notOut": false,
+      "strikeRate": 44.64,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-4-p-rajat-patidar",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-4",
+      "playerId": "p-rajat-patidar",
+      "runs": 4,
+      "balls": 18,
+      "fours": 1,
+      "sixes": 0,
+      "dismissal": "c Lees b Potts",
+      "notOut": false,
+      "strikeRate": 22.22,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-4-p-saransh-jain",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-4",
+      "playerId": "p-saransh-jain",
+      "runs": 63,
+      "balls": 142,
+      "fours": 7,
+      "sixes": 0,
+      "dismissal": "c Jennings b Fisher",
+      "notOut": false,
+      "strikeRate": 44.37,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-4-p-k-s-bharat",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-4",
+      "playerId": "p-k-s-bharat",
+      "runs": 116,
+      "balls": 165,
+      "fours": 15,
+      "sixes": 0,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 70.3,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-4-p-manav-suthar",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-4",
+      "playerId": "p-manav-suthar",
+      "runs": 89,
+      "balls": 254,
+      "fours": 10,
+      "sixes": 1,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 35.04,
+      "position": 5
+    },
+    {
+      "id": "z-inn-m-south-africa-vs-india-3rd-odi-2023-1-p-rajat-patidar",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-1",
+      "playerId": "p-rajat-patidar",
+      "runs": 22,
+      "balls": 16,
+      "fours": 1,
+      "sixes": 2,
+      "dismissal": "b Burger",
+      "notOut": false,
+      "strikeRate": 137.5,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-south-africa-vs-india-3rd-odi-2023-1-p-sai-sudharsan",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-1",
+      "playerId": "p-sai-sudharsan",
+      "runs": 10,
+      "balls": 16,
+      "fours": 1,
+      "sixes": 0,
+      "dismissal": "lbw b Beuran Hendricks",
+      "notOut": false,
+      "strikeRate": 62.5,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-south-africa-vs-india-3rd-odi-2023-1-p-sanju-samson",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-1",
+      "playerId": "p-sanju-samson",
+      "runs": 108,
+      "balls": 114,
+      "fours": 6,
+      "sixes": 3,
+      "dismissal": "c Reeza b Williams",
+      "notOut": false,
+      "strikeRate": 94.74,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-south-africa-vs-india-3rd-odi-2023-1-p-tilak-varma",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-1",
+      "playerId": "p-tilak-varma",
+      "runs": 52,
+      "balls": 77,
+      "fours": 5,
+      "sixes": 1,
+      "dismissal": "c Mulder b Maharaj",
+      "notOut": false,
+      "strikeRate": 67.53,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-south-africa-vs-india-3rd-odi-2023-1-p-rinku-singh",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-1",
+      "playerId": "p-rinku-singh",
+      "runs": 38,
+      "balls": 27,
+      "fours": 3,
+      "sixes": 2,
+      "dismissal": "c Maharaj b Burger",
+      "notOut": false,
+      "strikeRate": 140.74,
+      "position": 5
+    },
+    {
+      "id": "z-inn-m-south-africa-vs-india-3rd-odi-2023-1-p-avesh-khan",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-1",
+      "playerId": "p-avesh-khan",
+      "runs": 1,
+      "balls": 2,
+      "fours": 0,
+      "sixes": 0,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 50,
+      "position": 6
+    },
+    {
+      "id": "z-inn-m-south-africa-vs-india-3rd-odi-2023-2-p-reeza-hendricks",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-2",
+      "playerId": "p-reeza-hendricks",
+      "runs": 19,
+      "balls": 24,
+      "fours": 3,
+      "sixes": 0,
+      "dismissal": "c Samson b Arshdeep",
+      "notOut": false,
+      "strikeRate": 79.17,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-south-africa-vs-india-3rd-odi-2023-2-p-tony-de-zorzi",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-2",
+      "playerId": "p-tony-de-zorzi",
+      "runs": 81,
+      "balls": 87,
+      "fours": 6,
+      "sixes": 3,
+      "dismissal": "lbw b Arshdeep",
+      "notOut": false,
+      "strikeRate": 93.1,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-south-africa-vs-india-3rd-odi-2023-2-p-aiden-markram",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-2",
+      "playerId": "p-aiden-markram",
+      "runs": 36,
+      "balls": 41,
+      "fours": 2,
+      "sixes": 0,
+      "dismissal": "c Samson b Washington",
+      "notOut": false,
+      "strikeRate": 87.8,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-south-africa-vs-india-3rd-odi-2023-2-p-heinrich-klaasen",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-2",
+      "playerId": "p-heinrich-klaasen",
+      "runs": 21,
+      "balls": 22,
+      "fours": 1,
+      "sixes": 1,
+      "dismissal": "c Sai Sudharsan b Avesh Khan",
+      "notOut": false,
+      "strikeRate": 95.45,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-south-africa-vs-india-3rd-odi-2023-2-p-david-miller",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-2",
+      "playerId": "p-david-miller",
+      "runs": 10,
+      "balls": 15,
+      "fours": 1,
+      "sixes": 0,
+      "dismissal": "c Samson b Mukesh",
+      "notOut": false,
+      "strikeRate": 66.67,
+      "position": 5
+    },
+    {
+      "id": "z-inn-m-south-africa-vs-india-3rd-odi-2023-2-p-wiaan-mulder",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-2",
+      "playerId": "p-wiaan-mulder",
+      "runs": 1,
+      "balls": 3,
+      "fours": 0,
+      "sixes": 0,
+      "dismissal": "c Samson b Avesh Khan",
+      "notOut": false,
+      "strikeRate": 33.33,
+      "position": 6
+    },
+    {
+      "id": "z-inn-m-south-africa-vs-india-3rd-odi-2023-2-p-keshav-maharaj",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-2",
+      "playerId": "p-keshav-maharaj",
+      "runs": 14,
+      "balls": 27,
+      "fours": 1,
+      "sixes": 0,
+      "dismissal": "c Rinku b Avesh Khan",
+      "notOut": false,
+      "strikeRate": 51.85,
+      "position": 7
+    },
+    {
+      "id": "z-inn-m-south-africa-vs-india-3rd-odi-2023-2-p-beuran-hendricks",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-2",
+      "playerId": "p-beuran-hendricks",
+      "runs": 18,
+      "balls": 24,
+      "fours": 2,
+      "sixes": 0,
+      "dismissal": "c Samson b Avesh Khan",
+      "notOut": false,
+      "strikeRate": 75,
+      "position": 8
+    },
+    {
+      "id": "z-inn-m-bangladesh-vs-india-1st-odi-2022-1-p-rohit-sharma",
+      "inningsId": "inn-m-bangladesh-vs-india-1st-odi-2022-1",
+      "playerId": "p-rohit-sharma",
+      "runs": 27,
+      "balls": 31,
+      "fours": 4,
+      "sixes": 1,
+      "dismissal": "b Shakib",
+      "notOut": false,
+      "strikeRate": 87.09,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-bangladesh-vs-india-1st-odi-2022-1-p-kl-rahul",
+      "inningsId": "inn-m-bangladesh-vs-india-1st-odi-2022-1",
+      "playerId": "p-kl-rahul",
+      "runs": 73,
+      "balls": 70,
+      "fours": 5,
+      "sixes": 4,
+      "dismissal": "c Anamul b Ebadot",
+      "notOut": false,
+      "strikeRate": 104.28,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-bangladesh-vs-india-1st-odi-2022-1-p-kuldeep-sen",
+      "inningsId": "inn-m-bangladesh-vs-india-1st-odi-2022-1",
+      "playerId": "p-kuldeep-sen",
+      "runs": 2,
+      "balls": 9,
+      "fours": 0,
+      "sixes": 0,
+      "dismissal": "c Shanto b Ebadot",
+      "notOut": false,
+      "strikeRate": 22.22,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-bangladesh-vs-india-1st-odi-2022-2-p-shakib-al-hasan",
+      "inningsId": "inn-m-bangladesh-vs-india-1st-odi-2022-2",
+      "playerId": "p-shakib-al-hasan",
+      "runs": 29,
+      "balls": 38,
+      "fours": 3,
+      "sixes": 0,
+      "dismissal": "c Kohli b Washington",
+      "notOut": false,
+      "strikeRate": 76.31,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-bangladesh-vs-india-1st-odi-2022-2-p-afif-hossain",
+      "inningsId": "inn-m-bangladesh-vs-india-1st-odi-2022-2",
+      "playerId": "p-afif-hossain",
+      "runs": 6,
+      "balls": 12,
+      "fours": 1,
+      "sixes": 0,
+      "dismissal": "c Siraj b Kuldeep Sen",
+      "notOut": false,
+      "strikeRate": 50,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-bangladesh-vs-india-1st-odi-2022-2-p-ebadot-hossain",
+      "inningsId": "inn-m-bangladesh-vs-india-1st-odi-2022-2",
+      "playerId": "p-ebadot-hossain",
+      "runs": 0,
+      "balls": 1,
+      "fours": 0,
+      "sixes": 0,
+      "dismissal": "hit wicket b Kuldeep Sen",
+      "notOut": false,
+      "strikeRate": 0,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-bangladesh-vs-india-1st-odi-2022-2-p-mehidy-hasan-miraz",
+      "inningsId": "inn-m-bangladesh-vs-india-1st-odi-2022-2",
+      "playerId": "p-mehidy-hasan-miraz",
+      "runs": 38,
+      "balls": 39,
+      "fours": 4,
+      "sixes": 2,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 97.43,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-1-p-abhimanyu-easwaran",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-1",
+      "playerId": "p-abhimanyu-easwaran",
+      "runs": 154,
+      "balls": 240,
+      "fours": 17,
+      "sixes": 2,
+      "dismissal": "c Mantri b Avesh Khan",
+      "notOut": false,
+      "strikeRate": 64.17,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-1-p-yashasvi-jaiswal",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-1",
+      "playerId": "p-yashasvi-jaiswal",
+      "runs": 213,
+      "balls": 259,
+      "fours": 30,
+      "sixes": 3,
+      "dismissal": "c Gawli b Avesh Khan",
+      "notOut": false,
+      "strikeRate": 82.24,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-1-p-kuldeep-sen",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-1",
+      "playerId": "p-kuldeep-sen",
+      "runs": 0,
+      "balls": 4,
+      "fours": 0,
+      "sixes": 0,
+      "dismissal": "c Mantri b Saransh Jain",
+      "notOut": false,
+      "strikeRate": 0,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2-p-himanshu-mantri",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2",
+      "playerId": "p-himanshu-mantri",
+      "runs": 16,
+      "balls": 44,
+      "fours": 2,
+      "sixes": 0,
+      "dismissal": "c Upendra b Mukesh",
+      "notOut": false,
+      "strikeRate": 36.36,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2-p-yash-dubey",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2",
+      "playerId": "p-yash-dubey",
+      "runs": 109,
+      "balls": 258,
+      "fours": 16,
+      "sixes": 0,
+      "dismissal": "b Pulkit Narang",
+      "notOut": false,
+      "strikeRate": 42.25,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2-p-shubham-sharma",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2",
+      "playerId": "p-shubham-sharma",
+      "runs": 35,
+      "balls": 78,
+      "fours": 4,
+      "sixes": 0,
+      "dismissal": "c Easwaran b Kuldeep Sen",
+      "notOut": false,
+      "strikeRate": 44.87,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2-p-harsh-gawli",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2",
+      "playerId": "p-harsh-gawli",
+      "runs": 54,
+      "balls": 142,
+      "fours": 6,
+      "sixes": 0,
+      "dismissal": "c Jaiswal b Kuldeep Sen",
+      "notOut": false,
+      "strikeRate": 38.03,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2-p-saransh-jain",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2",
+      "playerId": "p-saransh-jain",
+      "runs": 27,
+      "balls": 56,
+      "fours": 3,
+      "sixes": 0,
+      "dismissal": "c Easwaran b Mukesh",
+      "notOut": false,
+      "strikeRate": 48.21,
+      "position": 5
+    },
+    {
+      "id": "z-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2-p-kumar-kartikeya",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2",
+      "playerId": "p-kumar-kartikeya",
+      "runs": 8,
+      "balls": 20,
+      "fours": 1,
+      "sixes": 0,
+      "dismissal": "c Upendra b Kuldeep Sen",
+      "notOut": false,
+      "strikeRate": 40,
+      "position": 6
+    },
+    {
+      "id": "z-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2-p-avesh-khan",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2",
+      "playerId": "p-avesh-khan",
+      "runs": 25,
+      "balls": 28,
+      "fours": 3,
+      "sixes": 1,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 89.28,
+      "position": 7
+    },
+    {
+      "id": "z-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-3-p-yashasvi-jaiswal",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-3",
+      "playerId": "p-yashasvi-jaiswal",
+      "runs": 144,
+      "balls": 157,
+      "fours": 16,
+      "sixes": 3,
+      "dismissal": "c Mantri b Saransh Jain",
+      "notOut": false,
+      "strikeRate": 91.72,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-4-p-harsh-gawli",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-4",
+      "playerId": "p-harsh-gawli",
+      "runs": 48,
+      "balls": 104,
+      "fours": 7,
+      "sixes": 0,
+      "dismissal": "c Jaiswal b Kuldeep Sen",
+      "notOut": false,
+      "strikeRate": 46.15,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-4-p-shubham-sharma",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-4",
+      "playerId": "p-shubham-sharma",
+      "runs": 13,
+      "balls": 32,
+      "fours": 2,
+      "sixes": 0,
+      "dismissal": "b Kuldeep Sen",
+      "notOut": false,
+      "strikeRate": 40.62,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-4-p-yash-dubey",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-4",
+      "playerId": "p-yash-dubey",
+      "runs": 8,
+      "balls": 18,
+      "fours": 1,
+      "sixes": 0,
+      "dismissal": "c Upendra b Kuldeep Sen",
+      "notOut": false,
+      "strikeRate": 44.44,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-4-p-saransh-jain",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-4",
+      "playerId": "p-saransh-jain",
+      "runs": 11,
+      "balls": 24,
+      "fours": 1,
+      "sixes": 0,
+      "dismissal": "c Easwaran b Kuldeep Sen",
+      "notOut": false,
+      "strikeRate": 45.83,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-4-p-kumar-kartikeya",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-4",
+      "playerId": "p-kumar-kartikeya",
+      "runs": 6,
+      "balls": 15,
+      "fours": 0,
+      "sixes": 0,
+      "dismissal": "b Kuldeep Sen",
+      "notOut": false,
+      "strikeRate": 40,
+      "position": 5
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-1-p-prithvi-shaw",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-1",
+      "playerId": "p-prithvi-shaw",
+      "runs": 47,
+      "balls": 79,
+      "fours": 6,
+      "sixes": 1,
+      "dismissal": "b Anubhav Agarwal",
+      "notOut": false,
+      "strikeRate": 59.49,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-1-p-yashasvi-jaiswal",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-1",
+      "playerId": "p-yashasvi-jaiswal",
+      "runs": 78,
+      "balls": 163,
+      "fours": 7,
+      "sixes": 1,
+      "dismissal": "c Yash Dubey b Anubhav Agarwal",
+      "notOut": false,
+      "strikeRate": 47.85,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-1-p-sarfaraz-khan",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-1",
+      "playerId": "p-sarfaraz-khan",
+      "runs": 134,
+      "balls": 243,
+      "fours": 13,
+      "sixes": 2,
+      "dismissal": "c Kartikeya b Gaurav Yadav",
+      "notOut": false,
+      "strikeRate": 55.14,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2-p-yash-dubey",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2",
+      "playerId": "p-yash-dubey",
+      "runs": 133,
+      "balls": 336,
+      "fours": 14,
+      "sixes": 0,
+      "dismissal": "c Tamore b Mohit Avasthi",
+      "notOut": false,
+      "strikeRate": 39.58,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2-p-himanshu-mantri",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2",
+      "playerId": "p-himanshu-mantri",
+      "runs": 31,
+      "balls": 50,
+      "fours": 3,
+      "sixes": 2,
+      "dismissal": "lbw b Tushar Deshpande",
+      "notOut": false,
+      "strikeRate": 62,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2-p-shubham-sharma",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2",
+      "playerId": "p-shubham-sharma",
+      "runs": 116,
+      "balls": 215,
+      "fours": 11,
+      "sixes": 1,
+      "dismissal": "c Tamore b Armaan Jaffer",
+      "notOut": false,
+      "strikeRate": 53.95,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2-p-rajat-patidar",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2",
+      "playerId": "p-rajat-patidar",
+      "runs": 122,
+      "balls": 219,
+      "fours": 20,
+      "sixes": 0,
+      "dismissal": "b Tushar Deshpande",
+      "notOut": false,
+      "strikeRate": 55.7,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2-p-aditya-shrivastava",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2",
+      "playerId": "p-aditya-shrivastava",
+      "runs": 25,
+      "balls": 69,
+      "fours": 2,
+      "sixes": 0,
+      "dismissal": "c Sarfaraz b Mohit Avasthi",
+      "notOut": false,
+      "strikeRate": 36.23,
+      "position": 5
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2-p-akshat-raghuwanshi",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2",
+      "playerId": "p-akshat-raghuwanshi",
+      "runs": 34,
+      "balls": 84,
+      "fours": 3,
+      "sixes": 0,
+      "dismissal": "c Tamore b Shams Mulani",
+      "notOut": false,
+      "strikeRate": 40.48,
+      "position": 6
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2-p-saransh-jain",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2",
+      "playerId": "p-saransh-jain",
+      "runs": 57,
+      "balls": 97,
+      "fours": 7,
+      "sixes": 0,
+      "dismissal": "c Shaw b Shams Mulani",
+      "notOut": false,
+      "strikeRate": 58.76,
+      "position": 7
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2-p-kumar-kartikeya",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2",
+      "playerId": "p-kumar-kartikeya",
+      "runs": 9,
+      "balls": 22,
+      "fours": 1,
+      "sixes": 0,
+      "dismissal": "b Shams Mulani",
+      "notOut": false,
+      "strikeRate": 40.9,
+      "position": 8
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-3-p-prithvi-shaw",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-3",
+      "playerId": "p-prithvi-shaw",
+      "runs": 44,
+      "balls": 52,
+      "fours": 3,
+      "sixes": 2,
+      "dismissal": "c Yash Dubey b Gaurav Yadav",
+      "notOut": false,
+      "strikeRate": 84.62,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-3-p-suved-parkar",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-3",
+      "playerId": "p-suved-parkar",
+      "runs": 51,
+      "balls": 58,
+      "fours": 5,
+      "sixes": 1,
+      "dismissal": "run out Shubham Sharma",
+      "notOut": false,
+      "strikeRate": 87.93,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-3-p-sarfaraz-khan",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-3",
+      "playerId": "p-sarfaraz-khan",
+      "runs": 45,
+      "balls": 48,
+      "fours": 2,
+      "sixes": 1,
+      "dismissal": "c Anubhav b Kumar Kartikeya",
+      "notOut": false,
+      "strikeRate": 93.75,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-4-p-yash-dubey",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-4",
+      "playerId": "p-yash-dubey",
+      "runs": 1,
+      "balls": 7,
+      "fours": 0,
+      "sixes": 0,
+      "dismissal": "b Shams Mulani",
+      "notOut": false,
+      "strikeRate": 14.28,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-4-p-himanshu-mantri",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-4",
+      "playerId": "p-himanshu-mantri",
+      "runs": 37,
+      "balls": 55,
+      "fours": 4,
+      "sixes": 1,
+      "dismissal": "c Tamore b Shams Mulani",
+      "notOut": false,
+      "strikeRate": 67.27,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-4-p-shubham-sharma",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-4",
+      "playerId": "p-shubham-sharma",
+      "runs": 30,
+      "balls": 42,
+      "fours": 3,
+      "sixes": 0,
+      "dismissal": "c Shaw b Shams Mulani",
+      "notOut": false,
+      "strikeRate": 71.43,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-4-p-rajat-patidar",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-4",
+      "playerId": "p-rajat-patidar",
+      "runs": 30,
+      "balls": 37,
+      "fours": 4,
+      "sixes": 1,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 81.08,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-4-p-aditya-shrivastava",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-4",
+      "playerId": "p-aditya-shrivastava",
+      "runs": 5,
+      "balls": 14,
+      "fours": 0,
+      "sixes": 0,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 35.71,
+      "position": 5
+    },
+    {
+      "id": "z-inn-m-rcb-vs-lsg-ipl-eliminator-2022-1-p-faf-du-plessis",
+      "inningsId": "inn-m-rcb-vs-lsg-ipl-eliminator-2022-1",
+      "playerId": "p-faf-du-plessis",
+      "runs": 0,
+      "balls": 1,
+      "fours": 0,
+      "sixes": 0,
+      "dismissal": "c de Kock b Mohsin Khan",
+      "notOut": false,
+      "strikeRate": 0,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-rcb-vs-lsg-ipl-eliminator-2022-1-p-virat-kohli",
+      "inningsId": "inn-m-rcb-vs-lsg-ipl-eliminator-2022-1",
+      "playerId": "p-virat-kohli",
+      "runs": 25,
+      "balls": 24,
+      "fours": 2,
+      "sixes": 0,
+      "dismissal": "c Mohsin b Avesh Khan",
+      "notOut": false,
+      "strikeRate": 104.17,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-rcb-vs-lsg-ipl-eliminator-2022-1-p-rajat-patidar",
+      "inningsId": "inn-m-rcb-vs-lsg-ipl-eliminator-2022-1",
+      "playerId": "p-rajat-patidar",
+      "runs": 112,
+      "balls": 54,
+      "fours": 12,
+      "sixes": 7,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 207.41,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-rcb-vs-lsg-ipl-eliminator-2022-1-p-glenn-maxwell",
+      "inningsId": "inn-m-rcb-vs-lsg-ipl-eliminator-2022-1",
+      "playerId": "p-glenn-maxwell",
+      "runs": 9,
+      "balls": 10,
+      "fours": 0,
+      "sixes": 1,
+      "dismissal": "c Lewis b Krunal",
+      "notOut": false,
+      "strikeRate": 90,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-rcb-vs-lsg-ipl-eliminator-2022-1-p-dinesh-karthik",
+      "inningsId": "inn-m-rcb-vs-lsg-ipl-eliminator-2022-1",
+      "playerId": "p-dinesh-karthik",
+      "runs": 37,
+      "balls": 23,
+      "fours": 5,
+      "sixes": 1,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 160.87,
+      "position": 5
+    },
+    {
+      "id": "z-inn-m-rcb-vs-lsg-ipl-eliminator-2022-2-p-quinton-de-kock",
+      "inningsId": "inn-m-rcb-vs-lsg-ipl-eliminator-2022-2",
+      "playerId": "p-quinton-de-kock",
+      "runs": 6,
+      "balls": 5,
+      "fours": 1,
+      "sixes": 0,
+      "dismissal": "c Kuvekar b Siraj",
+      "notOut": false,
+      "strikeRate": 120,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-rcb-vs-lsg-ipl-eliminator-2022-2-p-kl-rahul",
+      "inningsId": "inn-m-rcb-vs-lsg-ipl-eliminator-2022-2",
+      "playerId": "p-kl-rahul",
+      "runs": 79,
+      "balls": 58,
+      "fours": 3,
+      "sixes": 5,
+      "dismissal": "c Shahbaz b Hazlewood",
+      "notOut": false,
+      "strikeRate": 136.21,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-rcb-vs-lsg-ipl-eliminator-2022-2-p-deepak-hooda",
+      "inningsId": "inn-m-rcb-vs-lsg-ipl-eliminator-2022-2",
+      "playerId": "p-deepak-hooda",
+      "runs": 45,
+      "balls": 26,
+      "fours": 1,
+      "sixes": 4,
+      "dismissal": "b Hasaranga",
+      "notOut": false,
+      "strikeRate": 173.08,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-kkr-vs-srh-ipl-final-2024-1-p-abhishek-sharma",
+      "inningsId": "inn-m-kkr-vs-srh-ipl-final-2024-1",
+      "playerId": "p-abhishek-sharma",
+      "runs": 2,
+      "balls": 5,
+      "fours": 0,
+      "sixes": 0,
+      "dismissal": "b Starc",
+      "notOut": false,
+      "strikeRate": 40,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-kkr-vs-srh-ipl-final-2024-1-p-travis-head",
+      "inningsId": "inn-m-kkr-vs-srh-ipl-final-2024-1",
+      "playerId": "p-travis-head",
+      "runs": 0,
+      "balls": 1,
+      "fours": 0,
+      "sixes": 0,
+      "dismissal": "c Gurbaz b Vaibhav",
+      "notOut": false,
+      "strikeRate": 0,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-kkr-vs-srh-ipl-final-2024-1-p-pat-cummins",
+      "inningsId": "inn-m-kkr-vs-srh-ipl-final-2024-1",
+      "playerId": "p-pat-cummins",
+      "runs": 24,
+      "balls": 19,
+      "fours": 2,
+      "sixes": 1,
+      "dismissal": "c Starc b Russell",
+      "notOut": false,
+      "strikeRate": 126.32,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-kkr-vs-srh-ipl-final-2024-2-p-rahmanullah-gurbaz",
+      "inningsId": "inn-m-kkr-vs-srh-ipl-final-2024-2",
+      "playerId": "p-rahmanullah-gurbaz",
+      "runs": 39,
+      "balls": 32,
+      "fours": 5,
+      "sixes": 2,
+      "dismissal": "lbw b Shahbaz Ahmed",
+      "notOut": false,
+      "strikeRate": 121.88,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-kkr-vs-srh-ipl-final-2024-2-p-sunil-narine",
+      "inningsId": "inn-m-kkr-vs-srh-ipl-final-2024-2",
+      "playerId": "p-sunil-narine",
+      "runs": 6,
+      "balls": 2,
+      "fours": 0,
+      "sixes": 1,
+      "dismissal": "c Shahbaz b Cummins",
+      "notOut": false,
+      "strikeRate": 300,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-kkr-vs-srh-ipl-final-2024-2-p-venkatesh-iyer",
+      "inningsId": "inn-m-kkr-vs-srh-ipl-final-2024-2",
+      "playerId": "p-venkatesh-iyer",
+      "runs": 52,
+      "balls": 26,
+      "fours": 4,
+      "sixes": 3,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 200,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-kkr-vs-srh-ipl-final-2024-2-p-shreyas-iyer",
+      "inningsId": "inn-m-kkr-vs-srh-ipl-final-2024-2",
+      "playerId": "p-shreyas-iyer",
+      "runs": 6,
+      "balls": 3,
+      "fours": 1,
+      "sixes": 0,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 200,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-1-p-amit-tiwari-429",
+      "inningsId": "inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-1",
+      "playerId": "p-amit-tiwari-429",
+      "runs": 64,
+      "balls": 82,
+      "fours": 7,
+      "sixes": 1,
+      "dismissal": "c Aryan Deshmukh b Rohit Gupta",
+      "notOut": false,
+      "strikeRate": 78.05,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-1-p-suresh-patel",
+      "inningsId": "inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-1",
+      "playerId": "p-suresh-patel",
+      "runs": 38,
+      "balls": 54,
+      "fours": 4,
+      "sixes": 0,
+      "dismissal": "c Atul Tiwari b Avinash Sen",
+      "notOut": false,
+      "strikeRate": 70.37,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2-p-atul-tiwari",
+      "inningsId": "inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2",
+      "playerId": "p-atul-tiwari",
+      "runs": 34,
+      "balls": 46,
+      "fours": 4,
+      "sixes": 0,
+      "dismissal": "c Sharma b Yadav",
+      "notOut": false,
+      "strikeRate": 73.91,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2-p-aryan-deshmukh",
+      "inningsId": "inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2",
+      "playerId": "p-aryan-deshmukh",
+      "runs": 28,
+      "balls": 38,
+      "fours": 3,
+      "sixes": 0,
+      "dismissal": "b Patel",
+      "notOut": false,
+      "strikeRate": 73.68,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2-p-pranav-dwivedi",
+      "inningsId": "inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2",
+      "playerId": "p-pranav-dwivedi",
+      "runs": 68,
+      "balls": 74,
+      "fours": 8,
+      "sixes": 2,
+      "dismissal": "c Verma b Mishra",
+      "notOut": false,
+      "strikeRate": 91.89,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2-p-akhil-mishra",
+      "inningsId": "inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2",
+      "playerId": "p-akhil-mishra",
+      "runs": 45,
+      "balls": 38,
+      "fours": 5,
+      "sixes": 1,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 118.42,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2-p-sani-patel",
+      "inningsId": "inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2",
+      "playerId": "p-sani-patel",
+      "runs": 22,
+      "balls": 28,
+      "fours": 2,
+      "sixes": 0,
+      "dismissal": "c Tiwari b Yadav",
+      "notOut": false,
+      "strikeRate": 78.57,
+      "position": 5
+    },
+    {
+      "id": "z-inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2-p-rohit-gupta",
+      "inningsId": "inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2",
+      "playerId": "p-rohit-gupta",
+      "runs": 14,
+      "balls": 12,
+      "fours": 2,
+      "sixes": 0,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 116.67,
+      "position": 6
+    },
+    {
+      "id": "z-inn-m-rewa-district-vs-satna-district-inter-district-2025-1-p-manish-tripathi",
+      "inningsId": "inn-m-rewa-district-vs-satna-district-inter-district-2025-1",
+      "playerId": "p-manish-tripathi",
+      "runs": 52,
+      "balls": 68,
+      "fours": 6,
+      "sixes": 0,
+      "dismissal": "c Atul Tiwari b Rohit Gupta",
+      "notOut": false,
+      "strikeRate": 76.47,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-rewa-district-vs-satna-district-inter-district-2025-1-p-vikram-singh",
+      "inningsId": "inn-m-rewa-district-vs-satna-district-inter-district-2025-1",
+      "playerId": "p-vikram-singh",
+      "runs": 34,
+      "balls": 48,
+      "fours": 4,
+      "sixes": 0,
+      "dismissal": "b Sani Patel",
+      "notOut": false,
+      "strikeRate": 70.83,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-rewa-district-vs-satna-district-inter-district-2025-2-p-atul-tiwari",
+      "inningsId": "inn-m-rewa-district-vs-satna-district-inter-district-2025-2",
+      "playerId": "p-atul-tiwari",
+      "runs": 72,
+      "balls": 86,
+      "fours": 9,
+      "sixes": 1,
+      "dismissal": "c Tripathi b Rawat",
+      "notOut": false,
+      "strikeRate": 83.72,
+      "position": 1
+    },
+    {
+      "id": "z-inn-m-rewa-district-vs-satna-district-inter-district-2025-2-p-aryan-deshmukh",
+      "inningsId": "inn-m-rewa-district-vs-satna-district-inter-district-2025-2",
+      "playerId": "p-aryan-deshmukh",
+      "runs": 32,
+      "balls": 44,
+      "fours": 3,
+      "sixes": 0,
+      "dismissal": "b Rawat",
+      "notOut": false,
+      "strikeRate": 72.73,
+      "position": 2
+    },
+    {
+      "id": "z-inn-m-rewa-district-vs-satna-district-inter-district-2025-2-p-pranav-dwivedi",
+      "inningsId": "inn-m-rewa-district-vs-satna-district-inter-district-2025-2",
+      "playerId": "p-pranav-dwivedi",
+      "runs": 48,
+      "balls": 52,
+      "fours": 5,
+      "sixes": 1,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 92.31,
+      "position": 3
+    },
+    {
+      "id": "z-inn-m-rewa-district-vs-satna-district-inter-district-2025-2-p-akhil-mishra",
+      "inningsId": "inn-m-rewa-district-vs-satna-district-inter-district-2025-2",
+      "playerId": "p-akhil-mishra",
+      "runs": 24,
+      "balls": 28,
+      "fours": 3,
+      "sixes": 0,
+      "dismissal": "c Singh b Patel",
+      "notOut": false,
+      "strikeRate": 85.71,
+      "position": 4
+    },
+    {
+      "id": "z-inn-m-rewa-district-vs-satna-district-inter-district-2025-2-p-rohit-gupta",
+      "inningsId": "inn-m-rewa-district-vs-satna-district-inter-district-2025-2",
+      "playerId": "p-rohit-gupta",
+      "runs": 16,
+      "balls": 14,
+      "fours": 2,
+      "sixes": 0,
+      "dismissal": "not out",
+      "notOut": true,
+      "strikeRate": 114.29,
+      "position": 5
     }
   ],
   "bowling": [
@@ -49487,7 +52201,7 @@
       "maidens": 0,
       "runs": 32,
       "wickets": 2,
-      "economy": 8.0
+      "economy": 8
     },
     {
       "id": "bowl-m-shared-55-1-2",
@@ -49497,7 +52211,7 @@
       "maidens": 0,
       "runs": 36,
       "wickets": 2,
-      "economy": 9.0
+      "economy": 9
     },
     {
       "id": "bowl-m-shared-55-1-3",
@@ -49517,7 +52231,7 @@
       "maidens": 0,
       "runs": 40,
       "wickets": 0,
-      "economy": 10.0
+      "economy": 10
     },
     {
       "id": "bowl-m-shared-55-1-5",
@@ -49527,7 +52241,7 @@
       "maidens": 0,
       "runs": 44,
       "wickets": 0,
-      "economy": 11.0
+      "economy": 11
     },
     {
       "id": "bowl-m-shared-55-2-1",
@@ -49547,7 +52261,7 @@
       "maidens": 0,
       "runs": 32,
       "wickets": 0,
-      "economy": 8.0
+      "economy": 8
     },
     {
       "id": "bowl-m-shared-55-2-3",
@@ -49557,7 +52271,7 @@
       "maidens": 0,
       "runs": 24,
       "wickets": 1,
-      "economy": 8.0
+      "economy": 8
     },
     {
       "id": "bowl-m-shared-55-2-4",
@@ -49567,7 +52281,7 @@
       "maidens": 0,
       "runs": 28,
       "wickets": 2,
-      "economy": 7.0
+      "economy": 7
     },
     {
       "id": "bowl-m-shared-55-2-5",
@@ -49587,7 +52301,7 @@
       "maidens": 0,
       "runs": 26,
       "wickets": 0,
-      "economy": 13.0
+      "economy": 13
     },
     {
       "id": "bowl-m-shared-56-1-1",
@@ -49597,7 +52311,7 @@
       "maidens": 0,
       "runs": 28,
       "wickets": 2,
-      "economy": 7.0
+      "economy": 7
     },
     {
       "id": "bowl-m-shared-56-1-2",
@@ -49657,7 +52371,7 @@
       "maidens": 0,
       "runs": 32,
       "wickets": 1,
-      "economy": 8.0
+      "economy": 8
     },
     {
       "id": "bowl-m-shared-56-2-3",
@@ -49667,7 +52381,7 @@
       "maidens": 0,
       "runs": 28,
       "wickets": 1,
-      "economy": 7.0
+      "economy": 7
     },
     {
       "id": "bowl-m-shared-56-2-4",
@@ -49777,7 +52491,7 @@
       "maidens": 0,
       "runs": 32,
       "wickets": 1,
-      "economy": 4.0
+      "economy": 4
     },
     {
       "id": "bowl-m-shared-57-2-5",
@@ -49787,7 +52501,7 @@
       "maidens": 0,
       "runs": 42,
       "wickets": 0,
-      "economy": 7.0
+      "economy": 7
     },
     {
       "id": "bowl-m-shared-57-2-6",
@@ -49817,7 +52531,7 @@
       "maidens": 0,
       "runs": 50,
       "wickets": 2,
-      "economy": 5.0
+      "economy": 5
     },
     {
       "id": "bowl-m-shared-58-1-3",
@@ -49857,7 +52571,7 @@
       "maidens": 0,
       "runs": 24,
       "wickets": 0,
-      "economy": 6.0
+      "economy": 6
     },
     {
       "id": "bowl-m-shared-58-2-1",
@@ -49907,7 +52621,7 @@
       "maidens": 0,
       "runs": 56,
       "wickets": 0,
-      "economy": 7.0
+      "economy": 7
     },
     {
       "id": "bowl-m-shared-59-1-1",
@@ -49927,7 +52641,7 @@
       "maidens": 1,
       "runs": 50,
       "wickets": 2,
-      "economy": 5.0
+      "economy": 5
     },
     {
       "id": "bowl-m-shared-59-1-3",
@@ -49987,7 +52701,7 @@
       "maidens": 0,
       "runs": 50,
       "wickets": 2,
-      "economy": 5.0
+      "economy": 5
     },
     {
       "id": "bowl-m-shared-59-2-4",
@@ -49997,7 +52711,7 @@
       "maidens": 0,
       "runs": 30,
       "wickets": 1,
-      "economy": 5.0
+      "economy": 5
     },
     {
       "id": "bowl-m-shared-59-2-5",
@@ -50037,7 +52751,7 @@
       "maidens": 0,
       "runs": 36,
       "wickets": 1,
-      "economy": 9.0
+      "economy": 9
     },
     {
       "id": "bowl-m-shared-60-1-3",
@@ -50057,7 +52771,7 @@
       "maidens": 0,
       "runs": 40,
       "wickets": 0,
-      "economy": 10.0
+      "economy": 10
     },
     {
       "id": "bowl-m-shared-60-1-5",
@@ -50077,7 +52791,7 @@
       "maidens": 0,
       "runs": 28,
       "wickets": 3,
-      "economy": 7.0
+      "economy": 7
     },
     {
       "id": "bowl-m-shared-60-2-2",
@@ -50087,7 +52801,7 @@
       "maidens": 0,
       "runs": 32,
       "wickets": 2,
-      "economy": 8.0
+      "economy": 8
     },
     {
       "id": "bowl-m-shared-60-2-3",
@@ -50107,7 +52821,7 @@
       "maidens": 0,
       "runs": 36,
       "wickets": 0,
-      "economy": 9.0
+      "economy": 9
     },
     {
       "id": "bowl-m-shared-60-2-5",
@@ -50137,7 +52851,7 @@
       "maidens": 0,
       "runs": 28,
       "wickets": 2,
-      "economy": 7.0
+      "economy": 7
     },
     {
       "id": "bowl-m-shared-61-1-3",
@@ -50147,7 +52861,7 @@
       "maidens": 0,
       "runs": 32,
       "wickets": 2,
-      "economy": 8.0
+      "economy": 8
     },
     {
       "id": "bowl-m-shared-61-1-4",
@@ -50177,7 +52891,7 @@
       "maidens": 0,
       "runs": 32,
       "wickets": 1,
-      "economy": 8.0
+      "economy": 8
     },
     {
       "id": "bowl-m-shared-61-2-2",
@@ -50197,7 +52911,7 @@
       "maidens": 0,
       "runs": 36,
       "wickets": 1,
-      "economy": 9.0
+      "economy": 9
     },
     {
       "id": "bowl-m-shared-61-2-4",
@@ -50217,7 +52931,7 @@
       "maidens": 0,
       "runs": 22,
       "wickets": 0,
-      "economy": 11.0
+      "economy": 11
     },
     {
       "id": "bowl-m-shared-62-1-1",
@@ -50267,7 +52981,7 @@
       "maidens": 0,
       "runs": 60,
       "wickets": 0,
-      "economy": 6.0
+      "economy": 6
     },
     {
       "id": "bowl-m-shared-62-2-1",
@@ -50347,7 +53061,7 @@
       "maidens": 0,
       "runs": 50,
       "wickets": 1,
-      "economy": 5.0
+      "economy": 5
     },
     {
       "id": "bowl-m-shared-63-1-4",
@@ -50377,7 +53091,7 @@
       "maidens": 1,
       "runs": 50,
       "wickets": 2,
-      "economy": 5.0
+      "economy": 5
     },
     {
       "id": "bowl-m-shared-63-2-2",
@@ -50477,7 +53191,7 @@
       "maidens": 0,
       "runs": 50,
       "wickets": 4,
-      "economy": 5.0
+      "economy": 5
     },
     {
       "id": "bowl-m-shared-64-2-2",
@@ -50517,7 +53231,7 @@
       "maidens": 0,
       "runs": 48,
       "wickets": 0,
-      "economy": 6.0
+      "economy": 6
     },
     {
       "id": "bowl-m-shared-64-2-6",
@@ -50527,7 +53241,727 @@
       "maidens": 0,
       "runs": 36,
       "wickets": 0,
-      "economy": 6.0
+      "economy": 6
+    },
+    {
+      "id": "w-inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1-p-xavier-bartlett",
+      "inningsId": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1",
+      "playerId": "p-xavier-bartlett",
+      "overs": 10,
+      "maidens": 1,
+      "runs": 58,
+      "wickets": 2,
+      "economy": 5.8
+    },
+    {
+      "id": "w-inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1-p-todd-murphy",
+      "inningsId": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1",
+      "playerId": "p-todd-murphy",
+      "overs": 10,
+      "maidens": 0,
+      "runs": 52,
+      "wickets": 1,
+      "economy": 5.2
+    },
+    {
+      "id": "w-inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1-p-cooper-connolly",
+      "inningsId": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-1",
+      "playerId": "p-cooper-connolly",
+      "overs": 8,
+      "maidens": 0,
+      "runs": 46,
+      "wickets": 1,
+      "economy": 5.75
+    },
+    {
+      "id": "w-inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-2-p-arshdeep-singh",
+      "inningsId": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-2",
+      "playerId": "p-arshdeep-singh",
+      "overs": 9.4,
+      "maidens": 1,
+      "runs": 52,
+      "wickets": 3,
+      "economy": 5.38
+    },
+    {
+      "id": "w-inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-2-p-mukesh-kumar",
+      "inningsId": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-2",
+      "playerId": "p-mukesh-kumar",
+      "overs": 10,
+      "maidens": 1,
+      "runs": 55,
+      "wickets": 3,
+      "economy": 5.5
+    },
+    {
+      "id": "w-inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-2-p-axar-patel",
+      "inningsId": "inn-m-india-a-vs-australia-a-1st-unofficial-odi-2026-2",
+      "playerId": "p-axar-patel",
+      "overs": 10,
+      "maidens": 0,
+      "runs": 44,
+      "wickets": 2,
+      "economy": 4.4
+    },
+    {
+      "id": "w-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1-p-kuldeep-sen",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1",
+      "playerId": "p-kuldeep-sen",
+      "overs": 7,
+      "maidens": 1,
+      "runs": 30,
+      "wickets": 3,
+      "economy": 4.28
+    },
+    {
+      "id": "w-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1-p-shardul-thakur",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1",
+      "playerId": "p-shardul-thakur",
+      "overs": 8.2,
+      "maidens": 1,
+      "runs": 32,
+      "wickets": 4,
+      "economy": 3.84
+    },
+    {
+      "id": "w-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1-p-umran-malik",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1",
+      "playerId": "p-umran-malik",
+      "overs": 7,
+      "maidens": 0,
+      "runs": 27,
+      "wickets": 1,
+      "economy": 3.85
+    },
+    {
+      "id": "w-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1-p-kuldeep-yadav",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-1",
+      "playerId": "p-kuldeep-yadav",
+      "overs": 9,
+      "maidens": 0,
+      "runs": 38,
+      "wickets": 1,
+      "economy": 4.22
+    },
+    {
+      "id": "w-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2-p-logan-van-beek",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2",
+      "playerId": "p-logan-van-beek",
+      "overs": 6,
+      "maidens": 0,
+      "runs": 29,
+      "wickets": 1,
+      "economy": 4.83
+    },
+    {
+      "id": "w-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2-p-lockie-ferguson",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2",
+      "playerId": "p-lockie-ferguson",
+      "overs": 6,
+      "maidens": 1,
+      "runs": 31,
+      "wickets": 1,
+      "economy": 5.17
+    },
+    {
+      "id": "w-inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2-p-rachin-ravindra",
+      "inningsId": "inn-m-india-a-vs-new-zealand-a-1st-unofficial-odi-2022-2",
+      "playerId": "p-rachin-ravindra",
+      "overs": 5,
+      "maidens": 0,
+      "runs": 28,
+      "wickets": 1,
+      "economy": 5.6
+    },
+    {
+      "id": "w-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-1-p-saransh-jain",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-1",
+      "playerId": "p-saransh-jain",
+      "overs": 24,
+      "maidens": 2,
+      "runs": 112,
+      "wickets": 2,
+      "economy": 4.66
+    },
+    {
+      "id": "w-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-1-p-manav-suthar",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-1",
+      "playerId": "p-manav-suthar",
+      "overs": 26,
+      "maidens": 1,
+      "runs": 125,
+      "wickets": 3,
+      "economy": 4.8
+    },
+    {
+      "id": "w-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2-p-matthew-potts",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2",
+      "playerId": "p-matthew-potts",
+      "overs": 12,
+      "maidens": 2,
+      "runs": 53,
+      "wickets": 4,
+      "economy": 4.41
+    },
+    {
+      "id": "w-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2-p-matthew-fisher",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-2",
+      "playerId": "p-matthew-fisher",
+      "overs": 11,
+      "maidens": 1,
+      "runs": 65,
+      "wickets": 3,
+      "economy": 5.9
+    },
+    {
+      "id": "w-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-3-p-saransh-jain",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-3",
+      "playerId": "p-saransh-jain",
+      "overs": 8,
+      "maidens": 0,
+      "runs": 42,
+      "wickets": 1,
+      "economy": 5.25
+    },
+    {
+      "id": "w-inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-4-p-matthew-potts",
+      "inningsId": "inn-m-india-a-vs-england-lions-1st-unofficial-test-2024-4",
+      "playerId": "p-matthew-potts",
+      "overs": 24,
+      "maidens": 6,
+      "runs": 82,
+      "wickets": 2,
+      "economy": 3.41
+    },
+    {
+      "id": "w-inn-m-south-africa-vs-india-3rd-odi-2023-1-p-nandre-burger",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-1",
+      "playerId": "p-nandre-burger",
+      "overs": 10,
+      "maidens": 0,
+      "runs": 64,
+      "wickets": 2,
+      "economy": 6.4
+    },
+    {
+      "id": "w-inn-m-south-africa-vs-india-3rd-odi-2023-1-p-beuran-hendricks",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-1",
+      "playerId": "p-beuran-hendricks",
+      "overs": 10,
+      "maidens": 0,
+      "runs": 63,
+      "wickets": 3,
+      "economy": 6.3
+    },
+    {
+      "id": "w-inn-m-south-africa-vs-india-3rd-odi-2023-2-p-arshdeep-singh",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-2",
+      "playerId": "p-arshdeep-singh",
+      "overs": 9,
+      "maidens": 0,
+      "runs": 30,
+      "wickets": 4,
+      "economy": 3.33
+    },
+    {
+      "id": "w-inn-m-south-africa-vs-india-3rd-odi-2023-2-p-avesh-khan",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-2",
+      "playerId": "p-avesh-khan",
+      "overs": 7.5,
+      "maidens": 0,
+      "runs": 44,
+      "wickets": 4,
+      "economy": 5.61
+    },
+    {
+      "id": "w-inn-m-south-africa-vs-india-3rd-odi-2023-2-p-mukesh-kumar",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-2",
+      "playerId": "p-mukesh-kumar",
+      "overs": 9,
+      "maidens": 1,
+      "runs": 42,
+      "wickets": 1,
+      "economy": 4.66
+    },
+    {
+      "id": "w-inn-m-south-africa-vs-india-3rd-odi-2023-2-p-washington-sundar",
+      "inningsId": "inn-m-south-africa-vs-india-3rd-odi-2023-2",
+      "playerId": "p-washington-sundar",
+      "overs": 10,
+      "maidens": 0,
+      "runs": 49,
+      "wickets": 1,
+      "economy": 4.9
+    },
+    {
+      "id": "w-inn-m-bangladesh-vs-india-1st-odi-2022-1-p-shakib-al-hasan",
+      "inningsId": "inn-m-bangladesh-vs-india-1st-odi-2022-1",
+      "playerId": "p-shakib-al-hasan",
+      "overs": 10,
+      "maidens": 2,
+      "runs": 36,
+      "wickets": 5,
+      "economy": 3.6
+    },
+    {
+      "id": "w-inn-m-bangladesh-vs-india-1st-odi-2022-1-p-ebadot-hossain",
+      "inningsId": "inn-m-bangladesh-vs-india-1st-odi-2022-1",
+      "playerId": "p-ebadot-hossain",
+      "overs": 8.2,
+      "maidens": 0,
+      "runs": 47,
+      "wickets": 4,
+      "economy": 5.64
+    },
+    {
+      "id": "w-inn-m-bangladesh-vs-india-1st-odi-2022-2-p-mohammed-siraj",
+      "inningsId": "inn-m-bangladesh-vs-india-1st-odi-2022-2",
+      "playerId": "p-mohammed-siraj",
+      "overs": 10,
+      "maidens": 1,
+      "runs": 32,
+      "wickets": 3,
+      "economy": 3.2
+    },
+    {
+      "id": "w-inn-m-bangladesh-vs-india-1st-odi-2022-2-p-kuldeep-sen",
+      "inningsId": "inn-m-bangladesh-vs-india-1st-odi-2022-2",
+      "playerId": "p-kuldeep-sen",
+      "overs": 5,
+      "maidens": 0,
+      "runs": 53,
+      "wickets": 2,
+      "economy": 10.6
+    },
+    {
+      "id": "w-inn-m-bangladesh-vs-india-1st-odi-2022-2-p-washington-sundar",
+      "inningsId": "inn-m-bangladesh-vs-india-1st-odi-2022-2",
+      "playerId": "p-washington-sundar",
+      "overs": 5,
+      "maidens": 0,
+      "runs": 17,
+      "wickets": 2,
+      "economy": 3.4
+    },
+    {
+      "id": "w-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-1-p-avesh-khan",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-1",
+      "playerId": "p-avesh-khan",
+      "overs": 23.3,
+      "maidens": 3,
+      "runs": 74,
+      "wickets": 2,
+      "economy": 3.14
+    },
+    {
+      "id": "w-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-1-p-anubhav-agarwal",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-1",
+      "playerId": "p-anubhav-agarwal",
+      "overs": 22,
+      "maidens": 3,
+      "runs": 85,
+      "wickets": 1,
+      "economy": 3.86
+    },
+    {
+      "id": "w-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-1-p-kumar-kartikeya",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-1",
+      "playerId": "p-kumar-kartikeya",
+      "overs": 30,
+      "maidens": 2,
+      "runs": 118,
+      "wickets": 2,
+      "economy": 3.93
+    },
+    {
+      "id": "w-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-1-p-saransh-jain",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-1",
+      "playerId": "p-saransh-jain",
+      "overs": 28,
+      "maidens": 2,
+      "runs": 103,
+      "wickets": 2,
+      "economy": 3.67
+    },
+    {
+      "id": "w-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2-p-kuldeep-sen",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2",
+      "playerId": "p-kuldeep-sen",
+      "overs": 18.1,
+      "maidens": 3,
+      "runs": 62,
+      "wickets": 3,
+      "economy": 3.41
+    },
+    {
+      "id": "w-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2-p-mukesh-kumar",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2",
+      "playerId": "p-mukesh-kumar",
+      "overs": 24,
+      "maidens": 5,
+      "runs": 66,
+      "wickets": 4,
+      "economy": 2.75
+    },
+    {
+      "id": "w-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2-p-navdeep-saini",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-2",
+      "playerId": "p-navdeep-saini",
+      "overs": 20,
+      "maidens": 2,
+      "runs": 68,
+      "wickets": 1,
+      "economy": 3.4
+    },
+    {
+      "id": "w-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-3-p-saransh-jain",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-3",
+      "playerId": "p-saransh-jain",
+      "overs": 19.3,
+      "maidens": 2,
+      "runs": 56,
+      "wickets": 2,
+      "economy": 2.87
+    },
+    {
+      "id": "w-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-3-p-kumar-kartikeya",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-3",
+      "playerId": "p-kumar-kartikeya",
+      "overs": 22,
+      "maidens": 4,
+      "runs": 48,
+      "wickets": 1,
+      "economy": 2.18
+    },
+    {
+      "id": "w-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-3-p-avesh-khan",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-3",
+      "playerId": "p-avesh-khan",
+      "overs": 14,
+      "maidens": 1,
+      "runs": 52,
+      "wickets": 1,
+      "economy": 3.71
+    },
+    {
+      "id": "w-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-4-p-kuldeep-sen",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-4",
+      "playerId": "p-kuldeep-sen",
+      "overs": 12.1,
+      "maidens": 2,
+      "runs": 38,
+      "wickets": 5,
+      "economy": 3.12
+    },
+    {
+      "id": "w-inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-4-p-mukesh-kumar",
+      "inningsId": "inn-m-rest-of-india-vs-madhya-pradesh-irani-cup-2023-4",
+      "playerId": "p-mukesh-kumar",
+      "overs": 12,
+      "maidens": 3,
+      "runs": 34,
+      "wickets": 2,
+      "economy": 2.83
+    },
+    {
+      "id": "w-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-1-p-gaurav-yadav",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-1",
+      "playerId": "p-gaurav-yadav",
+      "overs": 35.4,
+      "maidens": 11,
+      "runs": 106,
+      "wickets": 4,
+      "economy": 2.97
+    },
+    {
+      "id": "w-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-1-p-anubhav-agarwal",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-1",
+      "playerId": "p-anubhav-agarwal",
+      "overs": 29,
+      "maidens": 6,
+      "runs": 81,
+      "wickets": 3,
+      "economy": 2.79
+    },
+    {
+      "id": "w-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-1-p-saransh-jain",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-1",
+      "playerId": "p-saransh-jain",
+      "overs": 22,
+      "maidens": 3,
+      "runs": 47,
+      "wickets": 2,
+      "economy": 2.13
+    },
+    {
+      "id": "w-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-1-p-kumar-kartikeya",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-1",
+      "playerId": "p-kumar-kartikeya",
+      "overs": 35,
+      "maidens": 4,
+      "runs": 115,
+      "wickets": 1,
+      "economy": 3.28
+    },
+    {
+      "id": "w-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2-p-shams-mulani",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2",
+      "playerId": "p-shams-mulani",
+      "overs": 63.2,
+      "maidens": 10,
+      "runs": 173,
+      "wickets": 5,
+      "economy": 2.73
+    },
+    {
+      "id": "w-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2-p-tushar-deshpande",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-2",
+      "playerId": "p-tushar-deshpande",
+      "overs": 36,
+      "maidens": 9,
+      "runs": 116,
+      "wickets": 3,
+      "economy": 3.22
+    },
+    {
+      "id": "w-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-3-p-kumar-kartikeya",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-3",
+      "playerId": "p-kumar-kartikeya",
+      "overs": 25,
+      "maidens": 4,
+      "runs": 98,
+      "wickets": 4,
+      "economy": 3.92
+    },
+    {
+      "id": "w-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-3-p-gaurav-yadav",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-3",
+      "playerId": "p-gaurav-yadav",
+      "overs": 11,
+      "maidens": 2,
+      "runs": 53,
+      "wickets": 2,
+      "economy": 4.81
+    },
+    {
+      "id": "w-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-3-p-parth-sahani",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-3",
+      "playerId": "p-parth-sahani",
+      "overs": 12.3,
+      "maidens": 1,
+      "runs": 43,
+      "wickets": 2,
+      "economy": 3.44
+    },
+    {
+      "id": "w-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-3-p-saransh-jain",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-3",
+      "playerId": "p-saransh-jain",
+      "overs": 8,
+      "maidens": 0,
+      "runs": 45,
+      "wickets": 1,
+      "economy": 5.62
+    },
+    {
+      "id": "w-inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-4-p-shams-mulani",
+      "inningsId": "inn-m-madhya-pradesh-vs-mumbai-ranji-trophy-final-2022-4",
+      "playerId": "p-shams-mulani",
+      "overs": 14,
+      "maidens": 3,
+      "runs": 41,
+      "wickets": 3,
+      "economy": 2.92
+    },
+    {
+      "id": "w-inn-m-rcb-vs-lsg-ipl-eliminator-2022-1-p-mohsin-khan",
+      "inningsId": "inn-m-rcb-vs-lsg-ipl-eliminator-2022-1",
+      "playerId": "p-mohsin-khan",
+      "overs": 4,
+      "maidens": 0,
+      "runs": 25,
+      "wickets": 1,
+      "economy": 6.25
+    },
+    {
+      "id": "w-inn-m-rcb-vs-lsg-ipl-eliminator-2022-1-p-avesh-khan",
+      "inningsId": "inn-m-rcb-vs-lsg-ipl-eliminator-2022-1",
+      "playerId": "p-avesh-khan",
+      "overs": 4,
+      "maidens": 0,
+      "runs": 44,
+      "wickets": 1,
+      "economy": 11
+    },
+    {
+      "id": "w-inn-m-rcb-vs-lsg-ipl-eliminator-2022-1-p-dushmantha-chameera",
+      "inningsId": "inn-m-rcb-vs-lsg-ipl-eliminator-2022-1",
+      "playerId": "p-dushmantha-chameera",
+      "overs": 4,
+      "maidens": 0,
+      "runs": 54,
+      "wickets": 0,
+      "economy": 13.5
+    },
+    {
+      "id": "w-inn-m-rcb-vs-lsg-ipl-eliminator-2022-2-p-josh-hazlewood",
+      "inningsId": "inn-m-rcb-vs-lsg-ipl-eliminator-2022-2",
+      "playerId": "p-josh-hazlewood",
+      "overs": 4,
+      "maidens": 0,
+      "runs": 43,
+      "wickets": 3,
+      "economy": 10.75
+    },
+    {
+      "id": "w-inn-m-rcb-vs-lsg-ipl-eliminator-2022-2-p-wanindu-hasaranga",
+      "inningsId": "inn-m-rcb-vs-lsg-ipl-eliminator-2022-2",
+      "playerId": "p-wanindu-hasaranga",
+      "overs": 4,
+      "maidens": 0,
+      "runs": 42,
+      "wickets": 1,
+      "economy": 10.5
+    },
+    {
+      "id": "w-inn-m-kkr-vs-srh-ipl-final-2024-1-p-mitchell-starc",
+      "inningsId": "inn-m-kkr-vs-srh-ipl-final-2024-1",
+      "playerId": "p-mitchell-starc",
+      "overs": 3,
+      "maidens": 0,
+      "runs": 14,
+      "wickets": 2,
+      "economy": 4.67
+    },
+    {
+      "id": "w-inn-m-kkr-vs-srh-ipl-final-2024-1-p-andre-russell",
+      "inningsId": "inn-m-kkr-vs-srh-ipl-final-2024-1",
+      "playerId": "p-andre-russell",
+      "overs": 2.3,
+      "maidens": 0,
+      "runs": 19,
+      "wickets": 3,
+      "economy": 7.6
+    },
+    {
+      "id": "w-inn-m-kkr-vs-srh-ipl-final-2024-2-p-pat-cummins",
+      "inningsId": "inn-m-kkr-vs-srh-ipl-final-2024-2",
+      "playerId": "p-pat-cummins",
+      "overs": 2,
+      "maidens": 0,
+      "runs": 18,
+      "wickets": 1,
+      "economy": 9
+    },
+    {
+      "id": "w-inn-m-kkr-vs-srh-ipl-final-2024-2-p-shahbaz-ahmed",
+      "inningsId": "inn-m-kkr-vs-srh-ipl-final-2024-2",
+      "playerId": "p-shahbaz-ahmed",
+      "overs": 2.3,
+      "maidens": 0,
+      "runs": 14,
+      "wickets": 1,
+      "economy": 5.6
+    },
+    {
+      "id": "w-inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-1-p-rohit-gupta",
+      "inningsId": "inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-1",
+      "playerId": "p-rohit-gupta",
+      "overs": 9,
+      "maidens": 1,
+      "runs": 34,
+      "wickets": 3,
+      "economy": 3.77
+    },
+    {
+      "id": "w-inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-1-p-atul-tiwari",
+      "inningsId": "inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-1",
+      "playerId": "p-atul-tiwari",
+      "overs": 7,
+      "maidens": 0,
+      "runs": 28,
+      "wickets": 2,
+      "economy": 4
+    },
+    {
+      "id": "w-inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-1-p-avinash-sen",
+      "inningsId": "inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-1",
+      "playerId": "p-avinash-sen",
+      "overs": 8.2,
+      "maidens": 1,
+      "runs": 41,
+      "wickets": 2,
+      "economy": 4.92
+    },
+    {
+      "id": "w-inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-1-p-chanchal-rathore",
+      "inningsId": "inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-1",
+      "playerId": "p-chanchal-rathore",
+      "overs": 8,
+      "maidens": 0,
+      "runs": 36,
+      "wickets": 1,
+      "economy": 4.5
+    },
+    {
+      "id": "w-inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2-p-shivam-yadav",
+      "inningsId": "inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2",
+      "playerId": "p-shivam-yadav",
+      "overs": 9,
+      "maidens": 0,
+      "runs": 52,
+      "wickets": 2,
+      "economy": 5.77
+    },
+    {
+      "id": "w-inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2-p-deepak-mishra",
+      "inningsId": "inn-m-rewa-division-vs-shahdol-division-rdca-championship-2026-2",
+      "playerId": "p-deepak-mishra",
+      "overs": 8.3,
+      "maidens": 0,
+      "runs": 46,
+      "wickets": 1,
+      "economy": 5.41
+    },
+    {
+      "id": "w-inn-m-rewa-district-vs-satna-district-inter-district-2025-1-p-rohit-gupta",
+      "inningsId": "inn-m-rewa-district-vs-satna-district-inter-district-2025-1",
+      "playerId": "p-rohit-gupta",
+      "overs": 9,
+      "maidens": 2,
+      "runs": 28,
+      "wickets": 4,
+      "economy": 3.11
+    },
+    {
+      "id": "w-inn-m-rewa-district-vs-satna-district-inter-district-2025-1-p-sani-patel",
+      "inningsId": "inn-m-rewa-district-vs-satna-district-inter-district-2025-1",
+      "playerId": "p-sani-patel",
+      "overs": 8,
+      "maidens": 0,
+      "runs": 35,
+      "wickets": 2,
+      "economy": 4.38
+    },
+    {
+      "id": "w-inn-m-rewa-district-vs-satna-district-inter-district-2025-1-p-chanchal-rathore",
+      "inningsId": "inn-m-rewa-district-vs-satna-district-inter-district-2025-1",
+      "playerId": "p-chanchal-rathore",
+      "overs": 7.1,
+      "maidens": 1,
+      "runs": 24,
+      "wickets": 2,
+      "economy": 3.35
+    },
+    {
+      "id": "w-inn-m-rewa-district-vs-satna-district-inter-district-2025-2-p-anand-rawat",
+      "inningsId": "inn-m-rewa-district-vs-satna-district-inter-district-2025-2",
+      "playerId": "p-anand-rawat",
+      "overs": 9,
+      "maidens": 0,
+      "runs": 48,
+      "wickets": 2,
+      "economy": 5.33
     }
   ]
 }
