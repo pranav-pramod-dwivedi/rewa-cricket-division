@@ -2787,6 +2787,8 @@ function writeRedirects() {
   lines.push(`/tournaments/de-v-des-t20-series/ /tournaments/atal-bihari-vajpayee-memorial-tournament/ 301`);
   lines.push(`/tournaments/de-v-des-odi-series /tournaments/atal-bihari-vajpayee-memorial-tournament/ 301`);
   lines.push(`/tournaments/de-v-des-odi-series/ /tournaments/atal-bihari-vajpayee-memorial-tournament/ 301`);
+  lines.push(`/news/record-t20-pranav-dwivedi-223-63-balls-452 /news/record-t20-pranav-dwivedi-216-56-balls-452/ 301`);
+  lines.push(`/news/record-t20-pranav-dwivedi-223-63-balls-452/ /news/record-t20-pranav-dwivedi-216-56-balls-452/ 301`);
   writeFileSync(join(DIST, '_redirects'), lines.join('\n') + '\n');
 }
 writeRedirects();
