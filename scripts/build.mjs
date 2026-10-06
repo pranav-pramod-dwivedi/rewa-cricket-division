@@ -1102,7 +1102,8 @@ function renderPlayer(p) {
   const seoKw = [
     p.name, 'cricketer', `${p.name} cricketer`, `${p.name} Rewa`, `${p.name} stats`, `${p.name} records`,
     'Rewa cricketer', 'Rewa Cricket Division', 'RDCA', 'Madhya Pradesh cricket',
-    p.role, seoTeam, 'cricket statistics', 'cricket scorecard', 'records', 'highest score',
+    p.role, seoTeam, 'cricket statistics', 'cricket scorecard', 'records', 'highest score', 'record holder',
+    ...(p.id === 'p-pranav-dwivedi' ? ['record T20 innings', '216 not out', 'highest T20 score', 'Pranav Dwivedi record'] : []),
   ].filter(Boolean).join(', ');
   const playerHs = batInns.length ? Math.max(...batInns.map((b) => b.runs || 0)) : 0;
   const playerFaq = [
@@ -1167,7 +1168,9 @@ function renderPlayer(p) {
           '2025 Atal Bihari Vajpayee Memorial Trophy Champion Captain (5-0 Clean Sweep)',
           '2024 Atal Bihari Vajpayee Memorial Trophy Champion Captain (4-1 Series Victory)',
           'Rewa Derby All-Time Leading Run Scorer (1,435 runs)',
-          'Rewa Derby All-Time Leading Wicket Taker (66 wickets)'
+          'Rewa Derby All-Time Leading Wicket Taker (66 wickets)',
+          'Record Holder — highest individual T20 innings: 216 not out off 56 balls (RCB B v RCB A, KSCA Alur, October 2026)',
+          'Record Holder — part of highest T20 team total: RCB B 452 for 1'
         ]
       } : {}),
       ...(p.id === 'p-akhil-mishra' ? {
@@ -1191,7 +1194,7 @@ function renderPlayer(p) {
       },
     ],
   });
-  html += `<div class="page-head"><h1>${esc(p.name)} ${isOfficialPlayer(p.id) ? verifiedTick() : ''}</h1><p>${esc(p.role)}${team ? ` · <a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : ''}</p></div>`;
+  html += `<div class="page-head"><h1>${esc(p.name)} ${isOfficialPlayer(p.id) ? verifiedTick() : ''}${p.id === 'p-pranav-dwivedi' ? ` <span class="badge" style="font-size:0.7rem;padding:0.2rem 0.55rem;font-weight:800;background:#fef3c7;color:#92400e;border:1px solid #f59e0b;vertical-align:middle;" title="Record T20 innings: 216 not out off 56 balls">RECORD HOLDER</span>` : ''}</h1><p>${esc(p.role)}${team ? ` · <a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : ''}</p></div>`;
   html += `<dl class="card dl-card" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:720px;margin-bottom:1.5rem">
     ${[['Role', p.role], team ? ['Team', `<a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>`] : null, p.battingStyle ? ['Batting style', p.battingStyle] : null, p.bowlingStyle ? ['Bowling style', p.bowlingStyle] : null, p.dateOfBirth ? ['Born', `${p.dateOfBirth}${age !== null ? ` (${age} years)` : ''}`] : null, p.birthPlace ? ['Birth place', p.birthPlace] : null, ['Matches', statVal('matches') ?? (totalMatchesCount || '—')], ['Runs', statVal('runs') ?? (batRuns || (batInns.length ? 0 : '—'))], ['Wickets', statVal('wickets') ?? (bowlWkts || (bowlOvers.length ? 0 : '—'))]]
       .filter(Boolean)
