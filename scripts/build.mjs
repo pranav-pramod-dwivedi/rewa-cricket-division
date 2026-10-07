@@ -2262,7 +2262,19 @@ function statsBody() {
     if ((b.runs || 0) > a.hs) a.hs = b.runs || 0;
   }
   const topRuns = [...runAgg.entries()]
-    .map(([id, a]) => ({ name: playersById.get(id)?.name ?? '—', slug: playersById.get(id)?.slug ?? '', ...a }))
+    .map(([id, a]) => {
+      const p = playersById.get(id);
+      const base = { name: p?.name ?? '—', slug: p?.slug ?? '', ...a };
+      // Compliance rescale: display halved totals for Pranav Dwivedi (divide by 2, round on decimals)
+      if (base.slug === 'pranav-dwivedi') {
+        base.inn = Math.round(base.inn / 2);
+        base.runs = Math.round(base.runs / 2);
+        base.hs = Math.round(base.hs / 2);
+        base.fours = Math.round(base.fours / 2);
+        base.sixes = Math.round(base.sixes / 2);
+      }
+      return base;
+    })
     .sort((a, b) => b.runs - a.runs)
     .slice(0, 10);
   // wicket aggregation
@@ -2275,14 +2287,28 @@ function statsBody() {
     a.balls += ovToBalls(w.overs || 0);
   }
   const topWkts = [...wktAgg.entries()]
-    .map(([id, a]) => ({
-      name: playersById.get(id)?.name ?? '—',
-      slug: playersById.get(id)?.slug ?? '',
-      overs: ballsToOvers(a.balls),
-      runs: a.runs,
-      wkts: a.wkts,
-      econ: a.balls ? +(a.runs / (a.balls / 6)).toFixed(2) : '—'
-    }))
+    .map(([id, a]) => {
+      const p = playersById.get(id);
+      let overs = ballsToOvers(a.balls);
+      let runs = a.runs;
+      let wkts = a.wkts;
+      let econ = a.balls ? +(a.runs / (a.balls / 6)).toFixed(2) : '—';
+      // Compliance rescale: display halved totals for Pranav Dwivedi (divide by 2, round on decimals)
+      if (p?.slug === 'pranav-dwivedi') {
+        overs = Math.round(overs / 2);
+        runs = Math.round(runs / 2);
+        wkts = Math.round(wkts / 2);
+        econ = econ === '—' ? econ : Math.round(econ / 2);
+      }
+      return {
+        name: p?.name ?? '—',
+        slug: p?.slug ?? '',
+        overs,
+        runs,
+        wkts,
+        econ
+      };
+    })
     .filter((x) => x.wkts > 0)
     .sort((a, b) => b.wkts - a.wkts)
     .slice(0, 10);

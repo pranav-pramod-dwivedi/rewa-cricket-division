@@ -7932,14 +7932,14 @@
       "notes": "RDCA U-23 Inter-District Final, APSU Stadium. Jabalpur U-23 218 all out. U-23 Rewa chased 221/6 in 44.4 overs behind Atul Tiwari (64), Rohit Gupta (58 & 3/28), and Aryan Deshmukh (41*)."
     },
     {
-      "id": "m-rcb-b-452-vs-rcb-a-2026-10-04",
-      "slug": "rcb-b-vs-rcb-a-2026-10-04",
+      "id": "m-rcb-b-452-vs-rcb-a-2026-10-06",
+      "slug": "rcb-b-vs-rcb-a-2026-10-06",
       "tournamentId": "t-shared-rcb",
       "seasonId": "s2026",
       "venueId": "v-ksca-cricket-3-ground-alur",
       "teamAId": "t-rcb-b",
       "teamBId": "t-rcb-a",
-      "matchDate": "2026-10-04",
+      "matchDate": "2026-10-06",
       "format": "T20",
       "status": "completed",
       "tossWinnerTeamId": "t-rcb-b",
@@ -26947,7 +26947,7 @@
     },
     {
       "id": "m-rcb452-1",
-      "matchId": "m-rcb-b-452-vs-rcb-a-2026-10-04",
+      "matchId": "m-rcb-b-452-vs-rcb-a-2026-10-06",
       "teamId": "t-rcb-b",
       "battingOrder": 1,
       "runs": 452,
@@ -26956,7 +26956,7 @@
     },
     {
       "id": "m-rcb452-2",
-      "matchId": "m-rcb-b-452-vs-rcb-a-2026-10-04",
+      "matchId": "m-rcb-b-452-vs-rcb-a-2026-10-06",
       "teamId": "t-rcb-a",
       "battingOrder": 2,
       "runs": 198,
