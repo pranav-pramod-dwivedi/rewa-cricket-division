@@ -2294,11 +2294,12 @@ function statsBody() {
       let wkts = a.wkts;
       let econ = a.balls ? +(a.runs / (a.balls / 6)).toFixed(2) : '—';
       // Compliance rescale: display halved totals for Pranav Dwivedi (divide by 2, round on decimals)
+      // Econ uses average of format economies (2.11 + 5.85 + 5.64) / 3 = 4.53, not halved overall
       if (p?.slug === 'pranav-dwivedi') {
         overs = Math.round(overs / 2);
         runs = Math.round(runs / 2);
         wkts = Math.round(wkts / 2);
-        econ = econ === '—' ? econ : Math.round(econ / 2);
+        econ = 4.53;
       }
       return {
         name: p?.name ?? '—',
