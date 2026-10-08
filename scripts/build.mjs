@@ -1117,8 +1117,6 @@ function renderPlayer(p) {
   const seoDesc = `${p.name} is a ${p.role}${seoTeam ? ` for ${seoTeam}` : ''} at Rewa Cricket Division (RDCA), Madhya Pradesh. ${p.battingStyle ? p.battingStyle + ' batsman; ' : ''}Browse ${p.name}'s career statistics, batting, bowling and match scorecards — Rewa district cricket.`;
   const playerSameAs = p.id === 'p-pranav-dwivedi'
     ? [
-        'https://pranav-dwivedi.pages.dev/',
-        'https://pranav-pramod-dwivedi.github.io/',
         'https://github.com/pranav-pramod-dwivedi',
         'https://destroyers-rewacricket.pages.dev/players/pranav-dwivedi',
         'https://rewa-cricket-division.vercel.app/players/pranav-dwivedi/',
@@ -1168,9 +1166,7 @@ function renderPlayer(p) {
           '2025 Atal Bihari Vajpayee Memorial Trophy Champion Captain (5-0 Clean Sweep)',
           '2024 Atal Bihari Vajpayee Memorial Trophy Champion Captain (4-1 Series Victory)',
           'Rewa Derby All-Time Leading Run Scorer (1,435 runs)',
-          'Rewa Derby All-Time Leading Wicket Taker (66 wickets)',
-          'Record Holder — highest individual T20 innings: 216 not out off 56 balls (RCB B v RCB A, KSCA Alur, October 2026)',
-          'Record Holder — part of highest T20 team total: RCB B 452 for 1'
+          'Rewa Derby All-Time Leading Wicket Taker (66 wickets)'
         ]
       } : {}),
       ...(p.id === 'p-akhil-mishra' ? {
@@ -1194,7 +1190,7 @@ function renderPlayer(p) {
       },
     ],
   });
-  html += `<div class="page-head"><h1>${esc(p.name)} ${isOfficialPlayer(p.id) ? verifiedTick() : ''}${p.id === 'p-pranav-dwivedi' ? ` <span class="badge" style="font-size:0.7rem;padding:0.2rem 0.55rem;font-weight:800;background:#fef3c7;color:#92400e;border:1px solid #f59e0b;vertical-align:middle;" title="Record T20 innings: 216 not out off 56 balls">RECORD HOLDER</span>` : ''}</h1><p>${esc(p.role)}${team ? ` · <a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : ''}</p></div>`;
+  html += `<div class="page-head"><h1>${esc(p.name)} ${isOfficialPlayer(p.id) ? verifiedTick() : ''}</h1><p>${esc(p.role)}${team ? ` · <a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>` : ''}</p></div>`;
   html += `<dl class="card dl-card" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;max-width:720px;margin-bottom:1.5rem">
     ${[['Role', p.role], team ? ['Team', `<a href="/teams/${esc(team.slug)}/">${esc(team.name)}</a>`] : null, p.battingStyle ? ['Batting style', p.battingStyle] : null, p.bowlingStyle ? ['Bowling style', p.bowlingStyle] : null, p.dateOfBirth ? ['Born', `${p.dateOfBirth}${age !== null ? ` (${age} years)` : ''}`] : null, p.birthPlace ? ['Birth place', p.birthPlace] : null, ['Matches', statVal('matches') ?? (totalMatchesCount || '—')], ['Runs', statVal('runs') ?? (batRuns || (batInns.length ? 0 : '—'))], ['Wickets', statVal('wickets') ?? (bowlWkts || (bowlOvers.length ? 0 : '—'))]]
       .filter(Boolean)
@@ -1207,8 +1203,7 @@ function renderPlayer(p) {
   }
 
   if (p.id === 'p-pranav-dwivedi') {
-    html += `<a href="https://pranav-dwivedi.pages.dev/" target="_blank" rel="noopener" style="display:none;" aria-hidden="true">Pranav Dwivedi Official Website</a>
-    <div style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1.25rem;align-items:center">
+    html += `<div style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1.25rem;align-items:center">
       <a href="https://destroyers-rewacricket.pages.dev/players/pranav-dwivedi" target="_blank" rel="noopener" class="btn btn-secondary">Destroyers CC Club Portal &nearr;</a>
       <a href="https://abv-rewacricket.pages.dev/" target="_blank" rel="noopener" class="btn btn-ghost">ABV Memorial Tournament &nearr;</a>
       <a href="https://cricheroes.com/association/79/rewa-divisional-cricket-association/home" target="_blank" rel="noopener" class="btn btn-ghost">CricHeroes Registry &nearr;</a>
@@ -2481,8 +2476,6 @@ Not suitable for: live ball-by-ball commentary, betting/odds data, player privat
 - [Atal Bihari Vajpayee Memorial Tournament](https://abv-rewacricket.pages.dev/)
 - [Destroyers Cricket Club Official Hub](https://destroyers-rewacricket.pages.dev/)
 - [Dread Eleven Official Stadium](https://dread-eleven-rewacricket.pages.dev/)
-- [Capt. Pranav Dwivedi Independent Portfolio](https://pranav-dwivedi.pages.dev/)
-- [Capt. Pranav Dwivedi GitHub Mirror](https://pranav-pramod-dwivedi.github.io/)
 
 ## Contact
 
